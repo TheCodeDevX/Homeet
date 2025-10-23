@@ -1,0 +1,16 @@
+
+ {
+    "dashboard" : {
+        "image" : "Image",
+        "title" : "Title",
+        "description" : "Description",
+        "location" : "Location",
+        "createdAt" : "Created At",
+        "actions" : {
+            "title" : "Actions",
+            "delete" : "Delete",
+            "edit" : "Edit"
+
+        } 
+    } 
+ }

@@ -1,0 +1,25 @@
+{
+    "price" : {
+        "label" : "Precio",
+        "options" : {
+            "cheap" : "Barato",
+            "exp" : "Caro"
+        }
+    },
+    "rating" : {
+        "label" : "Calificación",
+        "options" : {
+            "high" : "Alto",
+            "low" : "Bajo"
+        }
+    },
+    "date" : {
+        "label" : "Fecha",
+        "options" : {
+            "new" : "Más reciente",
+            "old" : "Más antiguo"
+        }
+    },
+    "apply" : "Aplicar",
+    "cancel" : "Cancelar"
+  }

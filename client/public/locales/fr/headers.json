@@ -1,0 +1,19 @@
+{
+    "postListing" : {
+        "titles" : {
+        "header" : "Créer une Nouvelle Annonce",
+        "subheader" : "Publiez Votre Bien et Trouvez des Locataires Rapidement"
+    }
+    },
+
+    "updateListing" : {
+    "titles" : {
+        "header" : "Modifier l'Annonce",
+        "subheader" : "Mettre à Jour les Informations de Votre Annonce"
+    }
+    },
+    
+     "chat" : {
+        "title" : "Discussions"
+    }
+}

@@ -1,0 +1,13 @@
+
+
+ {
+    "tooltips" : {
+        "NAV" : "Navigation",
+        "CHANGE_THEME" : "Toggle Theme",
+        "CHANGE_LANG" : "Change Language",
+        "NOTIFS" : "Notifications",
+        "LOGOUT" : "Logout",
+        "PROFILE" : "Profile"
+    }
+ }
+

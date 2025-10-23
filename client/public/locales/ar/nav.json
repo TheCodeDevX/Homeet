@@ -1,0 +1,9 @@
+{
+    "links" : {
+        "HOME" : "الرئيسية",
+        "POST_LISTING" : "نشر إعلان",
+        "NOTIFICATION" : "الإشعارات",
+        "CHAT" : "المحادثة",
+        "DASHBOARD" : " التحكم"
+    }
+}

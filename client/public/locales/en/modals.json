@@ -1,0 +1,17 @@
+
+
+ {
+    "logoutModal" : {
+        "logout" : "Logout",
+        "msg" : "Are you sure you want to logout?",
+        "actions" : {
+            "confirm" : "Confirm",
+            "cancel" : "Cancel"
+        }
+    },
+
+    "ratingModal" : {
+        "q" : "How would you rate this listing?"
+
+    }
+ }

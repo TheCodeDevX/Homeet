@@ -1,0 +1,21 @@
+
+
+ {
+    "postListing" : {
+        "titles" : {
+        "header" : "Create new Listing",
+        "subheader" : "List Your Property And Find Tenants Fast"
+    }
+    },
+
+    "updateListing" : {
+    "titles" : {
+        "header" : "Update Listing",
+        "subheader" : "Update Your Listing Information"
+    }
+    },
+    
+     "chat" : {
+        "title" : "Chats"
+    }
+ }

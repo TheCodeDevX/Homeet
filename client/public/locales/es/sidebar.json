@@ -1,0 +1,50 @@
+{
+    "content" : {
+        "title" : "Filtros",
+        "filters" : {
+            "price" : {
+                "name" : "Precio",
+                "content" : {
+                   "maxPrice" : "Precio máximo",
+                   "minPrice" : "Precio mínimo" 
+                } 
+            },
+            "category" : {
+                "name" : "Categoría",
+                "content" : {
+                    "label" : "Tipo de alquiler",
+                    "options" : {
+                        "default" : "Elige tu tipo de alquiler",
+                        "nightly" : "Por noche",
+                        "monthly" : "Por mes",
+                        "forSale" : "En venta"
+                    }
+                }
+            },
+            "location" : {
+                "name" : "Ubicación",
+                "content" : {
+                   "placeholder":"Ciudad, Barrio"
+                }
+            },
+            "amenities" : {
+                "name" : "Comodidades",
+                "facilities" : 
+              {
+              "WIFI": "Wi-Fi",
+             "FURNISHED": "Amueblado",
+             "PARKING": "Estacionamiento",
+             "AIR_CONDITIONING": "Aire Acondicionado",
+             "KITCHEN_ACCESS": "Acceso a Cocina",
+             "PET_FRIENDLY": "Se Admiten Mascotas",
+            "WASHER_DRYER": "Lavadora / Secadora",
+           "BALCONY": "Balcón",
+           "GARDEN": "Jardín",
+           "GYM": "Gimnasio",
+          "FIREPLACE": "Chimenea",
+          "POOL": "Piscina"
+}
+            }
+        }
+    }
+}

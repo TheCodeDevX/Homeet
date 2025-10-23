@@ -1,0 +1,10 @@
+{
+    "title" : "Perfil",
+    "subtitle" : "Información de tu perfil",
+    "info" : "Haz clic en el ícono de la cámara para actualizar tu foto de perfil",
+
+    "onboarding" : {
+        "title" : "Completa tu perfil",
+        "subtitle" : "Por favor ingresa toda la información requerida"
+    }
+}

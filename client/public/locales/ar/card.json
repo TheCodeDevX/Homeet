@@ -1,0 +1,35 @@
+{
+    "card" : {
+         "facilities" : 
+              {
+            "Wi-Fi": "واي فاي",
+           "Furnished": "مفروش",
+           "Parking": "موقف سيارات",
+           "Air Conditioning": "تكييف",
+           "Kitchen Access": "مطبخ متاح",
+           "Pet-Friendly": "يسمح بالحيوانات الأليفة",
+          "Washer / Dryer": "غسالة / مجفف",
+          "Balcony": "شرفة",
+         "Garden": "حديقة",
+         "Gym": "صالة رياضية",
+         "Fireplace": "مدفأة",
+         "Pool": "مسبح"
+      },
+
+      "roles" : {
+         "seller" : "بائع",
+         "tenant" : "مستأجر",
+         "homeowner" : "مالك العقار",
+         "default" : "غير محدد"
+      },
+
+     "categories" : {
+       "nightly" : "في الليلة",
+      "monthly" : "في الشهر",
+      "for sale" : "للبيع",
+      "placeholder" : "غير محدد"
+     }
+
+      
+    }
+ }

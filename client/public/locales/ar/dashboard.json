@@ -1,0 +1,15 @@
+{
+ "dashboard" : {
+        "image" : "الصورة",
+        "title" : "العنوان",
+        "description" : "الوصف",
+        "location" : "الموقع",
+        "createdAt" : "تاريخ الإنشاء",
+        "actions" : {
+            "title" : "الإجراءات",
+            "delete" : "حذف",
+            "edit" : "تعديل"
+
+        } 
+    } 
+}

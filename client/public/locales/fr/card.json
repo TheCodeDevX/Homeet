@@ -1,0 +1,35 @@
+{
+    "card" : {
+         "facilities" : 
+              {
+            "Wi-Fi": "Wi-Fi",
+           "Furnished": "Meublé",
+           "Parking": "Parking",
+           "Air Conditioning": "Climatisation",
+           "Kitchen Access": "Accès Cuisine",
+           "Pet-Friendly": "Animaux Acceptés",
+          "Washer / Dryer": "Lave-linge / Sèche-linge",
+          "Balcony": "Balcon",
+         "Garden": "Jardin",
+         "Gym": "Salle de Sport",
+         "Fireplace": "Cheminée",
+         "Pool": "Piscine"
+      },
+
+      "roles" : {
+         "seller" : "Vendeur",
+         "tenant" : "Locataire",
+         "homeowner" : "Propriétaire",
+         "default" : "Non Spécifié"
+      },
+
+     "categories" : {
+       "nightly" : "par nuit",
+      "monthly" : "par mois",
+      "for sale" : "À Vendre",
+      "placeholder" : "Non Spécifié"
+     }
+
+      
+    }
+}

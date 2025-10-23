@@ -1,0 +1,124 @@
+{
+    "buttons" : {
+        "details" : "Détails",
+        "images" : "Images",
+        "sort" : "Trier",
+        "previous" : "Précédent",
+        "next" : "Suivant",
+        "filter" : "Filtrer",
+        "clearAll" : "Tout Effacer",
+        "createListing" : "Créer une Annonce",
+        "updateListing" : "Modifier l'Annonce",
+        "updateProfile" : "Modifier le Profil",
+        "onboarding":"Découverte",
+        "submit" : "Soumettre",
+        "refuse" : "Non Merci",
+        "google" : "Google",
+        "facebook" : "Facebook",
+        "logIn" : "Se Connecter",
+        "createAcc" : "Créer un Compte",
+        "verifyEmail" : "Vérifier l'Email",
+        "verifying" : "Vérification",
+        "sendResetLink" : "Envoyer le Lien",
+        "resetPass" : "Réinitialiser",
+        "goback": "Retour",
+        "uploading" : "Téléchargement",
+        "follow" : "Suivre",
+        "message" : "Message",
+        "unfollow": "Se désabonner",
+        "following": "Suivi...",
+        "unfollowing": "Désabonnement..."
+    },
+
+      "placeholders" : {
+        "typeSomething" : "Tapez Quelque Chose",
+        "search" : "Rechercher",
+        "title" : "Saisissez le Titre de Votre Annonce",
+        "description" : "Saisissez Votre Description Détaillée",
+        "location" : "Saisissez l'Emplacement de Votre Bien",
+        "rentalType" : "Choisissez Votre Type",
+        "searchUser" : "Rechercher un Utilisateur",
+        "feedback" : "Votre Avis Nous Importe",
+        "address" : "Ville, Région, Pays, Code Postal",
+        "bio" : "Votre Biographie"
+        
+     },
+      "labels" : {
+        "password" : "Mot de Passe",
+        "confirmPass" : "Confirmer le Mot de Passe",
+        "firstName" : "Prénom",
+        "lastName" : "Nom de Famille",
+        "email" : "Email",
+        "enterEmail" : "Saisissez Votre Email",
+        "phoneNumber" : "Numéro de Téléphone",
+        "address" : "Adresse",
+        "bio" : "Biographie",
+        "reviews_one": "{{count}} avis",
+        "reviews_other": "{{count}} avis",
+        "gender" : {
+            "label" : "Genre",
+            "placeholder" : "Choisissez Votre Genre",
+            "options" : {
+             "male" : "Homme",
+             "female" : "Femme"
+            }
+        },
+          "currency": {
+      "label": "Devise",
+      "placeholder": "Choisissez votre devise",
+      
+    "dollar": { "code": "USD", "symbol": "$", "name": "Dollar américain" },
+    "euro": { "code": "EUR", "symbol": "€", "name": "Euro" },
+    "pound": { "code": "GBP", "symbol": "£", "name": "Livre sterling britannique" },
+    "yen": { "code": "JPY", "symbol": "¥", "name": "Yen japonais" },
+    "cad": { "code": "CAD", "symbol": "C$", "name": "Dollar canadien" },
+    "aud": { "code": "AUD", "symbol": "A$", "name": "Dollar australien" },
+    "chf": { "code": "CHF", "symbol": "CHF", "name": "Franc suisse" },
+    "yuan": { "code": "CNY", "symbol": "¥", "name": "Yuan chinois" },
+    "sar": { "code": "SAR", "symbol": "SAR", "name": "Riyal saoudien" },
+    "aed": { "code": "AED", "symbol": "AED", "name": "Dirham des Émirats arabes unis" },
+    "egp": { "code": "EGP", "symbol": "EGP", "name": "Livre égyptienne" },
+    "mad": { "code": "MAD", "symbol": "MAD", "name": "Dirham marocain" },
+    "brl": { "code": "BRL", "symbol": "R$", "name": "Réal brésilien" },
+    "inr": { "code": "INR", "symbol": "₹", "name": "Roupie indienne" },
+    "try": { "code": "TRY", "symbol": "₺", "name": "Livre turque" },
+    "zar": { "code": "ZAR", "symbol": "R", "name": "Rand sud-africain" },
+    "sgd": { "code": "SGD", "symbol": "S$", "name": "Dollar de Singapour" },
+    "hkd": { "code": "HKD", "symbol": "HK$", "name": "Dollar de Hong Kong" }
+    },
+        "role" : {
+            "label" : "Rôle",
+            "placeholder" : "Choisissez Votre Rôle",
+            "options" : {
+             "tenant" : "Locataire",
+             "seller" : "Vendeur",
+             "homeowner" : "Propriétaire"
+            }
+        },
+        "title" : "Titre",
+        "description" : "Description",
+        "location" : "Emplacement",
+        "rentalType" : "Type de Location",
+        "uploadImages" : {
+            "title" : "Télécharger des Images",
+            "label" : "Cliquez Ici pour Télécharger des Images, ou Glissez-Déposez",
+            "gallery" : "Galerie"
+        },
+        "amenities" : {
+            "text" : "Équipements",
+            "subtext" : "Choisissez les Équipements Dont Vous Disposez"
+        },
+        "specs" : {
+            "text" : "Caractéristiques du Bien",
+            "subtext" : "Renseignez les Données du Bien",
+            "beds" : "Lits",
+            "bathrooms" : "Salles de Bain",
+            "bedrooms" : "Chambres",
+            "size" : "Superficie (m²)",
+            "floor" : "Étage",
+            "rentalPrice" : "Prix de Location"
+        },
+        "price" : "Prix"
+
+     }
+}

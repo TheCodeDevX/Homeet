@@ -1,0 +1,9 @@
+{
+    "links" : {
+        "HOME" : "Home",
+        "POST_LISTING" : "Post Listing",
+        "NOTIFICATION" : "Notification",
+        "CHAT" : "Chat",
+        "DASHBOARD" : "Dashboard"
+    }
+}

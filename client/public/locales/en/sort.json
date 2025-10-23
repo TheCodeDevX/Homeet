@@ -1,0 +1,26 @@
+
+  {
+    "price" : {
+        "label" : "Price",
+        "options" : {
+            "cheap" : "Cheap",
+            "exp" : "expensive"
+        }
+    },
+    "rating" : {
+        "label" : "Rating",
+        "options" : {
+            "high" : "High",
+            "low" : "Low"
+        }
+    },
+    "date" : {
+        "label" : "Date",
+        "options" : {
+            "new" : "Newest",
+            "old" : "oldest"
+        }
+    },
+    "apply" : "Apply",
+    "cancel" : "Cancel"
+  }

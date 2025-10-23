@@ -1,0 +1,6 @@
+{
+    "status" :  {
+        "online" : "En ligne",
+        "offline" : "Hors ligne"
+    }
+}

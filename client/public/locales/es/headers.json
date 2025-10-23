@@ -1,0 +1,19 @@
+{
+    "postListing" : {
+        "titles" : {
+        "header" : "Crear Nuevo Anuncio",
+        "subheader" : "Publica Tu Propiedad y Encuentra Inquilinos Rápidamente"
+    }
+    },
+
+    "updateListing" : {
+    "titles" : {
+        "header" : "Modificar Anuncio",
+        "subheader" : "Actualiza la Información de Tu Anuncio"
+    }
+    },
+    
+     "chat" : {
+        "title" : "Conversaciones"
+    }
+}

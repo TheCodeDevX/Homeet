@@ -1,0 +1,52 @@
+
+ {
+    "content" : {
+        "title" : "Filtration",
+        "filters" : {
+            "price" : {
+                "name" : "Price",
+                "content" : {
+                   "maxPrice" : "Max Price",
+                   "minPrice" : "Min Price" 
+                } 
+            },
+            "category" : {
+                "name" : "Category",
+                "content" : {
+                    "label" : "Rental type",
+                    "options" : {
+                        "default" : "Pick Your Rental Type",
+                        "nightly" : "Nightly",
+                        "monthly" : "Monthly",
+                        "forSale" : "For Sale"
+                    }
+                }
+            },
+            "location" : {
+                "name" : "Location",
+                "content" : {
+                   "placeholder":"City, Neighborhood"
+                }
+            },
+            "amenities" : {
+                "name" : "Amenities",
+                "facilities" : 
+              {
+              "WIFI": "Wi-Fi",
+             "FURNISHED": "Furnished",
+             "PARKING": "Parking",
+             "AIR_CONDITIONING": "Air Conditioning",
+             "KITCHEN_ACCESS": "Kitchen Access",
+             "PET_FRIENDLY": "Pet-Friendly",
+            "WASHER_DRYER": "Washer / Dryer",
+           "BALCONY": "Balcony",
+           "GARDEN": "Garden",
+           "GYM": "Gym",
+          "FIREPLACE": "Fireplace",
+          "POOL": "Pool"
+}
+
+            }
+        }
+    }
+ }

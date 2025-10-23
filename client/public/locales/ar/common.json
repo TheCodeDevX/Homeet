@@ -1,0 +1,156 @@
+{
+    "card" : {
+         "facilities" : 
+              {
+            "Wi-Fi": "واي فاي",
+           "Furnished": "مفروش",
+           "Parking": "موقف سيارات",
+           "Air Conditioning": "تكييف",
+           "Kitchen Access": "مطبخ متاح",
+           "Pet-Friendly": "يسمح بالحيوانات الأليفة",
+          "Washer / Dryer": "غسالة / مجفف",
+          "Balcony": "شرفة",
+         "Garden": "حديقة",
+         "Gym": "صالة رياضية",
+         "Fireplace": "مدفأة",
+         "Pool": "مسبح"
+      },
+
+      "roles" : {
+         "seller" : "بائع",
+         "tenant" : "مستأجر",
+         "homeowner" : "مالك العقار",
+         "default" : "غير محدد"
+      },
+
+     "categories" : {
+       "nightly" : "في الليلة",
+      "monthly" : "في الشهر",
+      "for sale" : "للبيع",
+      "placeholder" : "غير محدد"
+     }
+    },
+
+    "buttons" : {
+        "details" : "التفاصيل",
+        "images" : "الصور",
+        "sort" : "ترتيب",
+        "previous" : "السابق",
+        "next" : "التالي",
+        "filter" : "تصفية",
+        "clearAll" : "مسح الكل",
+        "createListing" : "إنشاء إعلان",
+        "updateListing" : "تحديث الإعلان",
+        "updateProfile" : "تحديث الملف الشخصي",
+        "onboarding":"البداية",
+        "submit" : "إرسال",
+        "refuse" : "لا شكراً",
+        "google" : "جوجل",
+        "facebook" : "فيسبوك",
+        "logIn" : "تسجيل الدخول",
+        "createAcc" : "إنشاء حساب",
+        "verifyEmail" : "تأكيد البريد الإلكتروني",
+        "verifying" : "جاري التحقق",
+        "sendResetLink" : "إرسال رابط إعادة التعيين",
+        "resetPass" : "إعادة تعيين كلمة المرور",
+        "goback": "العودة",
+        "uploading" : "جاري الرفع",
+        "follow" : "متابعة",
+        "unfollow": "إلغاء المتابعة",
+        "following": "تابع...",
+        "unfollowing": "إلغاء المتابعة...",
+        "message" : "رسالة"
+    },
+
+      "placeholders" : {
+        "typeSomething" : "اكتب شيئاً",
+        "search" : "البحث",
+        "title" : "أدخل عنوان الإعلان",
+        "description" : "أدخل الوصف التفصيلي",
+        "location" : "أدخل موقع العقار",
+        "rentalType" : "اختر نوع الإيجار",
+        "searchUser" : "البحث عن مستخدم",
+        "feedback" : "رأيك يهمنا",
+        "address" : "المدينة، البلد، الرمز البريدي",
+        "bio" : "السيرة الذاتية"
+        
+     },
+      "labels" : {
+        "password" : "كلمة المرور",
+        "confirmPass" : "تأكيد كلمة المرور",
+        "firstName" : "الاسم الأول",
+        "lastName" : "اسم العائلة",
+        "email" : "البريد الإلكتروني",
+        "enterEmail" : "أدخل بريدك الإلكتروني",
+        "phoneNumber" : "رقم الهاتف",
+        "address" : "العنوان",
+        "bio" : "السيرة الذاتية",
+         "reviews_one": "{{count}} تقييم",
+         "reviews" : "{{count}} تقييمات",
+        "gender" : {
+            "label" : "الجنس",
+            "placeholder" : "اختر جنسك",
+            "options" : {
+             "male" : "ذكر",
+             "female" : "أنثى"
+            }
+        },
+          "currency": {
+      "label": "العملة",
+      "placeholder": "اختر عملتك",
+     
+        "dollar": { "code": "USD", "symbol": "$", "name": "الدولار الأمريكي" },
+        "euro": { "code": "EUR", "symbol": "€", "name": "اليورو" },
+        "pound": { "code": "GBP", "symbol": "£", "name": "الجنيه الإسترليني البريطاني" },
+        "yen": { "code": "JPY", "symbol": "¥", "name": "الين الياباني" },
+        "cad": { "code": "CAD", "symbol": "C$", "name": "الدولار الكندي" },
+        "aud": { "code": "AUD", "symbol": "A$", "name": "الدولار الأسترالي" },
+        "chf": { "code": "CHF", "symbol": "CHF", "name": "الفرنك السويسري" },
+        "yuan": { "code": "CNY", "symbol": "¥", "name": "اليوان الصيني" },
+        "sar": { "code": "SAR", "symbol": "SAR", "name": "الريال السعودي" },
+        "aed": { "code": "AED", "symbol": "AED", "name": "درهم الإمارات العربية المتحدة" },
+        "egp": { "code": "EGP", "symbol": "EGP", "name": "الجنيه المصري" },
+        "mad": { "code": "MAD", "symbol": "MAD", "name": "الدرهم المغربي" },
+        "brl": { "code": "BRL", "symbol": "R$", "name": "الريال البرازيلي" },
+        "inr": { "code": "INR", "symbol": "₹", "name": "الروبية الهندية" },
+        "try": { "code": "TRY", "symbol": "₺", "name": "الليرة التركية" },
+        "zar": { "code": "ZAR", "symbol": "R", "name": "الراند الجنوب أفريقي" },
+        "sgd": { "code": "SGD", "symbol": "S$", "name": "دولار سنغافورة" },
+        "hkd": { "code": "HKD", "symbol": "HK$", "name": "دولار هونغ كونغ" }
+    },
+        "role" : {
+            "label" : "الدور",
+            "placeholder" : "اختر دورك",
+            "options" : {
+             "tenant" : "مستأجر",
+             "seller" : "بائع",
+             "homeowner" : "مالك العقار"
+            }
+        },
+        "title" : "العنوان",
+        "description" : "الوصف",
+        "location" : "الموقع",
+        "rentalType" : "نوع الإيجار",
+        "uploadImages" : {
+            "title" : "رفع الصور",
+            "label" : "انقر هنا لرفع الصور، أو اسحبها وأفلتها",
+            "gallery" : "المعرض"
+        },
+        "amenities" : {
+            "text" : "المرافق",
+            "subtext" : "اختر المرافق المتوفرة لديك"
+        },
+        "specs" : {
+            "text" : "مواصفات العقار",
+            "subtext" : "أدخل أرقام العقار",
+            "beds" : "أسرّة",
+            "bathrooms" : "حمامات",
+            "bedrooms" : "غرف نوم",
+            "size" : "المساحة (م²)",
+            "floor" : "الطابق",
+            "rentalPrice" : "سعر الإيجار"
+        },
+        "price" : "السعر"
+
+     }
+ }

@@ -1,0 +1,9 @@
+{
+    "links" : {
+        "HOME" : "Inicio",
+        "POST_LISTING" : "Publicar",
+        "NOTIFICATION" : "Notifs",
+        "CHAT" : "Chat",
+        "DASHBOARD" : "Panel"
+    }
+}

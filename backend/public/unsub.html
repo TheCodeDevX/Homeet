@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unsubscription</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; line-height: 1.5; color: #333; background-color: #eee; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; border-radius: 10px 10px 0 0; padding: 20px; background: linear-gradient(to left, #7037AD, #5904B4);">
+    <h1 style="color: #fff; margin: 0;">Unsubscription Confirmed</h1>
+  </div>
+
+  <div style="background-color: #ffffff; padding: 10px 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="font-size: 18px; opacity: 0.9;">Hello <span style="color: #5904B4;">${userName}</span>,</p>
+    
+    <p style="font-size: 18px; opacity: 0.9;">You’ve been successfully unsubscribed.</p>
+    
+    <p style="font-size: 18px; opacity: 0.9;">You will no longer receive updates, offers, or emails from us.</p>
+    
+    <p style="font-size: 18px; opacity: 0.9;">We’re sorry to see you go, but we truly respect your decision and appreciate the time you spent with us.</p>
+
+    <p style="font-size: 18px; opacity: 0.9;">
+      If you change your mind and wish to stay connected, just click the button below:
+    </p>
+
+    <p style="text-align: center; margin: 20px 0;">
+      <a href="http://localhost:8000/api/subscription/subscribe?token=${token}" style="display: inline-block; text-decoration: none; color: white; font-size: 16px; font-weight: bold; background: linear-gradient(to left,#7037AD, #5904B4); padding: 12px 24px; border-radius: 4px;">
+        I'd Rather Stay
+      </a>
+    </p>
+
+    <p style="font-size: 16px;">
+      Have any questions? Reach out to us at 
+      <a href="mailto:ContactUs@demo.com" style="color: #5904B4; text-decoration: none;">ContactUs@demo.com</a>.
+    </p>
+  </div>
+</body>
+</html>

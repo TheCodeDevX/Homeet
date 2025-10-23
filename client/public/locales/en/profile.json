@@ -1,0 +1,11 @@
+
+ {
+    "title" :"Profile",
+    "subtitle" : "Your Profile Information",
+    "info" : "Click on the camera icon to update your profile picture",
+
+    "onboarding" : {
+    "title" :"Complete Your Profile",
+    "subtitle" : "Please Enter All The Required Information"
+    }
+ }

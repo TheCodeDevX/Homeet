@@ -1,0 +1,193 @@
+import {motion} from 'framer-motion'
+import Input from '../components/Input'
+import {Eye, EyeClosed, Loader, Lock, Mail, Shield, User} from 'lucide-react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
+import Checkbox from '../components/Checkbox'
+import Button from '../components/Button'
+import AuthButton from '../components/AuthButton'
+import {FaFacebookF, FaGoogle} from 'react-icons/fa'
+import { useAuthStore, type UserData } from '../store/auhStore'
+import Light from '../components/Light'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation, Trans } from 'react-i18next'
+import TinyHouse from '../assets/svg/tinyHouse'
+import { lightThemes } from '../constants'
+import { useThemeStore } from '../store/themeStore'
+
+const SignupPage = () => {
+  const {t} = useTranslation();
+  const {signup, isLoading, error} = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate()
+ 
+
+  const [formState, setFormState] = useState<Pick<UserData, "firstName" | "lastName" | "email" | "password">>({
+    firstName : "",
+    lastName :"",
+    email : "",
+    password : "",
+  })
+
+  const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const {value, name} = e.target;
+    setFormState((prev) => ({...prev, [name] : value}))
+  }
+
+  
+  const handleSubmit = async(e:FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await signup(formState);
+      navigate("/verify-email", {replace:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const google = () => window.open("http://localhost:8000/api/auth/google", "_self")
+  const facebook = () => window.open("http://localhost:8000/api/auth/facebook", "_self")
+  const {theme} = useThemeStore()
+  return (
+    <motion.div
+    initial={{opacity:0, y:20}}
+    animate={{y:0, opacity:1}}
+    transition={{duration:0.5}}
+     className='relative max-w-6xl mx-auto backdrop-filter backdrop-blur-xl rounded-[40px]
+    bg-base-300 flex flex-col lg:flex-row justify-between overflow-hidden
+     p-6 border border-base-content/20 shadow-xl'>
+       <Light color='bg-base-content/40' top='top-[80%]' left='left-[80%]'/>
+       <Light color='bg-base-content/40' top='top-[80%]' left='right-[80%]'/>
+          {/* Left Side */}
+          <div className={`hidden  
+         w-full lg:w-1/2 lg:flex items-center justify-center flex-col bg-gradient-to-b
+          ${lightThemes.includes(theme) ? "from-primary/60 to-primary/50 border-base-content/30 " 
+       : "from-primary/50 ring-1 ring-base-content/50 ring-offset-2 ring-offset-base-300 to-secondary/50 "} 
+           rounded-[40px]`}>
+       
+            <div className="max-w-md p-8 flex flex-col text-center items-center justify-center">
+                <div className="relative aspect-square  max-w-sm mx-auto">
+                    <div className="flex w-full h-full items-center justify-center">
+                         <TinyHouse/>
+                    </div>
+                </div>
+                <div className='mt-2'>
+                 <h1 className='text-3xl font-bold text-base-content'>
+                  {t("login.imageTitle", {ns:"auth"})}
+                 </h1>
+                 <h2 className='text-lg font-normal text-base-content/80'>
+                   {t("login.imageSubtitle", {ns:"auth"})}
+                 </h2>
+               </div>
+            </div>
+        </div>
+
+        {/* Right Side */}
+         <div className='w-full lg:w-1/2 flex flex-col lg:items-start lg:px-20 px-10 max-lg:py-10 justify-center'>
+         <div className='mb-2'>
+            <h1 className='text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text
+            from-base-content from-0% to-base-content/90 to-100%'>
+                {t("signup.title", {ns:"auth"})}
+            </h1>
+
+            <p className='text-base-content/60 '>
+            <Trans
+            i18nKey="signup.q"
+            ns='auth'
+            components={{ a : <a href='/login' className='text-primary font-semibold 
+            hover:underline'/> }}
+            />
+            </p>
+         </div>
+         <form onSubmit={handleSubmit}>
+           <div className="space-y-3 mt-4">
+             <div className="w-full flex gap-x-2">
+
+              <div className="w-full">
+                <label>
+                  <span className='label-text text-base-content/80'>
+                    {t("labels.firstName", {ns:"common"})}
+                  </span>
+                  <Input autoComplete='first-name' type="text" name="firstName" value={formState.firstName}
+                  onChange={handleChange} 
+                  placeholder={t("labels.firstName", {ns:"common"})} icon={User} required />
+               </label>
+              </div>
+              
+
+              <div className="w-full">
+                <label>
+                  <span className='label-text text-base-content/80'>
+                    {t("labels.lastName", {ns:"common"})}
+                  </span>
+                   <Input autoComplete='last-name' type="text" name="lastName" value={formState.lastName} onChange={handleChange}
+                    placeholder={t("labels.lastName", {ns:"common"})} icon={User} required/>
+               </label>
+              </div>
+              
+             </div>
+             
+              <div className="w-full">
+                <label>
+                  <span className='label-text text-base-content/80'>
+                    {t("labels.email", {ns:"common"})}
+                  </span>
+                  <Input autoComplete='email' type="email" name="email"
+                   placeholder= {t("labels.email", {ns:"common"})}
+                  value={formState.email} onChange={handleChange} icon={Mail} required />
+               </label>
+              </div>
+
+              
+            <div className="w-full">
+                <label>
+                  <span className={`label-text text-base-content/80`}>
+                     {t("labels.password", {ns:"common"})}
+                  </span>
+                 <Input autoComplete='current-password' type={showPassword ? "text" : "password"} name="password"
+                  value={formState.password} onChange={handleChange} onClickEye={() => setShowPassword(prev => !prev)}
+                  placeholder= {t("labels.password", {ns:"common"})}
+                  eyeIcon={showPassword ? Eye : EyeClosed} icon={Lock} required />
+
+               </label>
+                <span className="text-xs text-primary/80 flex items-center gap-1 mt-2"><Shield size={12}/>
+                 {t("signup.info", {ns:"auth"})}
+                </span>
+              </div>
+
+              <div className="w-full">
+              <label className='cursor-pointer flex items-center w-full group gap-1'>
+                 <Checkbox/>
+                <p className='text-xs text-base-content/80 leading-tight'>{t("signup.pact", {ns:"auth"})}
+                 
+                </p>
+                <p></p>
+              </label>
+              </div>
+              <div className="w-full">
+                <Button >{isLoading ? <Loader className='size-5 animate-spin text-center mx-auto' /> :
+                 t("buttons.createAcc", {ns:"common"}) }</Button>
+              </div>
+              <div className='flex items-center gap-2 '>
+                <span className='h-px flex-1 bg-base-content/40'/>
+                <p className='text-xs whitespace-nowrap text-center text-base-content/50 relative bottom-0.5'>
+                 {t("signup.or", {ns:"auth"})}
+                </p>
+                <span className='h-px flex-1 bg-base-content/40'/>
+              </div>
+            
+           </div>
+         </form>
+
+           <div className="flex items-center gap-4 w-full mt-3">
+               <AuthButton googleAuth={google} provider={t("buttons.google", {ns:"common"})} icon={FaGoogle}/>
+               <AuthButton googleAuth={facebook}  provider={t("buttons.facebook", {ns:"common"})} icon={FaFacebookF}/>
+          </div>
+          
+        </div>
+
+     
+    </motion.div>
+  )
+}
+
+export default SignupPage

@@ -1,0 +1,19 @@
+{
+    "postListing" : {
+        "titles" : {
+        "header" : "إنشاء إعلان جديد",
+        "subheader" : "اعرض عقارك واعثر على مستأجرين بسرعة"
+    }
+    },
+
+    "updateListing" : {
+    "titles" : {
+        "header" : "تحديث الإعلان",
+        "subheader" : "حدّث معلومات إعلانك"
+    }
+    },
+    
+     "chat" : {
+        "title" : "المحادثات"
+    }
+ }

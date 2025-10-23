@@ -1,0 +1,51 @@
+{
+    "content" : {
+        "title" : "التصفية",
+        "filters" : {
+            "price" : {
+                "name" : "السعر",
+                "content" : {
+                   "maxPrice" : "الحد الأقصى للسعر",
+                   "minPrice" : "الحد الأدنى للسعر" 
+                } 
+            },
+            "category" : {
+                "name" : "الفئة",
+                "content" : {
+                    "label" : "نوع الإيجار",
+                    "options" : {
+                        "default" : "اختر نوع الإيجار",
+                        "nightly" : "يومي",
+                        "monthly" : "شهري",
+                        "forSale" : "للبيع"
+                    }
+                }
+            },
+            "location" : {
+                "name" : "الموقع",
+                "content" : {
+                   "placeholder":"المدينة، الحي"
+                }
+            },
+            "amenities" : {
+                "name" : "المرافق",
+                "facilities" : 
+              {
+              "WIFI": "واي فاي",
+             "FURNISHED": "مفروش",
+             "PARKING": "موقف سيارات",
+             "AIR_CONDITIONING": "تكييف",
+             "KITCHEN_ACCESS": "مطبخ متاح",
+             "PET_FRIENDLY": "يسمح بالحيوانات الأليفة",
+            "WASHER_DRYER": "غسالة / مجفف",
+           "BALCONY": "شرفة",
+           "GARDEN": "حديقة",
+           "GYM": "صالة رياضية",
+          "FIREPLACE": "مدفأة",
+          "POOL": "مسبح"
+}
+
+            }
+        }
+    }
+ }

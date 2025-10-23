@@ -1,0 +1,37 @@
+
+
+ {
+    "card" : {
+         "facilities" : 
+              {
+            "Wi-Fi": "Wi-Fi",
+           "Furnished": "Furnished",
+           "Parking": "Parking",
+           "Air Conditioning": "Air Conditioning",
+           "Kitchen Access": "Kitchen Access",
+           "Pet-Friendly": "Pet-Friendly",
+          "Washer / Dryer": "Washer / Dryer",
+          "Balcony": "Balcony",
+         "Garden": "Garden",
+         "Gym": "Gym",
+         "Fireplace": "Fireplace",
+         "Pool": "Pool"
+      },
+
+      "roles" : {
+         "seller" : "Seller",
+         "tenant" : "Tenant",
+         "homeowner" : "Homeowner",
+         "default" : "Unspecified"
+      },
+
+     "categories" : {
+       "nightly" : "per night",
+      "monthly" : "per month",
+      "for sale" : "For Sale",
+      "placeholder" : "Unspecified"
+     }
+
+      
+    }
+ }

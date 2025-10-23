@@ -1,0 +1,11 @@
+
+ {
+    "tooltips" : {
+        "NAV" : "Navigation",
+        "CHANGE_THEME" : "Basculer le thème",
+        "CHANGE_LANG" : "Changer la langue",
+        "NOTIFS" : "Notifications",
+        "LOGOUT" : "Se déconnecter",
+        "PROFILE" : "Profil"
+    }
+}

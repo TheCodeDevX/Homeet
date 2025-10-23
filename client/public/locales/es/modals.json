@@ -1,0 +1,14 @@
+{
+    "logoutModal" : {
+        "logout" : "Cerrar Sesión",
+        "msg" : "¿Estás seguro de que quieres cerrar sesión?",
+        "actions" : {
+            "confirm" : "Confirmar",
+            "cancel" : "Cancelar"
+        }
+    },
+
+    "ratingModal" : {
+        "q" : "¿Cómo calificarías este anuncio?"
+    }
+}

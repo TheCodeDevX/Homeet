@@ -1,0 +1,127 @@
+{
+    "buttons" : { 
+        "details" : "Details",
+        "images" : "Images",
+        "sort" : "Sort",
+        "previous" : "Previous",
+        "next" : "Next",
+        "filter" : "Filter",
+        "clearAll" : "Clear All",
+        "createListing" : "Create Listing",
+        "updateListing" : "Update Listing",
+        "updateProfile" : "Update Profile",
+        "onboarding":"Onboarding",
+        "submit" : "Submit",
+        "refuse" : "No Thanks",
+        "google" : "Google",
+        "facebook" : "Facebook",
+        "logIn" : "Log In",
+        "createAcc" : "Create Account",
+        "verifyEmail" : "Verify Email",
+        "verifying" : "Verifying",
+        "sendResetLink" : "Send Reset Link",
+        "resetPass" : "Reset Password",
+        "goback": "Go Back",
+        "uploading" : "Uploading",
+        "follow" : "Follow",
+        "unfollow" : "Unfollow",
+        "following" : "following...",
+        "unfollowing" : "unfollowing...",
+        "message" : "Message"
+    },
+
+      "placeholders" : {
+        "typeSomething" : "Type Something",
+        "search" : "Search",
+        "title" : "Enter Your Listing Title",
+        "description" : "Enter Your Detailed Description",
+        "location" : "Enter Your Property's Location",
+        "rentalType" : "Pick Your Type",
+        "searchUser" : "Search User",
+        "feedback" : "Your Feedback Matters to Us",
+        "address" : "City, State, Country, ZIP",
+        "bio" : "Your Biography"
+        
+     },
+      "labels" : {
+        "password" : "Password",
+        "confirmPass" : "Confirm Password",
+        "firstName" : "First Name",
+        "lastName" : "Last Name",
+        "email" : "Email",
+        "enterEmail" : "Enter Your Email",
+        "phoneNumber" : "Phone Number",
+        "address" : "Address",
+        "bio" : "Bio",
+        "reviews_one" : "{{count}} review",
+        "reviews_other" : "{{count}} reviews",
+        "gender" : {
+            "label" : "Gender",
+            "placeholder" : "Pick Your Gender",
+            "options" : {
+             "male" : "Male",
+             "female" : "Female"
+            }
+        },
+
+         "currency" : {
+            "label" : "Currency",
+            "placeholder" : "Pick Your Currency",
+           
+
+        "dollar": { "code": "USD", "symbol": "$", "name": "US Dollar" },
+        "euro": { "code": "EUR", "symbol": "€", "name": "Euro" },
+        "pound": { "code": "GBP", "symbol": "£", "name": "British Pound Sterling" },
+        "yen": { "code": "JPY", "symbol": "¥", "name": "Japanese Yen" },
+        "cad": { "code": "CAD", "symbol": "C$", "name": "Canadian Dollar" },
+        "aud": { "code": "AUD", "symbol": "A$", "name": "Australian Dollar" },
+        "chf": { "code": "CHF", "symbol": "CHF", "name": "Swiss Franc" },
+        "yuan": { "code": "CNY", "symbol": "¥", "name": "Chinese Yuan" },
+        "sar": { "code": "SAR", "symbol": "SAR", "name": "Saudi Riyal" },
+        "aed": { "code": "AED", "symbol": "AED", "name": "UAE Dirham" },
+        "egp": { "code": "EGP", "symbol": "EGP", "name": "Egyptian Pound" },
+        "mad": { "code": "MAD", "symbol": "MAD", "name": "Moroccan Dirham" },
+        "brl": { "code": "BRL", "symbol": "R$", "name": "Brazilian Real" },
+        "inr": { "code": "INR", "symbol": "₹", "name": "Indian Rupee" },
+        "try": { "code": "TRY", "symbol": "₺", "name": "Turkish Lira" },
+        "zar": { "code": "ZAR", "symbol": "R", "name": "South African Rand" },
+        "sgd": { "code": "SGD", "symbol": "S$", "name": "Singapore Dollar" },
+        "hkd": { "code": "HKD", "symbol": "HK$", "name": "Hong Kong Dollar" }
+
+        },
+        "role" : {
+            "label" : "Role",
+            "placeholder" : "Pick Your Role",
+            "options" : {
+             "tenant" : "Tenant",
+             "seller" : "Seller",
+             "homeowner" : "Homeowner"
+            }
+        },
+        "title" : "Title",
+        "description" : "Description",
+        "location" : "Location",
+        "rentalType" : "Rental Type",
+        "uploadImages" : {
+            "title" : "Upload Images",
+            "label" : "Click Here to Upload Images, or Drag & Drop Them",
+            "gallery" : "Gallery"
+        },
+        "amenities" : {
+            "text" : "Amenities",
+            "subtext" : "Choose the Amenities That You Have"
+        },
+        "specs" : {
+            "text" : "Property Specs",
+            "subtext" : "Enter Property Numbers",
+            "beds" : "Beds",
+            "bathrooms" : "Bathrooms",
+            "bedrooms" : "Bedrooms",
+            "size" : "Size (m²)",
+            "floor" : "Floor",
+            "rentalPrice" : "Rental Price"
+        },
+        "price" : "Price"
+
+     }
+ }

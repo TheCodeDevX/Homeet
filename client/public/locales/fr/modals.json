@@ -1,0 +1,14 @@
+{
+    "logoutModal" : {
+        "logout" : "Déconnexion",
+        "msg" : "Êtes-vous sûr de vouloir vous déconnecter ?",
+        "actions" : {
+            "confirm" : "Confirmer",
+            "cancel" : "Annuler"
+        }
+    },
+
+    "ratingModal" : {
+        "q" : "Comment évalueriez-vous cette annonce ?"
+    }
+}
