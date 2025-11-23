@@ -5,6 +5,7 @@
         "CHANGE_LANG" : "Cambiar idioma",
         "NOTIFS" : "Notificaciones",
         "LOGOUT" : "Cerrar sesión",
-        "PROFILE" : "Perfil"
+        "PROFILE" : "Perfil",
+        "VIEW_PROFILE": "Ver perfil"
     }
 }

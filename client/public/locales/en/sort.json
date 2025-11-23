@@ -4,7 +4,7 @@
         "label" : "Price",
         "options" : {
             "cheap" : "Cheap",
-            "exp" : "expensive"
+            "exp" : "Expensive"
         }
     },
     "rating" : {
@@ -18,9 +18,10 @@
         "label" : "Date",
         "options" : {
             "new" : "Newest",
-            "old" : "oldest"
+            "old" : "Oldest"
         }
     },
+    "default" : "None",
     "apply" : "Apply",
     "cancel" : "Cancel"
   }

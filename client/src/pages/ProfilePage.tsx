@@ -8,6 +8,7 @@ import avatar from '../assets/avatar.png'
 import { useTranslation } from "react-i18next"
 import e from "cors"
 import toast from "react-hot-toast"
+import {parsePhoneNumber} from 'react-phone-number-input'
 
 
  
@@ -27,7 +28,7 @@ import toast from "react-hot-toast"
              bio:user?.bio ?? "",
              profilePic: user?.profilePic ?? avatar,
              address: user?.address ?? "",
-             phoneNumber: user?.phoneNumber ?? "",
+             phoneNumber: parsePhoneNumber(user?.phoneNumber ?? "")?.format("E.164") ?? "",
             email: user?.email ?? "",
             role: user?.role ?? "",
             currency :  user?.currency ?? ""

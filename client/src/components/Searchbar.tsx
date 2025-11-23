@@ -18,6 +18,7 @@ import clsx from "clsx";
     const {getListings} = useListingStore()
     const {setFilters, sort, setSort} = useFiltration()
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const [isEmpty, setIsEmpty] = useState(false)
     useEffect(() => {
       function handleClickOutside(e:MouseEvent){
       if(containerRef.current && !containerRef.current.contains(e.target as Node)){
@@ -58,6 +59,13 @@ import clsx from "clsx";
   //   }
   //  }, [])
 
+ const isNone = !sort.date && !sort.price && !sort.rating 
+  
+  
+  const handleSorting = () => {
+   setFilters(prev => ({...prev, shouldSort: prev.shouldSort || isNone ? false : true}))
+   !filters.shouldSort && setIsEmpty(isNone); 
+  }
 
   // translations :
    const {t} = useTranslation()
@@ -102,17 +110,21 @@ import clsx from "clsx";
         <FaSort/>
      </motion.button>
 
-     <div className={`absolute top-full mt-1 ${lang === "ar" ? " left-0" : "right-0"} overflow-hidden z-[60]
+     <div className={`absolute top-full mt-1  ${lang === "ar" ? " left-0" : "right-0"} overflow-hidden z-[60]
       rounded-xl backdrop-filter backdrop-blur-3xl`}>
 
-        <div  className={`p-4 bg-base-300 border border-base-content/20 rounded-xl duration-150 linear space-y-4 
+        <div  className={`p-4  bg-base-300 border border-base-content/20 rounded-xl duration-150 linear space-y-6 
               ${isOpen ? "visible max-h-fit" : "max-h-0 border-0 z-0 overflow-hidden invisible py-0"}
             `}>
             
         <div className="flex flex-col gap-2">
              <span>{t("price.label", {ns:"sort"})}</span>
-             <select value={sort.price} onChange={(e) => setSort(prev => ({...prev, price:e.target.value}))}
-              className='select select-primary select-sm bg-base-100 text-base-content border '>
+             <select value={sort.price} 
+             onMouseDown={() => setIsEmpty(false)}
+              onChange={(e) => setSort(prev => ({...prev, price:e.target.value}))}
+              className={`select ${isEmpty ? "select-error text-error" : "select-primary text-base-content"}
+               select-sm bg-base-100  border duration-300 transition-colors ease-in-out`}>
+              <option value="">{t("default", {ns:"sort"})}</option>  
               <option value="cheap">{t("price.options.cheap", {ns:"sort"})}</option>
               <option value="expensive">{t("price.options.exp", {ns:"sort"})}</option>
              </select>
@@ -120,23 +132,30 @@ import clsx from "clsx";
 
          <div className="flex flex-col gap-2">
              <span>{t("rating.label", {ns:"sort"})}</span>
-             <select className='select select-primary select-sm bg-base-100 text-base-content border '>
-              <option value="">{t("rating.options.high", {ns:"sort"})}</option>
-              <option value="">{t("rating.options.low", {ns:"sort"})}</option>
+             <select value={sort.rating} 
+             onMouseDown={() => setIsEmpty(false)}
+             onChange={(e) => setSort(prev => ({...prev, rating:e.target.value}))}
+              className={`select ${isEmpty ? "select-error text-error" : "select-primary text-base-content"}
+               select-sm bg-base-100 border duration-300 transition-colors ease-in-out`}>
+              <option value="">{t("default", {ns:"sort"})}</option>  
+              <option value="high">{t("rating.options.high", {ns:"sort"})}</option>
+              <option value="low">{t("rating.options.low", {ns:"sort"})}</option>
              </select>
         </div>
 
          <div className="flex flex-col gap-2">
              <span>{t("date.label", {ns:"sort"})}</span>
-             <select className='select select-primary select-sm bg-base-100 text-base-content border '>
-              <option value="">{t("date.options.old", {ns:"sort"})}</option>
-              <option value="">{t("date.options.new", {ns:"sort"})}</option>
+             <select value={sort.date} onChange={(e) => setSort((prev) => ({...prev, date : e.target.value}))}
+              onMouseDown={() => setIsEmpty(false)}
+              className={`select ${isEmpty ? "select-error text-error" : "select-primary text-base-content"}
+               select-sm bg-base-100 border duration-300 transition-colors ease-in-out`}>
+              <option value="">{t("default", {ns:"sort"})}</option>  
+              <option value="old">{t("date.options.old", {ns:"sort"})}</option>
+              <option value="new">{t("date.options.new", {ns:"sort"})}</option>
              </select>
         </div>
          <button className={`btn w-full ${filters.shouldSort ? "btn-error text-error-content" : "btn-primary text-primary-content"}`}
-          onClick={() => {setFilters(prev => ({...prev, shouldSort:prev.shouldSort ? false : true
-          }));
-          }}>
+          onClick={handleSorting}>
             {filters.shouldSort ? t("cancel", {ns:"sort"}) : t("apply", {ns:"sort"})}
           </button>
          </div>

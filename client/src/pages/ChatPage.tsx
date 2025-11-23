@@ -14,12 +14,17 @@ import i18n from '../config/reacti18next'
  const ChatPage = () => {
    const {users, getUsers, selectedUser} = useMessageStore();
    const [query, setQuery] = useState("")
-  useEffect(() => {
-    getUsers();
-  }, [getUsers])
+   const [isOnBoarded, setIsOnBoarded] = useState(true)
+ 
  
 
-  const filteredSidebarUsers : UserData[] = users.filter(user => user.firstName.toLowerCase().includes(query.toLowerCase()))
+  const filteredSidebarUsers : UserData[] =
+   users.filter(user => {
+    return user.firstName.toLowerCase().includes(query.toLowerCase())
+ })
+
+
+ 
  
    const {t} = useTranslation()
    const lang = i18n.language
@@ -29,9 +34,9 @@ import i18n from '../config/reacti18next'
       animate={{y:0, opacity:1}}
       transition={{duration:0.5}}
 
-      className="relative overflow-hidden p-2 sm:p-4 sm:mt-24 mt-12 "
+      className="relative overflow-hidden p-2 sm:p-4 sm:mt-24 mt-12"
     >
-         <div className="relative max-w-5xl w-full 
+         <div className="relative max-w-5xl w-full max-xs:max-w-sm max-sm:max-w-md
           mx-auto bg-base-200 border border-base-content/20 rounded-xl overflow-hidden shadow-lg ">
 
     <div className={` flex p-4 md:hidden flex-col ${selectedUser ? "hidden" : "max-md:flex"}`}>
@@ -48,9 +53,9 @@ import i18n from '../config/reacti18next'
        </div>
 
            <div className="w-40 max-md:w-full">
-            <ChatSidebar filteredUsers={filteredSidebarUsers}/>
+            <ChatSidebar  filteredUsers={filteredSidebarUsers}/>
            </div>
-           <div className={lang === "ar" ? "mr-48 max-md:mr-0" : "ml-48 max-md:ml-0 "}>
+           <div className={`${lang === "ar" ? "mr-48 max-md:mr-0" : "ml-48 max-md:ml-0 "}`}>
              {selectedUser && <ChatHeader/>}
             <ChatContainer/>
              <ChatInput/>

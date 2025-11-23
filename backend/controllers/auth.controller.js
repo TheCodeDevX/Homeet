@@ -10,6 +10,7 @@ import crypto from 'crypto'
 import bcrypt from 'bcryptjs';
 import fetch from 'node-fetch'
 import { genRefreshToken } from '../lib/generateRefreshToken.js';
+import { connectDB } from '../config/db.js';
 
 // @desc   Register a new user 
 // @route  POST /api/auth/signup
@@ -307,6 +308,19 @@ export const profilePic = async(req, res, next) => {
    }
 }
 
+// @desc   Warming up the server for an auth user
+// @route  GET /api/auth/ping
+// @access Private
+
+export const warmUp = async(req, res, next) => {
+ try {
+   const conn = await User.exists({email : "user@example.com"})
+   res.status(200).json(conn)
+   console.log("The server is warmed up now!", conn)
+ } catch (error) {
+   res.status(503).json("The server is unavailable now, please try again later after being warmed up!")
+ }
+}
 
 
 // @desc   Handle unauthorized user
@@ -341,7 +355,7 @@ export const googleCallback = asyncHandler(async(req, res, next) => {
     if(err || !user) return res.redirect("http://localhost:3000/login");
     genToken(res, user._id);
     genRefreshToken(res, user)
-    res.redirect("http://localhost:3000?message=AUTH_USER")
+    res.redirect(`http://localhost:3000?message=AUTH_USER`)
 })(req, res , next)
 })
 

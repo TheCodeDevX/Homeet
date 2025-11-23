@@ -1,32 +1,48 @@
-import { Camera, Loader,  PenBox } from "lucide-react"
-import {useForm, type SubmitHandler} from 'react-hook-form'
+import { Camera, ChevronDown, Loader,  PenBox, Search } from "lucide-react"
+import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
 import { useAuthStore, type ProfileData } from "../store/auhStore"
 import DotAnimation from "../components/DotAnimation"
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react"
 import {motion} from 'framer-motion'
 import avatar from '../assets/avatar.png'
 import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router-dom"
 import toast from "react-hot-toast"
 import ToasterCompo from "../components/Toaster"
+import {Icon} from "@iconify-icon/react"
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
+import { countries } from "../constants"
+import clsx from "clsx"
+import 'react-phone-number-input/style.css'
+import PhoneInput, {isValidPhoneNumber, parsePhoneNumber} from 'react-phone-number-input'
+import i18n from "../config/reacti18next"
+
 
 
  
  const OnboardingPage = () => {
   const {t} = useTranslation()
   const [img, setImg] = useState("")
+  const imgRef = useRef<HTMLImageElement>(null)
   const [isImageLoading, setIsImageLoading] = useState(false)
   const [progress, setProgress] = useState(0)
-  const {updateProfile, setIsOnBoarding, user} = useAuthStore()
+  const {updateProfile, setIsOnBoarding, user, isLoading} = useAuthStore()
+  const [showList, setShowList] = useState(false)
+
+ 
+
+  const [query, setQuery] = useState("")
+
+  const container = useRef<HTMLDivElement>(null)
 
   console.log(user?.profilePic, "the profile picture URL")
   const imageUrl = user?.profilePic ?
    `http://localhost:8000/api/auth/profilePic?url=${encodeURIComponent(user?.profilePic as string)}`
    : undefined;
 
-  const {register, setValue, getValues, trigger, reset, watch,
-      handleSubmit, formState : {isSubmitting, errors}} = useForm<ProfileData>({
-      })
+  const {register, control, setValue, getValues, trigger, reset, watch,
+      handleSubmit, formState : {isSubmitting, errors}} = useForm<ProfileData>()
 
       const fetchImage = async (url:string) : Promise<string | undefined> => {
         if(!url) return;
@@ -49,6 +65,9 @@ import ToasterCompo from "../components/Toaster"
       useEffect(() => {
         if(!imageUrl) return;
         fetchImage(imageUrl as string).then((imageBase64) => {
+          if(imgRef.current){
+            imgRef.current.src = imageBase64 as string
+          }
           setImg(imageBase64 as string);
           
           setIsImageLoading(false)
@@ -62,21 +81,17 @@ import ToasterCompo from "../components/Toaster"
       setValue("firstName", user?.firstName ?? "")
       setValue("lastName", user?.lastName ?? "")
       setValue("email", user?.email ?? "")
-      setValue("phoneNumber", user?.phoneNumber ?? "")
+      setValue("phoneNumber", parsePhoneNumber(user.phoneNumber ?? "")?.number)
       setValue("address", user?.address ?? "")
       setValue("bio", user?.bio ?? "")
       setValue("currency", user?.currency ?? "usd" )
       setValue("gender", user?.gender)
       setValue("role", user?.role ?? "homeowner")
-        }
-
-       if(img) {
-        setValue("profilePic", img)
-       }
+       setValue("profilePic", user?.profilePic)
+        } 
      
-      }, [user, img, setValue, getValues])
+      }, [user, setValue, getValues])
 
-    
 
 
   const handleUploadImage = (e:ChangeEvent<HTMLInputElement>) => {
@@ -116,8 +131,25 @@ import ToasterCompo from "../components/Toaster"
     console.error(error)
    }
    }
-   
+
+  //  const getCountry = (country : {code : string, name : string, phone : number | null}) => {
+
+  //  }
+
+  // filter countries
+
+  // const filteredCountries = countries.filter((c) => c.name.toLowerCase().includes(query.toLowerCase()))
  
+ const profilePicture = ()  => {
+  if(getValues("profilePic")) {
+  return getValues("profilePic") as string;
+  }
+   else if(imageUrl) {
+    return imageUrl
+  } else if (img) {
+    return img
+  } else return avatar
+ }
    return (
     <>
      <div className="h-full w-full">
@@ -146,14 +178,31 @@ import ToasterCompo from "../components/Toaster"
                           <div className={`avatar select-none pointer-events-none rounded-full
                            size-32 overflow-hidden
                           `} >
-                        { isImageLoading ?
+                        
+                        {/* { isAvailable &&
+                        (isImageLoading ?
                         <div className="m-auto size-full bg-base-content animate-pulse"></div>
-                         : <img src={img || avatar} alt="Profile"
-                         onLoad={() => setIsImageLoading(false)}
+                         : <img src={img} alt="Profile"
+                         onLoad={() => {
+                          isAvailable.current = false;
+                         }}
                           onError={(e) => {
                             (e.currentTarget as HTMLImageElement).src = avatar
                             setIsImageLoading(false);
-                          } } />}
+                             isAvailable.current = false;
+                          } } />)} */}
+
+                          {!user?.profilePic ?  
+                            <div className="m-auto size-full bg-base-content animate-pulse"/>
+                          : <img src={profilePicture()}
+                          alt="Profile Picture" 
+                          onError={(e) => e.currentTarget.src = avatar}
+                          onLoad={(e) => e.currentTarget.src = profilePicture() }
+                          />
+                          }
+
+                         
+                          
                     </div>
                         </motion.div>
                     <label className="absolute cursor-pointer right-0 bottom-1 bg-base-300 p-2 rounded-full
@@ -223,16 +272,49 @@ import ToasterCompo from "../components/Toaster"
                      {errors.email && (<p className="text-red-500 text-xs font-semibold mt-2">
                         {errors?.email.message}</p>) }
                  </div>
-
+                     {/* Phone Number */}
                    <div>
-                     <label className="space-y-2 flex flex-col ">
+                    <div className="relative">
+                       <label className="space-y-2 flex flex-col">
                       <span className="label-text">
                               {t("labels.phoneNumber", {ns:"common"})}
                       </span>
-                      <input type="text" className="input input-bordered"
-                       placeholder={t("labels.phoneNumber", {ns:"common"})}
-                       {...register("phoneNumber", {required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"})})} />
+                       {/* {...register("phoneNumber",
+                       {
+                        required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"}),
+                        validate : (value) => isValidPhoneNumber(value as string) || "Invalid Phone Number."
+                        
+                       }
+                       
+                       )} */}
+                      
+                   
+                     <Controller
+                     name="phoneNumber"
+                     control={control}
+                     rules={{
+                       required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"}),
+                       validate : (value) => isValidPhoneNumber(value as string) || "Invalid Phone Number."
+                     }}
+                    
+                     render={({field}) => (
+                        <PhoneInput    
+                        {...field}                  
+                         className={clsx(
+                          "relative",
+                          i18n.language === "ar" && "flex flex-row-reverse",
+                          " input input-bordered ",
+                              
+                          )}
+                       placeholder={i18n.language === "ar" ? "+1 555 123 4567"
+                         : t("labels.phoneNumber", {ns:"common"})}
+                       /> 
+                     )}
+                     />
+                     
                     </label>
+                
+                    </div>
                       {errors.phoneNumber && (<p className="text-red-500 text-xs font-semibold mt-2">
                         {errors?.phoneNumber.message}</p>) }
                    </div>

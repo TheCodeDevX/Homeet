@@ -23,20 +23,24 @@ import axios, { isAxiosError } from "axios";
     isUsersLoading : boolean,
     setIsUserLoading : (bool : boolean) => void
     error : string | null,
+    addOrRemoveUser : (user: UserData) => void;
     messages : MessageData[]
-    getUsers : () => Promise<any>
+    getUsers : (bool:boolean) => Promise<any>
     getMessages : (id:string ) => Promise<any>
     uploadAudio : (blob: Blob, receiverId:string | undefined, senderId : string | undefined) => Promise<any>
     // getAudio : (id:string) => Promise<any>
     sendMessages : (id : string , Msgdata : MessageData) => Promise<any>
     subToMessages : () => void
     unsubFromMessages : () => void
+    registerMessage : (msg: MessageData) => void
+
 
  }
 
   
 
  export const useMessageStore = create<MessageStates>((set, get) => ({
+    
     users : [],
     selectedUser: null,
     setSelectedUser : (selectedUser) => set({selectedUser}),
@@ -46,8 +50,17 @@ import axios, { isAxiosError } from "axios";
     setIsUserLoading : (bool) => set({isUsersLoading:bool}) ,
     isMessagesLoading:false,
     isMessagesSending : false,
-    getUsers : async() => {
-        set({isUsersLoading:true, error:null})
+    addOrRemoveUser : async(user) => {
+        
+        if(user.onBoarded) {
+        set(state => ({users: [...state.users, user]}))
+        } else {
+         set((state) => ({users : state.users.filter((u) => u._id !== user._id)}))
+        }
+       
+    },
+    getUsers : async(bool) => {
+        set({isUsersLoading:bool, error:null})
         try {
             const res = await MessageApi.get("/users")
             set({users:res.data})
@@ -128,23 +141,26 @@ import axios, { isAxiosError } from "axios";
   }
      },
 
-
-     subToMessages : () => {
-        const user = useAuthStore.getState().user
-        const socket = useAuthStore.getState().socket
+     registerMessage : (newMessage:MessageData) => {
+         const user = useAuthStore.getState().user
         const selectedUser = get().selectedUser
-        if(!user || !selectedUser) return;
-        socket?.on("newMessage", (newMessage:MessageData) => {
+         if(!user || !selectedUser) return;
             const isRelevant = 
             newMessage.senderId?.toString() === user._id && newMessage.receiverId?.toString() === selectedUser._id ||
             newMessage.senderId?.toString() === selectedUser._id && newMessage.receiverId?.toString() === user._id
 
             if(!isRelevant) return;
             set((state) => ({messages : [...state.messages, newMessage]}))
-        })
+        },
+
+     subToMessages : () => {
+        const socket = useAuthStore.getState().socket
+        const registerMessage = get().registerMessage
+        socket?.on("newMessage", registerMessage )
      },
      unsubFromMessages : () => {
+     const {registerMessage} = get()
      const {socket} = useAuthStore.getState()
-        socket?.off("newMessage")
+        socket?.off("newMessage", registerMessage)
      },
  }))

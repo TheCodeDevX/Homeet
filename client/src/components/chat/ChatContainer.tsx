@@ -128,13 +128,16 @@ import { formatDate } from "../../utils/formatDate"
    }
 
 
+
+
    const {t} = useTranslation()
    const lang = i18n.language
    return (
-     <div className={`overflow-y-auto ${selectedUser ? "h-[43.8vh]" : "h-[60vh]"} relative`}>
+     <div className={`overflow-y-auto ${selectedUser ? "h-[43.8vh]" : "h-[60vh]"}
+      relative`}>
        {isMessagesLoading ? 
        (<ChatSkeleton/>) :
-        ( <div className="p-4">
+        ( <div className="p-2">
        {selectedUser ? (
         messages.map((message) => (
         
@@ -198,12 +201,18 @@ import { formatDate } from "../../utils/formatDate"
           
 
           {message.text && (
-           <div>
-            <p className={` ${message.image ? "mt-2" : "mt-0"}`}>{message.text}
-                <span className="text-xs text-center opacity-70 ml-2">{formatDate(message?.createdAt as string)}</span>
+         
+           <div className="max-w-sm overflow-hidden">
+             <p className={`${message.image ? "mt-2" : "mt-0"}`}>
+              {message.text}
+              <br />
+                <span className="text-xs opacity-70">
+                {formatDate(message?.createdAt as string)}
+                </span>
            </p>
-          
            </div>
+          
+          
           )}
          </div>  
         </div> 

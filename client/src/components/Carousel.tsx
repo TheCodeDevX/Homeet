@@ -35,16 +35,19 @@ import home from "../assets/Tinyhouse.svg"
           -translate-y-1/2 text-white flex items-center gap-2 hover:from-zinc-600 hover:to-zinc-400/50`}>
            <ChevronRight/>
       </button>
-      <div className='absolute bottom-1 flex items-center justify-center gap-1 w-full select-none pointer-events-none'>
+      <div className='absolute bottom-1 flex items-center justify-center gap-1 w-full
+       select-none'>
        {listing?.images.map((img, i) => (
          <div key={i}>
          {listing?.images?.length > 12 ? (
-          <p className={`text-6xl ${state.currentIndex === i ? "text-white" : "text-white/50"}`}>.</p>
+          <p className={`text-6xl ${state.currentIndex === i ? "text-white" : "text-white/50"}`}>{"."}</p>
         
          ) : (
-             <img className={`size-10 object-center rounded-lg border-2 
+           <button onClick={() => { dispatch({type:"changeImage", index:i}) } } >
+              <img className={`size-10 object-center rounded-lg border-2 
           ${state.currentIndex === i ? "border-green-500" : "border-none"} `}
             src={img} alt="Preview" />
+           </button>
          )}
          </div>
        ))}

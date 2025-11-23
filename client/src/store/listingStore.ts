@@ -18,13 +18,13 @@ export interface FormData {
     bedrooms?:number, 
     size?:number, 
     floor?:number, 
-    avgRating?: number
+    avgRating: number
     count?:number
+    createdAt : string
  }
 
  export type ApiData = {   
      _id?: string,
-     createdAt?: string,
      updatedAt?: string ,
      user?:UserData
  } & FormData

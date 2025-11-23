@@ -14,11 +14,11 @@ import { Server } from "socket.io";
 
    let userSocketMap = {}; // {userId : socket.id (auto-generated id after each conn)}
     function getReceiverSocketId (userId) {
-     return userSocketMap[userId] // this is the receiver id so this object should contain a value with this key and return it
+     return userSocketMap[userId] 
     }
 
   io.on("connection", (socket) => {
-    const userId = socket.handshake?.query.userId;
+    const userId = socket.handshake?.query.userId; // the auth user id
     console.log("userId via socket.handshake.query", userId)
 
     if(userId){

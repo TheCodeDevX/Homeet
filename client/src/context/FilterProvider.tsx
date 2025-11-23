@@ -13,8 +13,8 @@ import { createContext, useState, type ChangeEvent, type PropsWithChildren, type
 
   type SortStates = {
     price: string;
-    date: boolean;
-    rating: boolean;
+    date: string;
+    rating: string;
   }
 
  interface FiltrationContextProps {
@@ -44,8 +44,8 @@ export const FiltrationContext = createContext<FiltrationContextProps | undefine
 
     const [sort, setSort] = useState({
       price : "",
-      date : false,
-      rating : false
+      date : "",
+      rating : ""
     })
 
 
@@ -73,8 +73,8 @@ export const FiltrationContext = createContext<FiltrationContextProps | undefine
     });
     setSort({
       price : "",
-      date : false,
-      rating : false
+      date : "",
+      rating : ""
     })
     }
     

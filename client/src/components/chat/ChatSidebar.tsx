@@ -8,16 +8,18 @@ import i18n from "../../config/reacti18next";
 import { useListingStore } from "../../store/listingStore";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useFollowRequestStore } from "../../store/followReq";
+import { useFollowRequestStore } from "../../store/followReqStore";
 import LoadingSpinner from "../Spinner";
+import { useUserStore } from "../../store/userStore";
  
  const ChatSidebar = ({filteredUsers} : {filteredUsers : UserData[]}) => {
-  const {setSelectedUser, users, selectedUser, isUsersLoading, setIsUserLoading} = useMessageStore();
+  const {setSelectedUser, users, selectedUser, isUsersLoading, setIsUserLoading, getUsers, addOrRemoveUser} = useMessageStore();
   // const {followReqs, followReq} = useFollowRequestStore()
   const {user:authUser, onlineUsers:OnlineUsers} = useAuthStore();
   const {listing} = useListingStore()
   const scrollRef = useRef<HTMLDivElement>(null)
   const {followReq} = useFollowRequestStore()
+ 
 
 
   const onlineUsers = users.filter(users => OnlineUsers.includes(users._id as string) )
@@ -25,7 +27,9 @@ import LoadingSpinner from "../Spinner";
   const navigate = useNavigate()
   const refs = useRef<Record<string, HTMLButtonElement | null>>({})
 
-
+  // useEffect(() => {
+    
+  // }, [onlineUsers])
 
 
   useLayoutEffect(() => {
@@ -34,6 +38,25 @@ import LoadingSpinner from "../Spinner";
     behavior: "smooth"
   })
   }, [users.length])
+
+
+  useEffect(() => {
+    console.warn("run again")
+   const debounce = setTimeout(() => {
+      getUsers(false);
+   }, 400)
+
+   return ( ) => clearTimeout(debounce);
+  }, [getUsers, OnlineUsers])
+
+  useEffect(() => {
+    getUsers(true)
+  }, [])
+
+ 
+
+  
+ 
 
   
 
@@ -62,7 +85,8 @@ import LoadingSpinner from "../Spinner";
             </div>
           )
            : isUsersLoading ? (<SidebarSkeleton/>) : filteredUsers.map((user) => (
-            <button id="child" data-id={user._id} 
+         
+           <button id="child" data-id={user._id} 
             ref={el => {refs.current[user._id as string] = el} } key={user._id} onClick={() => {
              setSelectedUser(user)}}
              
@@ -73,7 +97,9 @@ import LoadingSpinner from "../Spinner";
                    <div className='avatar '>
                   <div className="size-14 relative rounded-full border border-base-content/10 shadow-sm
                    shadow-base-300/50">
-                      <img src={user?.profilePic ||  avatar} alt="" />
+                      <img src={user?.profilePic || avatar} alt="profile"
+                      onError={(e) => e.currentTarget.src = avatar}
+                      />
                       
                   </div>
               </div>
@@ -113,7 +139,8 @@ import LoadingSpinner from "../Spinner";
                   : t("status.offline", {ns:"status"})}`}</span>
             </div>
               </div>
-            </button>
+            </button> 
+          
           ))}
          </div>
       

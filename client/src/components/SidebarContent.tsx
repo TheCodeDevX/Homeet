@@ -1,7 +1,7 @@
 import { BrushCleaning, Filter} from 'lucide-react'
 import avatar from '../assets/avatar.png'
 import {ImLocation, ImPriceTag} from 'react-icons/im'
-import { useState, type ChangeEvent } from 'react'
+import { useLayoutEffect, useRef, useState, type ChangeEvent } from 'react'
 import { TbCategory } from "react-icons/tb";
 import { FaBed} from 'react-icons/fa';
 import { amenities, type Facilities } from '../constants';
@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import UserProfile from './UserProfile';
 
 const SidebarContent = () => {
+  const rangeRef = useRef<HTMLInputElement | null>(null)
    const {filters, handleFiltersChange, clearAllFilters, setFilters} = useFiltration()
   
 
@@ -31,7 +32,8 @@ const SidebarContent = () => {
  }
 
  const handleMaxChange = (e:ChangeEvent<HTMLInputElement>) => {
-  const {value, step} = e.target;
+  let {value, step} = e.target;
+  
 
    if(+value <= filters.minPrice){
       setFilters(prev => ({...prev, maxPrice: filters.minPrice + Number(step)}))
@@ -44,7 +46,7 @@ const SidebarContent = () => {
   const{value, step} = e.target;
   
   if(+value >= filters.maxPrice ) {
-   setFilters(prev => ({...prev, minPrice: filters.maxPrice - +step}))
+   setFilters(prev => ({...prev, minPrice: ( filters.maxPrice - +step)}))
   } else {
    setFilters(prev => ({...prev, minPrice: +value}))
   }
@@ -67,6 +69,8 @@ const SidebarContent = () => {
     {ns:"sidebar", returnObjects:true}) as Record<string, Facilities>
    const lang = i18n.language;
 
+
+  
   return (
     <>
        <div className="p-4 ">
@@ -91,8 +95,8 @@ const SidebarContent = () => {
                 ${filters.minPrice} - ${filters.maxPrice}</p>
             <span className='label-text'>{t("content.filters.price.content.maxPrice", {ns: "sidebar"})}</span>
             {/* Max Range */}
-            <input type="range" className={`range`}
-             min={0} max={10000} step={10} value={filters.maxPrice} onChange={handleMaxChange} 
+            <input type="range" ref={rangeRef} className={clsx("range")}
+             min={0} max={10000} step={1} value={filters.maxPrice} onChange={handleMaxChange} 
              />     
          </label>
          <label className='flex flex-col gap-2'>
@@ -100,7 +104,7 @@ const SidebarContent = () => {
             <span className="label-text">{t("content.filters.price.content.minPrice", {ns: "sidebar"})}</span>
             <input type="range" className={`range range-primary`} value={filters.minPrice}
              onChange={handleMinChange}
-             min={0} max={10000} step={10}  />
+             min={0} max={10000} step={1}  />
        </label>
         </div>
          </div>
@@ -168,9 +172,9 @@ const SidebarContent = () => {
             
         <div className="flex flex-col gap-4">
              {amenities.map(({icon:Icon, label, key}, index) => (
-               <label key={index} className='flex items-center justify-between gap-2 cursor-pointer
+               <label key={index} className='flex items-center justify-between gap-2
                 bg-base-300 text-base-content/50 border border-base-content/10 p-2 px-4 rounded-md
-                 hover:bg-base-content/5 select-none '>
+                 hover:bg-base-content/5 '>
              <input type="checkbox" className='hidden peer' 
                 checked={filters.amenities.includes(label)}
                onChange={(e) => handleAmenitiesChange(label, e.target.checked )}/>

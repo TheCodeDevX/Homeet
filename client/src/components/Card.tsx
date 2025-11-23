@@ -81,7 +81,8 @@ import { useThemeStore } from '../store/themeStore'
          </figure>
 
 { (user?._id?.toString() !== listing.user?._id?.toString()) &&
-         <button onClick={() =>setShowModal(prev => !prev)} className={`absolute z-40 top-1 
+         <button onClick={() =>setShowModal(prev => !prev)} className={`cursor-pointer
+           absolute z-40 top-1 
            ${!isopen ? "opacity-100" : "opacity-0 hidden"}
            ${lang == "ar" ? "right-1" : "left-1"}
            `}>
@@ -95,13 +96,13 @@ import { useThemeStore } from '../store/themeStore'
      }
 
       <button onClick={() => {setIsOpen(p => !p)}}
-       className={`bg-base-300 hover:bg-primary px-4 transition-colors duration-300
-          cursor-pointer rounded-full absolute z-40 py-2 top-1 ${lang == "ar" ? "left-1" : "right-1"}
-          hover:text-primary-content flex text-center 
-          items-center gap-2 select-none `}>
+       className={`${lang == "ar" ? "left-1" : "right-1"}
+          absolute z-40 top-1 btn !h-[42px] !min-h-[42px]
+           rounded-full border border-base-content/20 hover:btn-primary btn-md transition-colors duration-200`}>
           {isopen ? (<>  <Image/> {t("buttons.images", {ns:"common"})} </>) :
            (<> <Info/> {t("buttons.details", {ns:"common"})} </>)}
       </button>
+    
      
        <motion.div initial={{opacity:0, visibility:"hidden"}}
        animate={{opacity: !isopen && isHover ? 1 : 0,

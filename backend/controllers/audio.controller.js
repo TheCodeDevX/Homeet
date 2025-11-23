@@ -1,7 +1,7 @@
  import {Readable} from 'stream'
 import cloudinary from '../lib/cloudinary.js'
 import Listing from '../models/messages.models.js'
-import { io } from '../socket.js'
+import { getReceiverSocketId, io } from '../socket.js'
 
 
  // @desc  Upload audio file
@@ -35,12 +35,13 @@ import { io } from '../socket.js'
     })
 
     console.log(uploadRes)
+    const receiverSocketId = getReceiverSocketId(String(receiverId));
 
     const message = new Listing({ audio : uploadRes.secure_url, text:"", image:"", receiverId, senderId ,
        audioDuration : uploadRes.duration
     })
-    await message.save()
-    io.to(receiverId).emit("newMessage", message)
+    await message.save();
+    io.to(receiverSocketId).emit("newMessage", message)
     console.log("Audio", message)
     res.status(201).json({message})
 

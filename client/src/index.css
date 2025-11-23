@@ -4,13 +4,44 @@
 @tailwind utilities;
 
 
+
 @layer utilities{
     .text_hover {
      @apply hover:text-base-content transition-colors duration-300 ease-in-out
     }
 
     .icon_hover {
-        @apply hover:text-base-content hover:bg-base-content/20 p-2 rounded-full transition-all duration-300 ease-in-out
+        @apply hover:text-base-content hover:bg-base-content/20 p-2
+         rounded-full transition-all duration-300 ease-in-out
+    }
+
+    .triangle::after {
+      clip-path:polygon(50% 0%, 0% 100%, 100% 100%)
+    }
+
+    .range {
+      direction: ltr !important;
+      /* transform: scaleX(-1); */
+    }
+
+    .dir {
+      direction: ltr !important;
+
+    }
+
+   
+
+    .custom_range {
+     @apply  h-6 w-full appearance-none overflow-hidden rounded-2xl bg-transparent 
+     focus:outline-none accent-white
+    }
+      .custom_range::-webkit-slider-thumb {
+       background-color: white;
+       padding: 9.5px;
+      }
+    .custom_range::-webkit-slider-runnable-track {
+      background-color: blue;
+      padding: 22px 2px;
     }
 
    

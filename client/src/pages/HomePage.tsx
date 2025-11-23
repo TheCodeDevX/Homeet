@@ -9,7 +9,8 @@ import usePagination from "../hooks/usePagination"
 import FallbackCard from "../components/FallbackCard"
 import {useTranslation} from 'react-i18next'
 import CardSkeleton from "../components/skeletons/CardSkeleton"
-import { useFollowRequestStore } from "../store/followReq"
+import { useFollowRequestStore } from "../store/followReqStore"
+import { getTimeInMilliseconds } from "../utils/getTime"
 
  const HomePage = () => {
 
@@ -37,12 +38,48 @@ import { useFollowRequestStore } from "../store/followReq"
    }
 
    if(filters.shouldSort) {
-    if(sort.price === "cheap") {
-     filteredData = filteredData.sort((a,b) => a.price - b.price)
-    }else if(sort.price === "expensive") {
-     filteredData = filteredData.sort((a,b) => b.price - a.price)
-    } else {
-     filteredData
+    // if(sort.price === "cheap") {
+    //  filteredData = filteredData.sort((a,b) => a.price - b.price)
+    // }else if(sort.price === "expensive") {
+    //  filteredData = filteredData.sort((a,b) => b.price - a.price)
+    // } else {
+    //  filteredData
+    // }
+
+    // Price
+    switch(sort.price) {
+      case "cheap" :  filteredData = filteredData.sort((a,b) => a.price - b.price)
+      break;
+
+      case "expensive" : filteredData = filteredData.sort((a,b) => b.price - a.price)
+      break;
+
+      default :  filteredData;
+    }
+
+    // Rating
+    switch(sort.rating) {
+    case "low" : filteredData = filteredData.sort((a,b) => a.avgRating -  b.avgRating )
+    break; 
+
+     case "high" : filteredData = filteredData.sort((a,b) => b.avgRating -  a.avgRating )
+     break;
+
+     default : filteredData;
+    }
+
+   
+    // Date
+    switch(sort.date) {
+    case "old" : filteredData = filteredData.sort((a,b) => 
+       getTimeInMilliseconds(a.createdAt) - getTimeInMilliseconds(b.createdAt))
+    break; 
+
+     case "new" : filteredData = filteredData.sort((a,b) => 
+       getTimeInMilliseconds(b.createdAt) - getTimeInMilliseconds(a.createdAt))
+     break;
+
+     default : filteredData;
     }
    }
 
@@ -74,10 +111,9 @@ import { useFollowRequestStore } from "../store/followReq"
    }
   }
 
-  const MemorizedCard = memo(Card);
   
     return filteredData.map((listing : ApiData) => (
-     <MemorizedCard key={listing._id} listing={listing}/>
+     <Card key={listing._id} listing={listing}/>
     ))
   }
 
@@ -144,7 +180,7 @@ import { useFollowRequestStore } from "../store/followReq"
       ))}</> ) : filteredData}
      </div>
       )}
-    { totalPages >= 2 &&  <div className="flex justify-between items-center mt-4">
+    { totalPages >= 2 && filteredData.length > 0 && listings.length > 0 && <div className="flex justify-between items-center mt-4">
         <button disabled={currentPage === 1} className="btn btn-active hover:btn-primary"
          onClick={() => setCurrentPage(currentPage -1)}>{t("buttons.previous", {ns: "common"})}</button>
 

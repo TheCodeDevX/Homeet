@@ -33,7 +33,9 @@ import { FollowReqApi } from "../lib/axios.config"
       set({isReqLoading:true, error:null, message:""})
      try {
         const res = await FollowReqApi.post(`/follow-request/${id}`);
-        set({followReq: res.data?.followReq, message:res.data?.message, hasPendingFollowReq:res.data?.existingFollowReq
+        set({followReq: res.data?.followReq,
+          message:res.data?.message, 
+          hasPendingFollowReq:res.data?.existingFollowReq
           })
      } catch (error) {
         let errMsg = "FOLLOW_REQ_SENDING_FAILED";

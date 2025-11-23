@@ -4,7 +4,7 @@
 import avatar from '../assets/avatar.png'
 import verificationIcon from '../assets/verificationIcon.svg'
 import { useEffect, useState } from 'react'
-import { useFollowRequestStore } from '../store/followReq'
+import { useFollowRequestStore } from '../store/followReqStore'
 import { useListingStore } from '../store/listingStore'
 import { useMessageStore } from '../store/messageStore'
 import type { UserData } from '../store/auhStore'

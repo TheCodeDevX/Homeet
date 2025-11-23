@@ -22,7 +22,7 @@ import clsx from 'clsx';
     {
     !isFollowing ?
     (  <button onClick={() => handleFollowReq(listing?.user?._id as string)}
-    className={`btn ${fontSize} btn-primary rounded-xl  ${isReqLoading ? "cursor-wait" : "cursor-pointer"}`}>
+    className={`btn ${fontSize} btn-outline rounded-xl border border-base-content/20  ${isReqLoading ? "cursor-wait" : "cursor-pointer"}`}>
     { isReqLoading ? (<>{t("buttons.following", {ns:"common"})} <Loader2 className={clsx( size , "animate-spin")}/></>) : 
     (<>{t("buttons.follow", {ns:"common"})} <UserPlusIcon className={clsx(size)}/></>)}
     </button>) : (
@@ -39,7 +39,7 @@ import clsx from 'clsx';
     </button>) 
 
     }
-    <button onClick={handleNavigation} className={clsx("btn hover:btn-primary btn-outline rounded-xl", fontSize)}>
+    <button onClick={handleNavigation} className={clsx("btn btn-primary hover:btn-outline rounded-xl", fontSize)}>
                 {t("buttons.message", {ns:"common"})} 
      <SendHorizonalIcon className={clsx( size)} />
      </button>

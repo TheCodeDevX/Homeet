@@ -1,6 +1,6 @@
 
  import express from 'express'
-import { getIncomingRequest, sendFollowRequest } from '../controllers/users.controller.js';
+import { getIncomingRequest, sendFollowRequest } from '../controllers/followReq.controller.js';
 import { protect } from '../middlewares/auth.middlewares.js';
 
  const router = express.Router();

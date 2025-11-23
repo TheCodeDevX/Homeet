@@ -20,6 +20,7 @@
             "old" : "Más antiguo"
         }
     },
+    "default": "Ninguno",
     "apply" : "Aplicar",
     "cancel" : "Cancelar"
   }

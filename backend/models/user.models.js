@@ -81,11 +81,26 @@ import crypto from "crypto"
 
     currency : {
     type : String,
-    enum : ["usd", "euro", "british_pound", "japanese_yen",
-       "canadian_dollar", "australian_dollar", "swiss_franc",
-        "chinese_yuan", "saudi_riyal", "uae_dirham", "egyptian_pound",
-         "moroccan_dirham", "brazilian_real", "indian_rupee", "turkish_lira",
-          "south_african_rand", "singapore_dollar", "hong_kong_dollar"],
+    enum : [
+    "usd",
+    "eur",
+    "gbp",
+    "jpy",
+    "cad",
+    "aud",
+    "chf",
+    "cny",
+    "sar",
+    "aed",
+    "egp",
+    "mad",
+    "brl",
+    "inr",
+    "try",
+    "zar",
+    "sgd",
+    "hkd",
+    ],
 
     default : "usd"
     },
@@ -96,10 +111,7 @@ import crypto from "crypto"
     default : ""
     },
 
-    phoneNumber : {
-    type : String,
-    default : ""
-    },
+    phoneNumber :{ type : String, default : ""},
 
     role : {
       type : String,

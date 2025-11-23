@@ -7,7 +7,8 @@
         "CHANGE_LANG" : "Change Language",
         "NOTIFS" : "Notifications",
         "LOGOUT" : "Logout",
-        "PROFILE" : "Profile"
+        "PROFILE" : "Profile",
+        "VIEW_PROFILE" : "View Profile"
     }
  }
 

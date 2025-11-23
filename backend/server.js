@@ -6,6 +6,7 @@ import ratingRoutes from "./routes/rating.routes.js"
 import messageRoutes from "./routes/messages.routes.js"
 import audioRoutes from "./routes/audio.route.js"
 import followReqRoutes from "./routes/followReq.routes.js"
+import userRoutes from "./routes/user.routes.js"
 import { connectDB } from './config/db.js';
 import { errorHandler } from './middlewares/errorHandler.middlewares.js';
 import { notFound } from './middlewares/notFound.middlewares.js';
@@ -32,9 +33,11 @@ app.use("/api/rating", ratingRoutes)
 app.use("/api/message", messageRoutes )
 app.use("/api/uploading", audioRoutes )
 app.use("/api/requests", followReqRoutes )
+app.use("/api/users", userRoutes )
 
 app.use(notFound)
 app.use(errorHandler)
+
 server.listen(port, async() => { 
  try {
 await connectDB();

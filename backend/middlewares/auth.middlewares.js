@@ -31,7 +31,7 @@ import { createError } from "../utils/createError.js";
     if(!token) createError("Unauthorized, no token provided", 401)
       const decoded = jwt.verify(token, JWT_SECRET)
     if(!decoded) createError("Unauthorized , invalid token", 401)
-      const user = await User.findById(decoded.userId).select("-password");
+      const user = await User.findById(decoded.userId).select("-password -refreshToken -refreshTokenExpiresAt");
     if(!user) createError("User not found", 404)
       req.user = user;
     next()

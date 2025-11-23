@@ -6,6 +6,7 @@
         "CHANGE_LANG" : "Changer la langue",
         "NOTIFS" : "Notifications",
         "LOGOUT" : "Se déconnecter",
-        "PROFILE" : "Profil"
+        "PROFILE" : "Profil",
+        "VIEW_PROFILE": "Voir le profil"
     }
 }

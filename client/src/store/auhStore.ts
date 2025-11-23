@@ -1,11 +1,12 @@
 import {create} from 'zustand'
-import axios, { isAxiosError, type AxiosResponse } from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { authApi } from '../lib/axios.config'
 import {type Socket, io} from "socket.io-client"
-import { handleAxiosError } from './helpers/authHelper'
+import { handleAxiosError } from './helpers/errorHelper'
 
 
 // const naviagte = useN
+
 export type UserRole = "tenant" | "homeowner" | "seller" 
  export type UserData = {
     firstName:string,
@@ -18,16 +19,13 @@ export type UserRole = "tenant" | "homeowner" | "seller"
     _id?:string,
     followers : string[]
     
- } & {bio?:string, gender?: "male" | "female", address?:string , phoneNumber?:string, profilePic?:string, 
+ } & {bio?:string, gender?: "male" | "female", address?:string ,
+    phoneNumber?:string, profilePic?:string, 
    role: UserRole, currency?: string  }
 
-export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "email" | "role"> 
- & {bio?:string, gender?: "male" | "female",
-    address?:string ,
-     phoneNumber?:string,
-      profilePic?:string,
-      currency?: string
-       }
+export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "bio" |
+ "email" | "role" | "phoneNumber" | "currency" | "profilePic" | "address" | "gender"> 
+
 
  interface AuthData {
 
@@ -57,9 +55,11 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "email" | 
     resetPassword : (password:string, token?:string) => void;
     checkAuth : () => void
     updateProfile : (data : ProfileData) => void
+    warmUp : () => void, 
     connectSocket : () => void,
     disconnectSocket : () => void;
     tryToRefreshAccessToken : (code:string) => Promise<any>;
+    
 
  }
 
@@ -221,10 +221,10 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "email" | 
 
     logout : async() => {
       set({isLoading:true, error:null})
+      try {
       const res = await authApi.post("/logout");
       set({message:res.data?.message || "",  isAuthenticated:false, error:null})
-      try {
-         
+      get().disconnectSocket()
       } catch (error) {
          set({user:null, error:"USER_LOGING_FAILED", message:""});
          throw error;
@@ -254,6 +254,13 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "email" | 
          set({isUpdatingProfile:false, isLoading:false})
       }
     } ,
+
+    warmUp: async() => {
+     const res = await authApi.get("/warm-up");
+     return res.data;
+    },
+
+
     connectSocket : () => {
       const authUser = get().user
       if(!authUser || get().socket?.connected) return;
@@ -266,9 +273,12 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "email" | 
 
       socket.on("connect", () => console.log("socket is connected"));
       socket.on("getOnlineUsers", (usersId: string[]) => {
-       set({onlineUsers:usersId})
+       set({onlineUsers : usersId})
       })
-      socket.on("disconnect", () => console.log("socket is disconnected"))
+      socket.on("disconnect", () => {
+         console.log("socket is disconnected");
+        
+      })
 
       set({socket:socket})
     },
@@ -277,6 +287,7 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "email" | 
          get().socket?.disconnect()
       }
     },
+    
    }))
 
 

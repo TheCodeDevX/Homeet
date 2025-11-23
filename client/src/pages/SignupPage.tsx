@@ -178,7 +178,7 @@ const SignupPage = () => {
            </div>
          </form>
 
-           <div className="flex items-center gap-4 w-full mt-3">
+           <div className="flex max-xss:flex-wrap items-center gap-4 w-full mt-3">
                <AuthButton googleAuth={google} provider={t("buttons.google", {ns:"common"})} icon={FaGoogle}/>
                <AuthButton googleAuth={facebook}  provider={t("buttons.facebook", {ns:"common"})} icon={FaFacebookF}/>
           </div>

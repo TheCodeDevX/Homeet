@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import avatar from '../assets/avatar.png'
 import { iconButtons, languages, lightThemes, links, THEMES, type Links, type Tooltips } from '../constants'
 import {motion} from 'framer-motion'
-import React, { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { useAuthStore } from '../store/auhStore'
 import LogoutModal from './LogoutModal'
 import clsx from 'clsx'
@@ -12,6 +12,18 @@ import { useTranslation } from 'react-i18next'
 import i18n from '../config/reacti18next'
 import { useLangStore } from '../store/languagesStore'
 import LoadingSpinner from './Spinner'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import Navigator from './Navigator'
+
+ export interface BarStyleStates {
+    width?: number;
+    left?: number;
+    opacity?: number;
+    right?:number
+  }
+
+  export type NavLinks = Record<string , Links>
 
  const Navbar = () => {
   const {user, logout} = useAuthStore()
@@ -23,39 +35,66 @@ import LoadingSpinner from './Spinner'
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false)
   const [showThemesMenu, setShowThemesMenu] = useState(false);
   const [showLangsMenu, setShowLangsMenu] = useState(false)
-   const [barStyle, setBarStyle] = useState<{
-    width?: number;
-    left?: number;
-    opacity?: number;
-  }>({width:0, left:0, opacity:1});
+   const [barStyle, setBarStyle] = useState<BarStyleStates>({width:0, left:0, opacity:1, right : 0});
+  
 
-   const containerRef = useRef<HTMLUListElement | null>(null);
+   const containerRef = useRef< HTMLUListElement | null>(null);
+   const barRef = useRef<HTMLSpanElement>(null)
+   const [isShow, setIsShow] = useState(false)
+  const {setLang, lang:storedLang} = useLangStore()
+  const resetBarToActiveLink = () => {
+      const activeLink = containerRef.current?.querySelector(`.nav-item[data-path="${location.pathname}"]`)
+      console.warn("active", activeLink)
+      const containerRect = containerRef.current?.getBoundingClientRect();
+      if(containerRect && activeLink) {
+        const rect = activeLink.getBoundingClientRect();
+        setBarStyle({width:rect.width,
+           left: rect.left - containerRect.left,      
+           opacity:1})
+      } else {
+        setBarStyle((prev) => ({...prev, opacity:0}))
+      }
+   }
 
    const handleHover = (e:ReactMouseEvent<HTMLAnchorElement>) => {
+    setIsShow(false);
     const containerRect = containerRef?.current?.getBoundingClientRect();
     const rect = e.currentTarget.getBoundingClientRect();
     if(!containerRect) return;
     setBarStyle({
       width:rect.width,
-      left:rect.left - containerRect.left
+      left: rect.left - containerRect.left,
+      opacity:1
     }) 
    };
 
-   const resetBarToActiveLink = () => {
-      const activeLink = containerRef.current?.querySelector(`.nav-item[data-path="${location.pathname}"]`)
-      const containerRect = containerRef.current?.getBoundingClientRect()
-      if(containerRect && activeLink) {
-        const rect = activeLink.getBoundingClientRect();
-        setBarStyle({width:rect.width, left:rect.left - containerRect.left, opacity:1})
-      } else {
-        setBarStyle({width:0, left:0, opacity:0})
-      }
-   }
+  //  const handleMouseOut = (e:ReactMouseEvent) => {
+  //   // barRef.current?.classList.add("opacity-100")
+
+  //     setBarStyle({opacity:0}) 
+  //  }
 
    useEffect(() => {
-   resetBarToActiveLink()
+    resetBarToActiveLink()
    }, [location.pathname])
 
+
+  
+
+
+
+  //  useLayoutEffect(() => {
+  //   window.addEventListener("mousemove", resetBarToActiveLink)
+  //   return () =>  {
+  //     window.removeEventListener("mousemove", resetBarToActiveLink)
+  //   }
+  //  }, [storedLang, i18n.language])
+
+
+
+
+
+  
 
    const handleToolTip = (msg:string) => {
    setToolTip(msg)
@@ -89,8 +128,6 @@ import LoadingSpinner from './Spinner'
    },[])
    const handleClick = (action:"navigate" | "logout" | "changeTheme" | "changeLang" | undefined, e:React.MouseEvent) => {
     e.stopPropagation();
-
-
     if(action === "logout") {
     setShowLogout(prev => !prev)
     }  else if (action === "navigate") {
@@ -109,13 +146,13 @@ import LoadingSpinner from './Spinner'
    }
 
    const { setTheme, theme:currTheme} = useThemeStore()
-   const {setLang, lang:storedLang} = useLangStore()
+  
   
   
 
 
   const {t} = useTranslation()
-  const navLinks = t("links", {ns:"nav", returnObjects:true}) as Record<string , Links>
+  const navLinks = t("links", {ns:"nav", returnObjects:true}) as NavLinks
 
   const tooltips = t("tooltips", {ns : "tooltips", returnObjects:true}) as Record<string, Tooltips>
   const lang = i18n.language;
@@ -139,31 +176,16 @@ import LoadingSpinner from './Spinner'
             '>Homeet</span>
            </Link>
           </div>
-       
-        <div className='hidden xl:flex items-center justify-center w-full'>
-           <ul onMouseLeave={resetBarToActiveLink} ref={containerRef}
-            className={clsx("flex items-center space-x-10 px-8 py-4",
-            "border border-base-content/10 bg-base-300 rounded-full relative overflow-hidden shadow",
-            lang === "ar" && "flex-row-reverse"
-   )}>
-               <motion.span
-                 animate={{width:barStyle.width,
-                left : barStyle.left, opacity:barStyle.opacity}}
-               transition={{duration:0.5, ease:"easeInOut"}}
-                 className='absolute h-1 rounded-full bottom-0 bg-base-content' />
-              {links.map(({href, size, key,icon:Icon, classes, id}) => (
-                <Link onMouseEnter={(e) => { e.stopPropagation(),handleHover(e)}}
-                data-path={href}
-                 to={href}  key={id} className={clsx(classes, 
-                location.pathname === href ? "text-base-content" : "text-base-content/50",
-                user?.role === "tenant" && (key === "POST_LISTING" || key === "DASHBOARD") && "hidden",
-                "nav-item")}>
-                {navLinks[key]} 
-                <Icon className={size}/>
-                </Link>
-              ))}
-           </ul>
-        </div> 
+       {/* Navigator */}
+        <Navigator
+         containerRef={containerRef}
+         resetBarToActiveLink={resetBarToActiveLink}
+         isShow={isShow}
+         barRef={barRef}
+         barStyle={barStyle}
+         handleHover={handleHover}
+         navLinks={navLinks}
+         />
 
      
 
@@ -192,7 +214,8 @@ import LoadingSpinner from './Spinner'
               {links.map(({href, size, key,icon:Icon, classes, id}) => (
                 <Link
                 data-path={href}
-                 to={href}  key={id}
+                 to={href}
+                   key={id}
                 className={clsx(classes,
                 "p-2",
                 location.pathname === href ? "text-base-content" : "text-base-content/60",
@@ -285,27 +308,30 @@ import LoadingSpinner from './Spinner'
                 className='overflow-y-auto w-40 h-fit bg-base-300 rounded-xl
                 border border-base-content/20 p-2'>
               
-              {languages.map(({language, symbol}) => (
-                <button
-                onClick={() => { i18n.changeLanguage(storedLang === symbol ? storedLang : symbol); 
-                setLang(symbol) }}
+              {languages.map(({language, symbol}) => {
+              
+              return (
+                <button 
+                onClick={() => {  
+                setIsShow(true)
+                i18n.changeLanguage(storedLang === symbol ? storedLang : symbol); 
+                setLang(symbol)
+              }}
                 key={symbol}
                 aria-label={language}
-                //  onMouseEnter={() => setThemeToolTip(theme.label)}
-                //  onMouseLeave={() => setThemeToolTip("")}
+                id='lngButton'
                  className={`p-2 w-full hover:bg-base-content/10
-                   ${lightThemes.includes(currTheme) ? "active:bg-white" : "active:bg-black"}
                    ${ symbol === lang ? "bg-base-100/80" : "bg-transparent" }
                      relative flex justify-start items-center gap-4`}>
                   <span className='text-[10px] text-base-content/80'>{symbol.toUpperCase()}</span>
                  <span className='text-[14px] text-base-content'>{language}</span>
                 </button>
-              ))}
+              )
+            })}
              </motion.div>
              </div>
              )}
-             
-
+            
              </div>
             )
              

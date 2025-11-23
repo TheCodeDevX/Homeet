@@ -47,15 +47,14 @@ import { createError } from "../utils/createError.js";
            sender: new mongoose.Types.ObjectId(userId) })
          console.log(userId, recipientId)
          console.log(deleteReq, existingFollowReq)
-         res.status(200).json({message : "Follow Request has been deleted successfully!", followReq, existingFollowReq})
+         res.status(200).json({message : "DELETED_FOLLOW_REQ", followReq, existingFollowReq}) 
         return;
         }
-     
-
+    
        if(!existingFollowReq) {
         await followReq.save();
         await followReq.populate("recipient")
-        res.status(201).json({message : "Follow Request has been set successfully!", followReq , existingFollowReq})
+        res.status(201).json({message : "SUCCESSFUL_FOLLOW_REQ", followReq , existingFollowReq})
        }
 
     } catch (error) {

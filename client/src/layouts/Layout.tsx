@@ -2,6 +2,8 @@ import Sidebar from "../components/Sidebar"
 import Navbar from "../components/Navbar"
 import React from "react"
 import SidebarProvider from "../context/SidebarProvider"
+import { useLangStore } from "../store/languagesStore"
+import i18n from "../config/reacti18next"
 
  interface LayoutProps {
     children : React.ReactNode
@@ -9,6 +11,7 @@ import SidebarProvider from "../context/SidebarProvider"
  }
  
  const Layout = ({children, showSidebar } : LayoutProps) => {
+  
    return (
     <SidebarProvider>
      <div className="h-full w-full ">

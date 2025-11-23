@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState} from "react"
+import { useEffect, useState, useRef, type RefObject} from "react"
 import { useAuthStore } from "./store/auhStore"
-import { Navigate, Route, Routes, useLocation} from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 import HomePage from "./pages/HomePage"
 import SignupPage from "./pages/SignupPage"
 import LoginPage from "./pages/LoginPage"
@@ -16,58 +16,76 @@ import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
 import UpdateListingPage from "./pages/UpdateListingPage"
 import { useListingStore } from "./store/listingStore"
-import ToastMessage from "./components/Toast"
 import ChatPage from "./pages/ChatPage"
 import { useThemeStore } from "./store/themeStore"
 import {useTranslation} from 'react-i18next'
 import i18n from "./config/reacti18next"
-import { useMessageStore } from "./store/messageStore"
 import toast, {Toaster} from "react-hot-toast"
-import { Check, X } from "lucide-react"
-import {motion} from 'framer-motion'
-import { lightThemes } from "./constants"
-import { useFollowRequestStore } from "./store/followReq"
+import { useFollowRequestStore } from "./store/followReqStore"
 import { useLangStore } from "./store/languagesStore"
 import ToasterCompo from "./components/Toaster"
 import LoadingSpinner from "./components/Spinner"
 import NotificationPage from "./pages/NotificationPage"
+import gsap from "gsap"
+import { SplitText } from "gsap/all"
+import UserProfilePage from "./pages/UserProfilePage"
+
 
 
 
 const App = () => {
-  const {checkAuth, isAuthenticated, user, connectSocket,error:authErr, message:authMsg, isCheckingAuth, isLoading} = useAuthStore()
-  const {error: messageError} = useMessageStore()
+  const {checkAuth, isAuthenticated, user, connectSocket,error:authErr, message:authMsg, isCheckingAuth, warmUp} = useAuthStore()
+ 
   const [authMessage, setAuthMessage] = useState("")
+  const authMessageL = useRef<string>("");
   const {message:followReqMsg, error:followReqErr} = useFollowRequestStore()
   const {message, error} = useListingStore()
-  const {lang:storedLanguage} = useLangStore()
-  const [toastMsg, setToastMsg] = useState({
-    message : "",
-    error : ""
-  })
-
+  const {lang:storedLanguage, setLang} = useLangStore()
+  const runRef = useRef(false)
+ 
   // const {language} = useLangStore()
   
  useEffect(() => {checkAuth()} , [checkAuth])
 console.log(isAuthenticated)
   useEffect(() => { connectSocket() }, [user])
   const location = useLocation()
+  const navigate = useNavigate()
  
 
-   const lang = i18n.language
+  useEffect(() => {
   
+    const warpUpTheServer = async() => {
+      try {
+        const response = await warmUp();
+        console.warn(response);
+      } catch (error) {
+        console.error("The server is unavailable now, please try again later after being warmed up!")
+      }
+    }
+    warpUpTheServer();
+    const interval = setInterval(() => warpUpTheServer(), 300000)
 
+    return () => clearInterval(interval);
+  }, [])
+
+   const lang = i18n.language
   const {t} = useTranslation()
 
   useEffect(() => {
-   const params = new URLSearchParams(window.location.search);
-   const msg = params.get("message")
-   setAuthMessage(msg as string);
+   const params = new URLSearchParams(window.location.search); 
+   const msg = params.get("message") as string
+   authMessageL.current = msg
    params.delete("message");
-   setTimeout(() => {
-   const newUrl = window.location.pathname + ( params.toString() ? `${params.toString()}` : '' )
+   const timer = setTimeout(() => {
+   const newUrl = window.location.pathname + ( params.toString() ? `${params.toString()}` : '')
    window.history.replaceState({}, "", newUrl)
-   }, 3000)
+   authMessageL.current = "";
+   }, 3000);
+   console.warn("search", location.search)
+   return () => {
+    clearTimeout(timer);
+   }
+
   }, [])
 
   
@@ -76,44 +94,33 @@ console.log(isAuthenticated)
 
 
 
-  const msgkey  = message || authMsg || authMessage || followReqMsg || ""
-  const errkey = error  || authErr || messageError || followReqErr || ""
+  
 
   const messages = t("backendMessages", {ns:"messages", returnObjects:true}) as Record<string , string>
   // let msg = messages[msgkey];
   // let errMsg = messages[errkey]
-
-
- useEffect(() => {
-    console.warn(msgkey, "and", errkey)
-  if((msgkey || errkey)){
-     setToastMsg((prev) => ({...prev, message : messages[msgkey], error : messages[errkey]}))
-     return;
-  };
-  setToastMsg({
-    message :"",
-    error : ""
-  })
- }, [msgkey, errkey])
+  let msgkey  = message || authMsg || authMessageL.current || followReqMsg || "";
+  let errkey = error  || authErr || followReqErr || "";
 
  
 
  const useToastMessage = ({msg , color} : {msg:string , color : "green" | "red"}) => {
     useEffect(() => {
+      console.warn("msg", msg)
     if(!msg || msg.trim() === "") return; 
     toast.custom(t => (
-     <ToasterCompo color={color} msg={msg} t={t} />
+     <ToasterCompo color={color} msg={messages[msg]} t={t} />
     ))
-    setTimeout(() => setToastMsg({message:"", error:""}), 0);
   
   }, [msg])
  }
 
+ useToastMessage({msg:msgkey && msgkey, color:"green"})
+ useToastMessage({msg:errkey && errkey, color:"red"})
 
 
-  
- useToastMessage({color:"green", msg: toastMsg.message})
-useToastMessage({color:"red", msg: toastMsg.error})
+
+
 
 
 
@@ -130,8 +137,11 @@ useToastMessage({color:"red", msg: toastMsg.error})
   const isHomePage = location.pathname === "/";
   const {theme} = useThemeStore()
 
+  gsap.registerPlugin(SplitText)
+
 
   if(isCheckingAuth) return <LoadingSpinner/>
+  
 
 
   return (
@@ -152,6 +162,10 @@ useToastMessage({color:"red", msg: toastMsg.error})
       <Route path="/profile" element={<ProtectRoute><Layout showSidebar={false}><ProfilePage/></Layout></ProtectRoute>} />
       <Route path="/listings/:id" element={<ProtectRoute><Layout showSidebar={false}><CardPage/></Layout></ProtectRoute>} />
       <Route path="/dashboard" element={<ProtectRoute><Layout showSidebar={false}><DashboardPage/></Layout></ProtectRoute>} />
+      
+      <Route path="/profile/:id" element={<ProtectRoute><Layout showSidebar={false}>
+        <UserProfilePage/></Layout></ProtectRoute>} />
+
       <Route path="/dashboard/:id" element={<ProtectRoute><Layout showSidebar={false}><UpdateListingPage/></Layout></ProtectRoute>} />
       <Route path="/chat" element={<ProtectRoute><Layout showSidebar={false}>
         <ChatPage/></Layout></ProtectRoute>} />

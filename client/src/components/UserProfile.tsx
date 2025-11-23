@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import i18n from '../config/reacti18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import ToolTip from './ToolTip'
  
  const UserProfile = ({user, isBtn} : {user : UserData | null, isBtn?:boolean}) => {
     
@@ -15,13 +16,15 @@ import { useNavigate } from 'react-router-dom'
     const ProfilePicture = () => {
       return (
       <>
-      { 
-      <div onClick={() => isBtn && navigate(`/profile/${user?._id}`)}
+         <div onClick={() => isBtn && navigate(`/profile/${user?._id}`, {state:user?._id})}
        className={`${isBtn ? "cursor-pointer size-14" : "cursor-default size-10"}
-         rounded-full border-2 border-primary/50`}>
-        <img src={user?.profilePic || avatar}  alt="Avatar" rel="noreferrer"/>
+         rounded-full border-2 border-primary/50 group`}>
+        <img src={user?.profilePic || avatar} 
+        onError={(e) => e.currentTarget.src = avatar}
+         alt="Avatar" rel="noreferrer"/>
+        { location.pathname.startsWith("/listings") && <ToolTip isMobile/>}
       </div>
-      }
+      
       </>
       )
     }

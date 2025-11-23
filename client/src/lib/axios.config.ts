@@ -25,4 +25,9 @@ import axios from 'axios'
     withCredentials: true
  })
 
+    export const UserApi = axios.create({
+    baseURL: "http://localhost:8000/api/users",
+    withCredentials: true
+ })
+
 
