@@ -11,12 +11,14 @@ import {useTranslation} from 'react-i18next'
 import CardSkeleton from "../components/skeletons/CardSkeleton"
 import { useFollowRequestStore } from "../store/followReqStore"
 import { getTimeInMilliseconds } from "../utils/getTime"
+import type { BarStyleStates } from "../components/Navbar"
 
  const HomePage = () => {
 
   
   const {filters, sort} = useFiltration()
    const {getListings, listings, isListingsLoading, isLoading, listingsLength} = useListingStore()
+   const [barStyle, setBarStyle] = useState<BarStyleStates>({width:0, left:0, opacity:1, right : 0});
 
 
 
@@ -30,7 +32,7 @@ import { getTimeInMilliseconds } from "../utils/getTime"
        listing["title"].toLowerCase().includes(q) ||
         listing?.["description"].toLowerCase().includes(q) || 
         listing?.["location"].toLowerCase().includes(q) || 
-        listing?.["rentalType"].toLowerCase().includes(q) || 
+        listing?.["pricingType"].toLowerCase().includes(q) || 
         listing?.["price"].toString().includes(filters.query) ||
         listing?.["amenities"]?.some(a => a.toLowerCase().includes(q))
       )
@@ -59,10 +61,10 @@ import { getTimeInMilliseconds } from "../utils/getTime"
 
     // Rating
     switch(sort.rating) {
-    case "low" : filteredData = filteredData.sort((a,b) => a.avgRating -  b.avgRating )
+    case "low" : filteredData = filteredData.sort((a,b) => (a.avgRating ?? 0) -  (b.avgRating ?? 0) )
     break; 
 
-     case "high" : filteredData = filteredData.sort((a,b) => b.avgRating -  a.avgRating )
+     case "high" : filteredData = filteredData.sort((a,b) => (b.avgRating ?? 0) -  (a.avgRating ?? 0) )
      break;
 
      default : filteredData;
@@ -72,11 +74,11 @@ import { getTimeInMilliseconds } from "../utils/getTime"
     // Date
     switch(sort.date) {
     case "old" : filteredData = filteredData.sort((a,b) => 
-       getTimeInMilliseconds(a.createdAt) - getTimeInMilliseconds(b.createdAt))
+       getTimeInMilliseconds(a.createdAt ?? "") - getTimeInMilliseconds(b.createdAt ?? ""))
     break; 
 
      case "new" : filteredData = filteredData.sort((a,b) => 
-       getTimeInMilliseconds(b.createdAt) - getTimeInMilliseconds(a.createdAt))
+       getTimeInMilliseconds(b.createdAt ?? "") - getTimeInMilliseconds(a.createdAt ?? ""))
      break;
 
      default : filteredData;
@@ -88,7 +90,7 @@ import { getTimeInMilliseconds } from "../utils/getTime"
     
     if(filters.category) {
        filteredData = filteredData.filter((listing) => (
-        listing.rentalType.toLowerCase() === filters.category.toLowerCase()
+        listing.pricingType.toLowerCase() === filters.category.toLowerCase()
        ))
     }
 
@@ -142,7 +144,7 @@ import { getTimeInMilliseconds } from "../utils/getTime"
    console.log(filteredData.length, listings.length)
 
    return (
-     <div className="mt-24 max-sm:pt-2 ml-72 xl:p-4 lg:p-4 p-2 max-2xl:ml-0">
+     <div className="mt-24 max-sm:pt-2 ml-72 xl:p-4 lg:p-4 p-2 max-2xl:ml-0 select-none">
       <Searchbar/>
       <h1 className="md:text-3xl text-2xl font-black text-base-content mb-2.5 max-xs:4">
 

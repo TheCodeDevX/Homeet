@@ -1,129 +1,89 @@
-import { Camera, ChevronDown, Loader,  PenBox, Search } from "lucide-react"
+import { Camera,  Loader,  PenBox } from "lucide-react"
 import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
-import { useAuthStore, type ProfileData } from "../store/auhStore"
+import { useAuthStore } from "../store/auhStore"
+import type {ProfileData} from '../../../backend/src/shared/types/types'
 import DotAnimation from "../components/DotAnimation"
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react"
+import { useEffect, useState, type ChangeEvent } from "react"
 import {motion} from 'framer-motion'
 import avatar from '../assets/avatar.png'
 import { useTranslation } from "react-i18next"
-import { useLocation } from "react-router-dom"
-import toast from "react-hot-toast"
-import ToasterCompo from "../components/Toaster"
-import {Icon} from "@iconify-icon/react"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import { countries } from "../constants"
 import clsx from "clsx"
 import 'react-phone-number-input/style.css'
 import PhoneInput, {isValidPhoneNumber, parsePhoneNumber} from 'react-phone-number-input'
 import i18n from "../config/reacti18next"
+import toast from "react-hot-toast"
+import ToasterCompo from "../components/Toaster"
+import PhoneInputComponent from "../components/PhoneInput"
 
 
 
- 
- const OnboardingPage = () => {
+
+const OnboardingPage = () => {
+
   const {t} = useTranslation()
-  const [img, setImg] = useState("")
-  const imgRef = useRef<HTMLImageElement>(null)
-  const [isImageLoading, setIsImageLoading] = useState(false)
   const [progress, setProgress] = useState(0)
-  const {updateProfile, setIsOnBoarding, user, isLoading} = useAuthStore()
-  const [showList, setShowList] = useState(false)
+  const {updateProfile, setIsOnBoarding, user} = useAuthStore()
 
- 
-
-  const [query, setQuery] = useState("")
-
-  const container = useRef<HTMLDivElement>(null)
-
-  console.log(user?.profilePic, "the profile picture URL")
-  const imageUrl = user?.profilePic ?
-   `http://localhost:8000/api/auth/profilePic?url=${encodeURIComponent(user?.profilePic as string)}`
-   : undefined;
-
-  const {register, control, setValue, getValues, trigger, reset, watch,
-      handleSubmit, formState : {isSubmitting, errors}} = useForm<ProfileData>()
-
-      const fetchImage = async (url:string) : Promise<string | undefined> => {
-        if(!url) return;
-        setIsImageLoading(true)
-      try {
-        const res = await fetch(url, {credentials : "include"});
-        const buffer = await res.arrayBuffer();
-        const blob = new Blob([buffer], {type: res.headers.get("content-type") || "image/jpeg"});
-        return await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result?.toString() as string)
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        })
-      } catch (error) {
-        console.log(error)
-      }
-      }
-
-      useEffect(() => {
-        if(!imageUrl) return;
-        fetchImage(imageUrl as string).then((imageBase64) => {
-          if(imgRef.current){
-            imgRef.current.src = imageBase64 as string
-          }
-          setImg(imageBase64 as string);
-          
-          setIsImageLoading(false)
-        }).catch(err => console.log(err))
-      }, [])
-
+  const {register, control, setValue, reset, getValues,
+  handleSubmit, formState : {isSubmitting, errors}} = useForm<ProfileData>()
       
 
-      useEffect(() => {
-      if(user){
-      setValue("firstName", user?.firstName ?? "")
-      setValue("lastName", user?.lastName ?? "")
-      setValue("email", user?.email ?? "")
-      setValue("phoneNumber", parsePhoneNumber(user.phoneNumber ?? "")?.number)
-      setValue("address", user?.address ?? "")
-      setValue("bio", user?.bio ?? "")
-      setValue("currency", user?.currency ?? "usd" )
-      setValue("gender", user?.gender)
-      setValue("role", user?.role ?? "homeowner")
-       setValue("profilePic", user?.profilePic)
-        } 
-     
-      }, [user, setValue, getValues])
+  useEffect(() => {
+    if(user) {
+      reset({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      gender:user.gender,
+      phoneNumber: parsePhoneNumber(user.phoneNumber)?.number.toString() as string,
+      role: user.role,
+      profilePic: user.profilePic,
+      bio: user.bio,
+      currency: user.currency,
+      address: user.address,
+    })
+    }
+  }, [user, reset]);
 
 
 
   const handleUploadImage = (e:ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const fileList = e.target.files;
-    if(!fileList) return;
-    const file = fileList[0]
-    if(!file.type.startsWith("image/")) return console.error("please select an image file!");
-    const reader = new FileReader();
-    reader.onload = async() => {
-      const imagebase64 = reader.result?.toString();
-      if(imagebase64) {
-        setValue("profilePic", imagebase64, {shouldValidate:true})
-        setImg(imagebase64)
-      } 
-    };
-     reader.readAsDataURL(file);
-    reader.onprogress = async(e) => {
-      if(e.lengthComputable) {
-        const percent = (e.loaded / e.total) * 100;
-       
-        setProgress(percent)
-      }
-    }
-    reader.onloadend = async() => setTimeout(() => setProgress(0), 2000)
+  e.preventDefault();
+
+  const fileList = e.target.files;
+  if(!fileList) return;
+  const file = fileList[0];
+
+  if(!file.type.startsWith("image/")) {
+  toast.custom((toast) => (
+  <ToasterCompo color="red" msg={t("clientMessages.ONLY_IMG_FILE", {ns:"messages"})} t={toast}/>
+  ))
+  return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async() => {
+  const imagebase64 = reader.result?.toString();
+  if(imagebase64) {
+  setValue("profilePic", imagebase64, {shouldValidate:true})
+  } 
+  };
+
+  reader.readAsDataURL(file);
+  reader.onprogress = async(e) => {
+  if(e.lengthComputable) {
+  const percent = (e.loaded / e.total) * 100;
+  setProgress(percent)
+  }
+  }
+  reader.onloadend = async() => setTimeout(() => setProgress(0), 2000)
+
   }
 
   
    
 
-   const OnSubmit : SubmitHandler<ProfileData> = async(data, e:FormEvent<HTMLFormElement>) => {
-   e.preventDefault();
+   const OnSubmit : SubmitHandler<ProfileData> = async(data) => {
    try {
     setIsOnBoarding(true);
     await updateProfile(data);
@@ -132,24 +92,7 @@ import i18n from "../config/reacti18next"
    }
    }
 
-  //  const getCountry = (country : {code : string, name : string, phone : number | null}) => {
 
-  //  }
-
-  // filter countries
-
-  // const filteredCountries = countries.filter((c) => c.name.toLowerCase().includes(query.toLowerCase()))
- 
- const profilePicture = ()  => {
-  if(getValues("profilePic")) {
-  return getValues("profilePic") as string;
-  }
-   else if(imageUrl) {
-    return imageUrl
-  } else if (img) {
-    return img
-  } else return avatar
- }
    return (
     <>
      <div className="h-full w-full">
@@ -166,6 +109,8 @@ import i18n from "../config/reacti18next"
                {/* Profile Picture */}
                
                 <div className="flex flex-col items-center">
+                            {/* {user?.googleId as string} Let's see */}
+
                     <div className="relative">
                         <motion.div 
                         style={{maskComposite: "exclude",
@@ -178,26 +123,12 @@ import i18n from "../config/reacti18next"
                           <div className={`avatar select-none pointer-events-none rounded-full
                            size-32 overflow-hidden
                           `} >
-                        
-                        {/* { isAvailable &&
-                        (isImageLoading ?
-                        <div className="m-auto size-full bg-base-content animate-pulse"></div>
-                         : <img src={img} alt="Profile"
-                         onLoad={() => {
-                          isAvailable.current = false;
-                         }}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = avatar
-                            setIsImageLoading(false);
-                             isAvailable.current = false;
-                          } } />)} */}
-
-                          {!user?.profilePic ?  
+                            
+                          {!user?.profilePic && user?.googleId ? 
                             <div className="m-auto size-full bg-base-content animate-pulse"/>
-                          : <img src={profilePicture()}
+                          : <img src={user?.profilePic || getValues("profilePic") || avatar}
                           alt="Profile Picture" 
                           onError={(e) => e.currentTarget.src = avatar}
-                          onLoad={(e) => e.currentTarget.src = profilePicture() }
                           />
                           }
 
@@ -279,14 +210,6 @@ import i18n from "../config/reacti18next"
                       <span className="label-text">
                               {t("labels.phoneNumber", {ns:"common"})}
                       </span>
-                       {/* {...register("phoneNumber",
-                       {
-                        required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"}),
-                        validate : (value) => isValidPhoneNumber(value as string) || "Invalid Phone Number."
-                        
-                       }
-                       
-                       )} */}
                       
                    
                      <Controller
@@ -294,21 +217,11 @@ import i18n from "../config/reacti18next"
                      control={control}
                      rules={{
                        required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"}),
-                       validate : (value) => isValidPhoneNumber(value as string) || "Invalid Phone Number."
+                       validate : (value) => isValidPhoneNumber(value as string) || t("INVALID_PHONE_NUMBER", {ns:"messages"})
                      }}
                     
                      render={({field}) => (
-                        <PhoneInput    
-                        {...field}                  
-                         className={clsx(
-                          "relative",
-                          i18n.language === "ar" && "flex flex-row-reverse",
-                          " input input-bordered ",
-                              
-                          )}
-                       placeholder={i18n.language === "ar" ? "+1 555 123 4567"
-                         : t("labels.phoneNumber", {ns:"common"})}
-                       /> 
+                      <PhoneInputComponent field={field}/>
                      )}
                      />
                      
@@ -342,11 +255,12 @@ import i18n from "../config/reacti18next"
                     <span className="label-text">
                             {t("labels.currency.label", {ns:"common"})}
                     </span>
-                    <select {...register("currency")} defaultValue="usd" className='select select-bordered w-full'
+                    <select {...register("currency")}
+                     defaultValue="usd" className='select select-bordered w-full'
                     >
                    {/* <option disabled value=""> {t("labels.currency.placeholder", {ns:"common"})}</option> */}
 
-                <option value="usd">{t("labels.currency.dollar.name", {ns:"common"})}</option>
+                  <option value="usd">{t("labels.currency.dollar.name", {ns:"common"})}</option>
                   <option value="eur">{t("labels.currency.euro.name", {ns:"common"})}</option>
                   <option value="gbp">{t("labels.currency.pound.name", {ns:"common"})}</option>
                   <option value="jpy">{t("labels.currency.yen.name", {ns:"common"})}</option>
@@ -372,7 +286,9 @@ import i18n from "../config/reacti18next"
                     <span className="label-text">
                             {t("labels.gender.label", {ns:"common"})}
                     </span>
-                    <select {...register("gender")} className='select select-bordered w-full'
+                    <select {...register("gender")}
+                    defaultValue=""
+                     className='select select-bordered w-full'
                     >
                    <option disabled value=""> {t("labels.gender.placeholder", {ns:"common"})}</option>
                    <option value="male"> {t("labels.gender.options.male", {ns:"common"})}</option>
@@ -384,20 +300,27 @@ import i18n from "../config/reacti18next"
                     <span className="label-text">
                       {t("labels.role.label", {ns:"common"})}
                     </span>
-                    <select {...register("role", {required : "Role is required"})} className='select select-bordered w-full'
+                    <select
+                    {...register("role")} 
+                    className='select select-bordered w-full'
+                    defaultValue="none"
                     >
-                   <option disabled value="">
+                   <option disabled value="none">
                        {t("labels.role.placeholder", {ns:"common"})}
                    </option>
+
                    <option value="tenant">
                      {t("labels.role.options.tenant", {ns:"common"})}
                    </option>
+
                    <option value="seller">
                         {t("labels.role.options.seller", {ns:"common"})}
                    </option>
+
                    <option value="homeowner">
                         {t("labels.role.options.homeowner", {ns:"common"})}
                     </option>
+
                   </select>
                   </label>
 

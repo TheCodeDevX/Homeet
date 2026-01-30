@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { useAuthStore, type UserData } from "./auhStore";
+import { useAuthStore } from "./auhStore";
+import type {UserData} from '../../../backend/src/shared/types/types'
 import { MessageApi } from "../lib/axios.config";
 import axios, { isAxiosError } from "axios";
  interface MessageData {

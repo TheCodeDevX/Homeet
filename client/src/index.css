@@ -54,3 +54,33 @@
     margin: 0;
   }
 
+  /* .PhoneInputCountryIcon {
+   box-shadow: none  !important;
+   background-color: transparent !important;
+  }
+ */
+
+  .PhoneInputCountrySelectArrow {
+    position: absolute;
+    left: 100%;
+  }
+
+  input[type="tel"] {
+   padding: 0 15px;
+  }
+
+  #phone-number {
+    direction: ltr;
+    flex-direction: row-reverse;
+    text-align: end;
+  }
+
+  #ltr {
+    direction: ltr;
+  }
+
+   #rtl {
+    direction: rtl;
+  }
+  
+ 

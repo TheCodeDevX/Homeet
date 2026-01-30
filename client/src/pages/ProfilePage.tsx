@@ -1,40 +1,56 @@
 import { Camera, Loader, PenBox } from "lucide-react"
-import {useForm, type SubmitHandler} from 'react-hook-form'
-import { useAuthStore, type ProfileData } from "../store/auhStore"
+import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
+import { useAuthStore} from "../store/auhStore"
+import * as types from ".././../../backend/src/shared/types/types"
 import DotAnimation from "../components/DotAnimation"
 import {useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 import {motion} from 'framer-motion'
 import avatar from '../assets/avatar.png'
 import { useTranslation } from "react-i18next"
-import e from "cors"
 import toast from "react-hot-toast"
-import {parsePhoneNumber} from 'react-phone-number-input'
+import {parsePhoneNumber, isValidPhoneNumber, getCountries} from 'react-phone-number-input'
+import clsx from "clsx"
+import i18n from "../config/reacti18next"
+import ToasterCompo from "../components/Toaster"
+import PhoneInputComponent from "../components/PhoneInput"
+
 
 
  
  const ProfilePage = () => {
-  const {t} = useTranslation()
+  const {t} = useTranslation();
+  const lng = i18n.language;
   const [progress, setProgress] = useState(0)
-  const {updateProfile, isLoading, message, error, user, setIsOnBoarding} = useAuthStore()
+  const {updateProfile, isLoading, message, error, user, setIsOnBoarding} = useAuthStore();
+  // const [countryCode, setCountryCode] = useState<string | undefined>('');
 
-  const {register, setValue, trigger, handleSubmit, reset,
-     formState : {isSubmitting, errors}, getValues} = useForm<ProfileData>();
+  // const countriesArray = getCountries();
+  // console.log("Countries", countriesArray) // ['MA', 'US', ...]
 
-           useEffect(() => {
-             if(user) {
-                 reset({
-             firstName: user?.firstName ?? "",
-             lastName:user?.lastName ?? "",
-             bio:user?.bio ?? "",
-             profilePic: user?.profilePic ?? avatar,
-             address: user?.address ?? "",
-             phoneNumber: parsePhoneNumber(user?.phoneNumber ?? "")?.format("E.164") ?? "",
-            email: user?.email ?? "",
-            role: user?.role ?? "",
-            currency :  user?.currency ?? ""
-             })
-             }
-            }, [user, reset])
+    
+ 
+  
+
+
+  const {register, setValue, trigger, handleSubmit, reset, control,
+     formState : {isSubmitting, errors}, getValues} = useForm<types.ProfileData>();
+
+  useEffect(() => {
+    if(user) {
+        reset({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        gender: user.gender,
+        phoneNumber: parsePhoneNumber(user?.phoneNumber ?? "")?.format("E.164") ?? "",
+        role: user.role,
+        profilePic: user.profilePic,
+        bio: user.bio,
+        currency: user.currency,
+        address: user.address
+        })
+    }
+  }, [user, reset])
          
 
 
@@ -43,7 +59,14 @@ import {parsePhoneNumber} from 'react-phone-number-input'
     const fileList = e.target.files;
     if(!fileList) return;
     const file = fileList[0]
-    if(!file.type.startsWith("image/")) return console.error("please select an image file!");
+   
+     if(!file.type.startsWith("image/")) {
+     toast.custom((toast) => (
+     <ToasterCompo color="red" msg={t("clientMessages.ONLY_IMG_FILE", {ns:"messages"})} t={toast}/>
+     ))
+     return;
+     }
+   
     const reader = new FileReader();
     reader.onload = async() => {
       const imagebase64 = reader.result?.toString();
@@ -71,9 +94,7 @@ import {parsePhoneNumber} from 'react-phone-number-input'
 
  
   
-   const OnSubmit : SubmitHandler<ProfileData> = async(data, e:FormEvent<HTMLFormElement>) => {
-   e.preventDefault();
-
+   const OnSubmit : SubmitHandler<any>  = async(data:types.ProfileData) => {
     setIsOnBoarding(false)
     try {
        await updateProfile(data)
@@ -193,9 +214,18 @@ import {parsePhoneNumber} from 'react-phone-number-input'
                       <span className="label-text">
                               {t("labels.phoneNumber", {ns:"common"})}
                       </span>
-                      <input type="text" className="input input-bordered"
-                       placeholder={t("labels.phoneNumber", {ns:"common"})}
-                       {...register("phoneNumber", {required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"})})} />
+                      <Controller
+                      name="phoneNumber"
+                      rules={{
+                        required : t("backendMessages.PHONE_NUMBER_REQUIRED", {ns:"messages"}),
+                        validate : (v) => isValidPhoneNumber(v) ||
+                         t("clientMessages.INVALID_PHONE_NUMBER", {ns:"messages"})
+                      }}
+                      control={control} 
+                       render={({field}) => ( 
+                       <PhoneInputComponent field={field}/>
+                        )}
+                       />
                     </label>
                       {errors.phoneNumber && (<p className="text-red-500 text-xs font-semibold mt-2">
                         {errors?.phoneNumber.message}</p>) }

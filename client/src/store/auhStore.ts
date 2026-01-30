@@ -3,28 +3,11 @@ import axios, { isAxiosError } from 'axios'
 import { authApi } from '../lib/axios.config'
 import {type Socket, io} from "socket.io-client"
 import { handleAxiosError } from './helpers/errorHelper'
+import type {UserRole, UserData, ProfileData, VerifyEmailResponse, LogoutResponse} from '../../../backend/src/shared/types/types'
 
 
 // const naviagte = useN
 
-export type UserRole = "tenant" | "homeowner" | "seller" 
- export type UserData = {
-    firstName:string,
-    lastName: string ,
-    email: string,
-    password: string
-    isVerified? : boolean,
-    verificationToken?: number,
-    onBoarded? : boolean,
-    _id?:string,
-    followers : string[]
-    
- } & {bio?:string, gender?: "male" | "female", address?:string ,
-    phoneNumber?:string, profilePic?:string, 
-   role: UserRole, currency?: string  }
-
-export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "bio" |
- "email" | "role" | "phoneNumber" | "currency" | "profilePic" | "address" | "gender"> 
 
 
  interface AuthData {
@@ -47,14 +30,14 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "bio" |
     socket : Socket | null
     onlineUsers : string[]
     setEmail : (email:string) => void;
-    signup : (data : Pick<UserData, "firstName" | "lastName" | "email" | "password">) => void
-    login : (data : Pick<UserData, "email" | "password">) => void
-    forgotPassword : (email:string) => void;
-    logout : () => void
-    verifyEmail : (code : string) => void
+    signup : (data : Pick<UserData, "firstName" | "lastName" | "email" | "password">) => Promise<void>
+    login : (data : Pick<UserData, "email" | "password">) => Promise<void>
+    forgotPassword : (email:string) => Promise<void>;
+    logout : () => Promise<void>
+    verifyEmail : (code : string) => Promise<void>
     resetPassword : (password:string, token?:string) => void;
-    checkAuth : () => void
-    updateProfile : (data : ProfileData) => void
+    checkAuth : () => Promise<void>
+    updateProfile : (data : ProfileData) => Promise<void>
     warmUp : () => void, 
     connectSocket : () => void,
     disconnectSocket : () => void;
@@ -134,7 +117,7 @@ export type ProfileData =  Pick<UserData , "firstName" | "lastName" | "bio" |
          if(res.data === "EXPIRED_VERIFICATION_CODE") {
           res = await get().tryToRefreshAccessToken(code);
          }
-         set({user:res.data?.user, isAuthenticated:true, message:res?.data?.message, accessToken:""})
+         set({isAuthenticated:true, message:res?.data?.message, accessToken:""})
       } catch (error) {
          let errMessage = "USER_VERIFICATION_FAILED"
       if(axios.isAxiosError(error)) {

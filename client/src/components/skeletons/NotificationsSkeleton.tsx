@@ -3,9 +3,9 @@
   const NotificationsSkeleton = () => {
     return (
      <div>
-      <div className="relative">
-          {[...Array(3).fill("").map((_,i) => (
-            <div key={i} className="card border border-base-content/10 shadow-[0px_0px_30px_1px] shadow-primary/10
+      <div className="relative"> 
+           {[...Array(5).fill("").map((_,i) => ( 
+            <div key={i}  className="card border border-base-content/10 shadow-[0px_0px_30px_1px] shadow-primary/10
            bg-base-300
            flex items-center justify-center gap-4 p-8">
             <section className="flex items-center justify-between w-full gap-2 ">
@@ -41,9 +41,9 @@
        </div> 
              </section>
          </div>
-          ))]}
-          </div>
-         </div>
+        ))]} 
+       </div>
+      </div>
     )
   }
   

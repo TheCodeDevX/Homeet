@@ -25,9 +25,9 @@
 
      "categories" : {
        "nightly" : "في الليلة",
-      "monthly" : "في الشهر",
-      "for sale" : "للبيع",
-      "placeholder" : "غير محدد"
+       "monthly" : "في الشهر",
+       "one_time" : "للبيع",
+       "placeholder" : "غير محدد"
      }
 
       

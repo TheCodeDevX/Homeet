@@ -13,14 +13,14 @@ import useCarouselControls from '../hooks/useCarouselControls'
 import { FaExclamation } from 'react-icons/fa'
 import RatingModal from './RatingModal'
 import { useTranslation } from 'react-i18next'
-import { useAuthStore, type UserRole } from '../store/auhStore'
+import { useAuthStore } from '../store/auhStore'
+import * as sharedTypes from '../../../backend/src/shared/types/types'
 import i18n from '../config/reacti18next'
-import e from 'cors'
 import { useThemeStore } from '../store/themeStore'
 
 
  const Card = ({listing}: {listing : ApiData}) => {
-  const {getRatings, isLoading} = useListingStore()
+  const {getRating, isLoading} = useListingStore()
   const {user} = useAuthStore()
   
    
@@ -45,7 +45,7 @@ import { useThemeStore } from '../store/themeStore'
 
      const {t} = useTranslation()
      const facilities = t("card.facilities", {ns:"card", returnObjects:true}) as Record<string, Facilities>
-     const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, UserRole>
+     const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, sharedTypes.UserRole>
      const lang = i18n.language
      const avgRating = listing?.avgRating
 
@@ -122,11 +122,15 @@ import { useThemeStore } from '../store/themeStore'
            <ChevronRight/>
       </button>
       <div className='absolute bottom-0 flex items-center justify-center w-full select-none pointer-events-none'>
-       {[...Array(listing.images.length)].fill("").map((_, i) => (
+       { (listing.images.length < 6 ) ? [...Array(listing.images.length)].fill("").map((_, i) => (
          <div key={i}>
-          <p className={`text-9xl ${state.currentIndex === i ? "text-white" : "text-white/50"}`}>.</p>
+          <p className={`text-3xl mr-1 ${state.currentIndex === i ? "text-white" : "text-white/50"}`}>●</p>
          </div>
-       ))}
+       )) : 
+       <div className='text-lg font-semibold mb-1.5'>
+        {`${state.currentIndex + 1}/${listing.images.length}`}
+       </div>
+       }
       </div>
        </motion.div>
 

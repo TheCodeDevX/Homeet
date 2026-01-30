@@ -2,7 +2,7 @@
     "links" : {
         "HOME" : "الرئيسية",
         "POST_LISTING" : "نشر إعلان",
-        "NOTIFICATION" : "الإشعارات",
+        "NOTIFICATIONS" : "الإشعارات",
         "CHAT" : "المحادثة",
         "DASHBOARD" : " التحكم"
     }

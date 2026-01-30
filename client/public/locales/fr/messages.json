@@ -42,6 +42,8 @@
       "LAST_NAME_REQUIRED": "Le nom de famille est requis.",
       "LAST_NAME_MUSTBE_STRING": "Le nom de famille ne doit contenir que des lettres.",
       "EMAIL_REQUIRED": "L'email est requis.",
+      "GENDER_REQUIRED" : "Le genre est requis",
+      "ROLE_REQUIRED" : "Le rôle est requis",
       "PASS_REQUIRED": "Le mot de passe est requis.",
       "PASS_MUSTBE_STRING": "Le mot de passe doit être du texte.",
       "TIP": "Le mot de passe doit contenir au moins 8 caractères incluant minuscules, majuscules, chiffres et symboles.",
@@ -52,6 +54,10 @@
       "ATLEAST_ONE_IMAGE": "Ajoutez au moins une photo.",
       "IMG_MUSTBE_NOTEMTY": "L'image ne peut pas être vide.",
       "IMAGES_MUSTBE_STRINGS": "Format d'image invalide.",
+
+      "PETS_REQUIRED" : "Le champ animaux de compagnie est obligatoire",
+      "ADULTS_REQUIRED" : "Le champ adultes est obligatoire",
+      "CHILDREN_REQUIRED" : "Le champ enfants est obligatoire",
 
       "ENTER_RENTALPRICE": "Veuillez sélectionner un type de location.",
       "RENTAL_PRICE_REQUIRED": "Le prix de location est requis.",
@@ -99,6 +105,10 @@
     },
 
     "clientMessages": {
-      "ERROR_MATCHING_PASSWORDS": "Les mots de passe ne correspondent pas."
+      "ERROR_MATCHING_PASSWORDS": "Les mots de passe ne correspondent pas.",
+      "ONLY_IMG_FILE" : "Veuillez sélectionner un fichier image!",
+      "INVALID_PHONE_NUMBER": "Numéro de téléphone invalide",
+      "FAILED_COPYING_FIELD": "Échec de la copie",
+      "FOLLOW_MESSAGE": "{{context}} a commencé à vous suivre"
     }
 }

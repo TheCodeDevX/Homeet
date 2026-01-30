@@ -26,7 +26,7 @@
      "categories" : {
        "nightly" : "par nuit",
       "monthly" : "par mois",
-      "for sale" : "À Vendre",
+      "one_time" : "À Vendre",
       "placeholder" : "Non Spécifié"
      }
 

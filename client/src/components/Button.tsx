@@ -1,12 +1,23 @@
- import { type ReactNode } from 'react'
+ import { type ButtonHTMLAttributes, type ReactNode } from 'react'
  import {motion} from 'framer-motion'
 import { useThemeStore } from '../store/themeStore'
 import { lightThemes } from '../constants';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
+ {
+  children : ReactNode,
+  classes?:string,
+  onClick?: () => void,
+  type?: "submit" | "button" | "reset",
+  }
  
- const Button = ({children, classes} : {children : ReactNode, classes?:string}) => {
+ const Button = ({children, classes, onClick, type} : ButtonProps ) => {
   const {theme} = useThemeStore();
    return (
-    <motion.button whileHover={{scale:1.02}} type="submit" whileTap={{scale:0.98}} className={`
+    <motion.button whileHover={{scale:1.02}}
+     type={type ?? "submit"}
+     onClick={onClick}
+      whileTap={{scale:0.98}} className={`
       w-full px-5 py-2.5 bg-gradient-to-r from-10%
         hover:from-primary hover:to-secondary/80 from-primary to-secondary
         ${lightThemes.includes(theme)

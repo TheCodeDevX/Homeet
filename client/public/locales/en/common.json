@@ -27,7 +27,12 @@
         "unfollow" : "Unfollow",
         "following" : "following...",
         "unfollowing" : "unfollowing...",
-        "message" : "Message"
+        "message" : "Message",
+        "readMore" : "Read More",
+        "less" : "Less",
+        "comments" : "Comments",
+        "followBack" : "Follow Back",
+        "mutualFollow" : "Mutual Follow"
     },
 
       "placeholders" : {
@@ -36,7 +41,7 @@
         "title" : "Enter Your Listing Title",
         "description" : "Enter Your Detailed Description",
         "location" : "Enter Your Property's Location",
-        "rentalType" : "Pick Your Type",
+        "pricingType" : "Select pricing type",
         "searchUser" : "Search User",
         "feedback" : "Your Feedback Matters to Us",
         "address" : "City, State, Country, ZIP",
@@ -53,8 +58,27 @@
         "phoneNumber" : "Phone Number",
         "address" : "Address",
         "bio" : "Bio",
+        "country" : "Country",
         "reviews_one" : "{{count}} review",
         "reviews_other" : "{{count}} reviews",
+        "stars_one" : "{{count}} star",
+        "stars_other" : "{{count}} stars",
+        "justNow": "Commented just now",
+        "msAgo_one": "Commented 1ms ago",
+        "msAgo_other": "Commented {{count}}ms ago",
+        "seconds_one": "Commented a second ago",
+        "seconds_other": "Commented {{count}} seconds ago",
+        "minutes_one": "Commented a minute ago",
+        "minutes_other": "Commented {{count}} minutes ago",
+        "hours_one": "Commented an hour ago",
+        "hours_other": "Commented {{count}} hours ago",
+        "days_one": "Commented a day ago",
+        "days_other": "Commented {{count}} days ago",
+        "months_one": "Commented a month ago",
+        "months_other": "Commented {{count}} months ago",
+        "years_one": "Commented a year ago",
+        "years_other": "Commented {{count}} years ago",
+        "newFollowers": "New Followers",
         "gender" : {
             "label" : "Gender",
             "placeholder" : "Pick Your Gender",
@@ -101,7 +125,7 @@
         "title" : "Title",
         "description" : "Description",
         "location" : "Location",
-        "rentalType" : "Rental Type",
+        "pricingType" : "Pricing Type",
         "uploadImages" : {
             "title" : "Upload Images",
             "label" : "Click Here to Upload Images, or Drag & Drop Them",
@@ -112,16 +136,23 @@
             "subtext" : "Choose the Amenities That You Have"
         },
         "specs" : {
-            "text" : "Property Specs",
+            "text" : "Specs",
             "subtext" : "Enter Property Numbers",
             "beds" : "Beds",
             "bathrooms" : "Bathrooms",
             "bedrooms" : "Bedrooms",
             "size" : "Size (m²)",
-            "floor" : "Floor",
-            "rentalPrice" : "Rental Price"
+            "floors" : "Floors",
+            "rentalPrice" : "Rental Price",
+            "salePrice" : "Sale Price"
         },
-        "price" : "Price"
+        "guestCapacity" : "Guest Capacity",
+        "guestLabel" : "Enter Max Capacity",
+        "adults" : "Adults",
+        "children" : "Children",
+        "pets" : "Pets",
+        "price" : "Price",
+        "guestContent" : "{{adults}} adults, {{children}} children, {{pets}} pets"
 
      }
  }

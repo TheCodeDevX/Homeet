@@ -17,7 +17,7 @@ const UpdateListingPage = () => {
 
   let {id} = useParams()
 
-  // const [unit, setUnit] = useState<Exclude<FormData["rentalType"], "">>("monthly")
+  // const [unit, setUnit] = useState<Exclude<FormData["pricingType"], "">>("monthly")
     const {isLoading, updateListing, listing, getListing, error, message} = useListingStore()
    
   
@@ -40,7 +40,7 @@ const UpdateListingPage = () => {
     description:  "",
     location: "",
     images: [],
-    rentalType:  "placeholder",
+    pricingType:  "placeholder",
     amenities : [],
     price: 0,
     bedrooms:0,
@@ -57,7 +57,7 @@ const UpdateListingPage = () => {
     description: listing?.description ?? "",
     location:listing?.location ?? "",
     images: listing.images ?? [],
-    rentalType: listing?.rentalType ?? "placeholder",
+    pricingType: listing?.pricingType ?? "placeholder",
     amenities : listing?.amenities ?? [],
     price: listing?.price ?? 0,
     bedrooms:listing?.bedrooms ?? 0,
@@ -104,7 +104,7 @@ const UpdateListingPage = () => {
     e.preventDefault()
 
 
-    if(!formState.rentalType) console.log("please pick a renatl type!")
+    if(!formState.pricingType) console.log("please pick a renatl type!")
     
     try {
        const data = {...formState}
@@ -244,15 +244,15 @@ const UpdateListingPage = () => {
 
                 <label>
                 <p className="lg:text-lg md:text-md text-sm font-semibold mb-2">
-                   {t("labels.rentalType", {ns:"common"})}
+                   {t("labels.pricingType", {ns:"common"})}
                 </p>
               <select className={`select select-bordered w-full lg:text-md text-sm 
-              ${formState.rentalType === "placeholder" ? "text-bseplaceholder-base-content/60":"text-base-content"}
-              `} name="rentalType"
-               value={formState.rentalType} 
+              ${formState.pricingType === "placeholder" ? "text-bseplaceholder-base-content/60":"text-base-content"}
+              `} name="pricingType"
+               value={formState.pricingType} 
                 onChange={handleChange}>
               <option disabled value="placeholder" className="">
-                {t("placeholders.rentalType", {ns:"common"})}
+                {t("placeholders.pricingType", {ns:"common"})}
               </option>
                <option className="text-base-content" value="nightly">
                 {t("content.filters.category.content.options.nightly", {ns:"sidebar"})}
@@ -260,7 +260,7 @@ const UpdateListingPage = () => {
                 <option  className="text-base-content" value="monthly">
                   {t("content.filters.category.content.options.monthly", {ns:"sidebar"})}
                 </option>
-                 <option  className="text-base-content" value="for sale">
+                 <option  className="text-base-content" value="one_time">
                   {t("content.filters.category.content.options.forSale", {ns:"sidebar"})}
                  </option>
               </select>
@@ -416,7 +416,7 @@ const UpdateListingPage = () => {
     </div>
 
     <div>
-      <span className="mb-2 md:text-md text-sm">{t("labels.specs.floor", {ns:"common"})}</span>
+      <span className="mb-2 md:text-md text-sm">{t("labels.specs.floors", {ns:"common"})}</span>
       <label className="flex flex-col relative">
         <input type="number"  name="floor" value={formState.floor}
          onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />

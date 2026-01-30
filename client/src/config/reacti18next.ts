@@ -19,7 +19,7 @@ import HttpBackend from 'i18next-http-backend'
     fallbackLng : localStorage.getItem("lang") || "en" as "en" | "ar" | "es" | "fr",
     lng : localStorage.getItem("lang") as "en" | "ar" | "es" | "fr",
     ns : ["home", "common", "sidebar", "status", "nav", "tooltips",
-       "card", "headers", "messages", "dashboard", "profile", "modals", "auth", "sort"],
+       "card", "headers", "messages", "dashboard", "profile", "modals", "auth", "sort", "countries"],
     defaultNS:"home",
      interpolation : {
         escapeValue : false 

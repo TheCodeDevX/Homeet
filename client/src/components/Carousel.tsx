@@ -24,14 +24,14 @@ import home from "../assets/Tinyhouse.svg"
           <button onClick={(() => dispatch({type: "prev", length:listing?.images?.length ?? 0 }))}
        className={` bg-gradient-to-r from-zinc-500 to-zinc-300/50 
         shadow-[inset_-2px_-2px_10px_rgba(225,225,225,1)] transition-colors duration-300
-          cursor-pointer rounded-full absolute z-50 p-2 top-1/2 left-1 
+          cursor-pointer rounded-full absolute z-30 p-2 top-1/2 left-1 
           -translate-y-1/2 text-white flex items-center gap-2 hover:from-zinc-600 hover:fto-zinc-400/50`}>
            <ChevronLeft/>
       </button>
 
       <button  onClick={(() => dispatch({type: "next",length:listing?.images.length ?? 0}))}
        className={`bg-gradient-to-l from-zinc-500 to-zinc-300/50 shadow-[inset_2px_2px_10px_rgba(225,225,225,1)]  transition-colors duration-300
-          cursor-pointer rounded-full absolute z-50 p-2 top-1/2 right-1 
+          cursor-pointer rounded-full absolute z-30 p-2 top-1/2 right-1 
           -translate-y-1/2 text-white flex items-center gap-2 hover:from-zinc-600 hover:to-zinc-400/50`}>
            <ChevronRight/>
       </button>

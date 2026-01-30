@@ -1,27 +1,49 @@
 
- import React, { useState } from 'react'
+ import React, { useEffect, useRef, useState } from 'react'
+ import gsap from 'gsap'
+ import { useGSAP } from '@gsap/react'
  import {motion} from 'framer-motion'
 import { links } from '../constants'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 import { useAuthStore } from '../store/auhStore'
 import type { BarStyleStates, NavLinks } from './Navbar'
+import i18n from '../config/reacti18next'
+import useNotification from '../hooks/useNotification'
+import { useFollowRequestStore } from '../store/followReqStore'
+import { useNotificationStore } from '../store/notificationStore'
 
  interface NavigatorProps {
     containerRef : React.RefObject<HTMLUListElement | null>
     resetBarToActiveLink : () => void;
-    isShow : boolean
+    // isShow : boolean
     barStyle : BarStyleStates
     handleHover :  (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
     barRef : React.RefObject<HTMLSpanElement | null>
     navLinks : NavLinks
  }
+
  
- const Navigator = ({containerRef, resetBarToActiveLink, isShow, barStyle, handleHover, barRef, navLinks} : NavigatorProps) => {
-    const {user} = useAuthStore()
+ 
+ const Navigator = ({containerRef, resetBarToActiveLink,  barStyle, handleHover, barRef, navLinks} : NavigatorProps) => {
+  const {user} = useAuthStore()
+  const {notificationsLength} = useNotification();
+  const {getIncomingNotifs, notifications} = useNotificationStore()
+
+    const barVariants = {
+    left: barStyle.left,
+    width:barStyle.width,
+    opacity: barStyle.opacity
+
+    }
+
+    useEffect(() => {
+     getIncomingNotifs()   
+    }, [getIncomingNotifs]);
+
 
    return (
-<div className='hidden xl:flex items-center justify-center w-full'>
+<div id={i18n.language === 'ar' ? 'rtl' : 'ltr'} className='hidden xl:flex items-center justify-center w-full'>
     <ul  ref={containerRef}
     onMouseLeave={() => setTimeout(() => {
     resetBarToActiveLink()
@@ -31,16 +53,21 @@ import type { BarStyleStates, NavLinks } from './Navbar'
     "border border-base-content/10 bg-base-300 rounded-full relative overflow-hidden shadow",
     
 )}>
-    { !isShow &&
-            <motion.span 
-            animate={{
-            left: barStyle.left,
-        width:barStyle.width, opacity:barStyle.opacity}}
+
+
+
+{   
+    (<motion.span 
+        animate={barVariants} 
         transition={{duration:0.5, ease:"easeInOut"}}
-            className='absolute h-1  bottom-0 rounded-full bg-base-content' />
-    }
+        className={`absolute h-1 bottom-0 rounded-full
+        bg-base-content`} /> )
         
-            
+}
+
+
+
+
         
         {links.map(({href, size, key,icon:Icon, classes, id}) => (
         <Link
@@ -56,11 +83,14 @@ import type { BarStyleStates, NavLinks } from './Navbar'
         "nav-item")}>
         {navLinks[key]} 
         <Icon className={size}/>
+       { href === "/notification" && notifications.length > 0  && 
+       <span className='size-2 rounded-full absolute right-0 top-0 bg-red-500'/>}
         
-        {location.pathname === href && isShow && 
+        {/* {location.pathname === href && isShow && 
         <motion.span ref={barRef}
-        className='absolute h-1 w-full rounded-full top-[150%] bg-base-content' />}
+        className='absolute h-1 w-full rounded-full top-[150%] bg-base-content' />} */}
         </Link>
+        
         ))}
     </ul>
 </div> 

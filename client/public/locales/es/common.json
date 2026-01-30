@@ -27,7 +27,12 @@
         "message" : "Mensaje",
         "unfollow": "Dejar de seguir",
         "following": "Siguiendo...",
-        "unfollowing": "Dejando de seguir..."
+        "unfollowing": "Dejando de seguir...",
+        "readMore": "Leer más",
+        "less": "Menos",
+        "comments" : "Comentarios",
+        "followBack": "Seguir de vuelta",
+        "mutualFollow": "Seguimiento mutuo"
     },
 
       "placeholders" : {
@@ -36,7 +41,7 @@
         "title" : "Ingresa el Título de Tu Anuncio",
         "description" : "Ingresa Tu Descripción Detallada",
         "location" : "Ingresa la Ubicación de Tu Propiedad",
-        "rentalType" : "Elige Tu Tipo",
+        "pricingType":"Seleccionar tipo de precio",
         "searchUser" : "Buscar Usuario",
         "feedback" : "Tu Opinión Nos Importa",
         "address" : "Ciudad, Región, País, Código Postal",
@@ -53,8 +58,27 @@
         "phoneNumber" : "Número de Teléfono",
         "address" : "Dirección",
         "bio" : "Biografía",
-       "reviews_one": "{{count}} reseña",
+        "country" : "País",
+        "reviews_one": "{{count}} reseña",
         "reviews_other": "{{count}} reseñas",
+        "stars_one": "{{count}} estrella",
+        "stars_other": "{{count}} estrellas",
+        "justNow": "Comentado justo ahora",
+        "msAgo_one": "Comentado hace 1ms",
+        "msAgo_other": "Comentado hace {{count}}ms",
+        "seconds_one": "Comentado hace un segundo",
+        "seconds_other": "Comentado hace {{count}} segundos",
+        "minutes_one": "Comentado hace un minuto",
+        "minutes_other": "Comentado hace {{count}} minutos",
+        "hours_one": "Comentado hace una hora",
+        "hours_other": "Comentado hace {{count}} horas",
+        "days_one": "Comentado hace un día",
+        "days_other": "Comentado hace {{count}} días",
+        "months_one": "Comentado hace un mes",
+        "months_other": "Comentado hace {{count}} meses",
+        "years_one": "Comentado hace un año",
+        "years_other": "Comentado hace {{count}} años",
+        "newFollowers": "Nuevos seguidores",
         "gender" : {
             "label" : "Género",
             "placeholder" : "Elige Tu Género",
@@ -98,7 +122,7 @@
         "title" : "Título",
         "description" : "Descripción",
         "location" : "Ubicación",
-        "rentalType" : "Tipo de Alquiler",
+       "pricingType": "Tipo de precio",
         "uploadImages" : {
             "title" : "Subir Imágenes",
             "label" : "Haz Clic Aquí para Subir Imágenes, o Arrastra y Suelta",
@@ -109,15 +133,21 @@
             "subtext" : "Selecciona las Comodidades que Tienes Disponibles"
         },
         "specs" : {
-            "text" : "Características de la Propiedad",
+            "text" : "Características",
             "subtext" : "Completa los Datos de la Propiedad",
             "beds" : "Camas",
             "bathrooms" : "Baños",
             "bedrooms" : "Habitaciones",
             "size" : "Superficie (m²)",
-            "floor" : "Piso",
-            "rentalPrice" : "Precio de Alquiler"
+            "floors" : "Pisos",
+            "rentalPrice" : "Precio de Alquiler",
+              "salePrice": "Precio de venta"
         },
+        "guestCapacity" : "Capacidad de huéspedes",
+        "guestLabel" : "Ingrese la capacidad máxima",
+        "adults" : "Adultos",
+        "children" : "Niños",
+        "pets" : "Mascotas",
         "price" : "Precio"
 
      }

@@ -2,7 +2,7 @@
     "links" : {
         "HOME" : "Home",
         "POST_LISTING" : "Post Listing",
-        "NOTIFICATION" : "Notification",
+        "NOTIFICATIONS" : "Notifications",
         "CHAT" : "Chat",
         "DASHBOARD" : "Dashboard"
     }

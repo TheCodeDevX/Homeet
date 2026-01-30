@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { listingApi, ratingApi } from "../lib/axios.config";
 import { isAxiosError } from "axios";
-import type { UserData } from "./auhStore";
+import type { ID, UserData } from "../../../backend/src/shared/types/types";
+import { useAuthStore } from "./auhStore";
 
-export type RentalType = "nightly" | "monthly" | "for sale" | "placeholder";
+export type PricingType = "nightly" | "monthly" | "one_time" | "placeholder";
 export interface FormData {
     title : string,
     description : string,
     location : string,
-    images: string[] ;
-    
-    rentalType : RentalType
+    images: string[];
+    pricingType : PricingType
     amenities?: (string)[],
     price: number,
     beds?: number,
@@ -18,9 +18,12 @@ export interface FormData {
     bedrooms?:number, 
     size?:number, 
     floor?:number, 
-    avgRating: number
+    pets:number,
+    adults:number,
+    children:number,
+    avgRating?: number
     count?:number
-    createdAt : string
+    createdAt?: string
  }
 
  export type ApiData = {   
@@ -29,8 +32,13 @@ export interface FormData {
      user?:UserData
  } & FormData
 
- type Rating = {
-   value?: number,
+ export type Rating = {
+    value?: number,
+    likes?:number,
+    likers:string[],
+    _id?: ID,
+    user:UserData | null,
+    listing : ApiData | null,
     feedback?: string,
     createdAt?: string,
     updatedAt?: string ,
@@ -40,6 +48,7 @@ export interface FormData {
  interface ListingData {
     listing: ApiData | null,
     listings :ApiData[],
+    userListings :ApiData[],
     isLoading: boolean,
     isCardLoading : boolean,
     isListingsLoading: boolean,
@@ -48,6 +57,11 @@ export interface FormData {
     currentPage : number,
     listingsLength : number,
     rating : Rating | null,
+    isAlreadyLiked: boolean,
+    isDashboardLoading : boolean,
+    setIsAlreadyLiked : (bool:boolean) => void,
+    userHasLikedRating:boolean,
+    ratings : Rating[]
     setCurrentPage : (page:number) => void
     createListing : (data : FormData) => Promise<any>
     getListings : () => Promise<any>
@@ -56,7 +70,11 @@ export interface FormData {
     deleteListing : (id:string) => void
     updateListing : (id:string, data:FormData) => void
     rateListing : (id:string, data: {stars?:number, feedback?:string}) => Promise<any>
+    getRating : (id:string) => void
     getRatings : (id:string) => void
+    likeRating : (id:string, likers: string[]) => void
+   //  getLikes : (id:string) => void; 
+
  }
 
  
@@ -64,7 +82,14 @@ export interface FormData {
   export const useListingStore = create<ListingData>((set, get) => ({
     listing:null,
     listings: [],
+    userListings:[],
     rating : null,
+    ratings : [],
+    isAlreadyLiked:false,
+    isDashboardLoading:false,
+    likes:null,
+    likers : [],
+    userHasLikedRating:false,
     isLoading:false,
     isListingsLoading : false,
     isCardLoading : false,
@@ -73,6 +98,7 @@ export interface FormData {
     currentPage:1,
     listingsLength:0,
     setCurrentPage : (currentPage) => set({currentPage}),
+    setIsAlreadyLiked : (bool) => set({isAlreadyLiked:bool}),
 
     createListing : async(data) => {
      try {
@@ -141,10 +167,10 @@ export interface FormData {
     },
 
     getUserListings : async () => {
-         set({isLoading:true, error:null})
+         set({isDashboardLoading:true, error:null})
         try {
             const res = await listingApi.get("/dashboard")
-            set({listings:res.data.listings, isLoading:false})
+            set({userListings:res.data.listings})
             return res.data.listings
         } catch (error) {
             let errMsg = "Error fetching listing"
@@ -153,10 +179,10 @@ export interface FormData {
         } else if (error instanceof Error){
             errMsg = error?.message || errMsg;
         }
-        set({error:errMsg, listings:[]})
+        set({error:errMsg})
         }
         finally {
-         set({isLoading:false})
+         set({isDashboardLoading:false})
         }
     },
 
@@ -228,14 +254,14 @@ export interface FormData {
    
     },
 
-     getRatings : async(id) => {
+     getRating : async(id) => {
       set({isLoading:true, error:null, message:""})
     try {
-       const res = await ratingApi.get(`/${id}`);
+       const res = await ratingApi.get(`/rating/${id}`);
        set({rating : res.data?.rating, isLoading:false, message:res.data?.message})
      
     } catch (error) {
-         let errMsg = "Error Fetching Ratings"
+         let errMsg = "Error Fetching a Rating"
          if(isAxiosError(error)){
             errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
          } else if(error instanceof Error){
@@ -247,5 +273,65 @@ export interface FormData {
     finally {
          set({isLoading:false})
    }
-    }
+    },
+    getRatings : async (listingID) => {
+      set({isLoading:true, error:null})
+      try {
+         const response = await ratingApi.get(`/${listingID}`);
+         set({ratings:response.data, isLoading:false})
+      } catch (error) {
+         let errMsg = "Error Fetching Ratings"
+         if(isAxiosError(error)){
+            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
+         } else if (error instanceof Error) {
+            errMsg = error.message || errMsg
+         }
+         set({error:errMsg, isLoading:false})
+         throw error;
+      }
+    },
+
+    likeRating : async (ratingId) => {
+      set({isLoading:true, error:null});
+      const authUserId = useAuthStore.getState().user?._id as string;
+      set((state) => ({ratings:state.ratings.map((rating) => rating._id === ratingId 
+         ? {...rating, likers: state.isAlreadyLiked ? rating.likers?.filter(id => id !== authUserId) 
+            : [...rating.likers, authUserId]}
+          : rating)}))
+      try {
+         const response = await ratingApi.post(`/likes/${ratingId}`);
+         set((state) => ({isLoading:false, ratings: state.ratings.map((r) => 
+            r._id?.toString() === ratingId.toString() 
+            ? {...r, likers:response.data} 
+            : r)
+         }))
+           
+      } catch (error) {
+         let errMessage = "Error liking a rating!"
+         if(isAxiosError(error)) {
+            errMessage = error.response?.data?.message || errMessage 
+         } else if(error instanceof Error) {
+            errMessage = error.message;
+         }
+         set({error:errMessage, isLoading:false})
+         throw error
+      }
+    },
+
+   //  getLikes : async (id) => {
+   //    set({isLoading:true, error:null})
+   //    try {
+   //       const res = await ratingApi.get(`/likes/user/${id}`)
+   //       set({isLoading:false, userHasLikedRating:res.data.userHasLikedRating})
+   //    } catch (error) {
+   //     let errMessage = "Error fetching data"
+   //       if(isAxiosError(error)) {
+   //          errMessage = error.response?.data?.message || errMessage 
+   //       } else if(error instanceof Error) {
+   //          errMessage = error.message;
+   //       }
+   //       set({error:errMessage, isLoading:false})
+   //       throw error
+   //    }
+   //  }
   }))

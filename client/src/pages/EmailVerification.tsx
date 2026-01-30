@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import {motion} from 'framer-motion'
-import Light from "../components/Light";
 import Button from "../components/Button";
 import { useAuthStore } from "../store/auhStore";
 import {useNavigate } from "react-router-dom";
@@ -17,7 +16,7 @@ import clsx from "clsx";
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const naviagte = useNavigate();
+    const navigate = useNavigate();
 
 
 
@@ -94,7 +93,7 @@ import clsx from "clsx";
      try {
       const verificationCode = code.join("");
       await verifyEmail(verificationCode);
-      naviagte("/onboarding", {state: user})
+      navigate("/onboarding", { replace: true })
      } catch (error) {
       console.error(error)
      }
@@ -131,7 +130,8 @@ import clsx from "clsx";
              ref={(el) => { inputRefs.current[index] = el} }
              maxLength={6}
              onKeyDown={(e) => handleKeyDown(index, e)}
-             className="w-12 h-12 text-center text-2xl font-bold bg-base-100
+             
+             className="cursor-default caret-transparent w-12 h-12 text-center text-2xl font-bold bg-base-100
             border-base-content/10 text-base-content border rounded-lg focus:outline-none
              focus:ring-offset-1 focus:ring-offset-base-300
               focus:ring-2 focus:ring-primary"

@@ -1,5 +1,6 @@
 import {useForm} from 'react-hook-form'
-import { useAuthStore, type ProfileData } from "../store/auhStore"
+import { useAuthStore } from "../store/auhStore"
+import type {ProfileData, UserData} from '../../../backend/src/shared/types/types'
 import {useEffect, useRef, useState} from "react"
 import { useTranslation } from "react-i18next"
 import {  useParams } from "react-router-dom"
@@ -7,8 +8,17 @@ import { useUserStore } from '../store/userStore'
 import { useMessageStore } from '../store/messageStore'
 import avatar from "../assets/avatar.png"
 import LoadingSpinner from '../components/Spinner'
+import {formatPhoneNumberIntl, getCountries, parsePhoneNumber} from 'react-phone-number-input'
+import { countries } from '../constants'
+import clsx from 'clsx'
+import i18n from '../config/reacti18next'
+import { CopyCheckIcon, CopyIcon } from 'lucide-react'
+import ClipBoardComponent from '../components/ClipBoardComponent'
 
 
+console.warn(getCountries().length, countries.length, 'countries')
+const reducedArr = countries.reduce((acc, item) => ({...acc, [item.code] : item.name}), {})
+console.warn('new', JSON.stringify(reducedArr, null, 2));
  
  const UserProfilePage = () => {
   const {t} = useTranslation()
@@ -16,7 +26,8 @@ const {user, getUser, isUserLoading} = useUserStore()
 const {user:authUser} = useAuthStore()
 const {messages, getMessages, isMessagesLoading} = useMessageStore()
 const inputRef = useRef<HTMLInputElement>(null)
-const [isAuth, setIsAuth] = useState(false)
+const [isAuth, setIsAuth] = useState(false);
+
 
 
  
@@ -39,10 +50,6 @@ const [isAuth, setIsAuth] = useState(false)
     setIsAuth(messages.some((msg) => msg.senderId?.toString() === authUser?._id));
    }, [user, messages, authUser])
 
-   
-   
-
- 
 
     console.warn(messages, "messages")
 
@@ -71,23 +78,33 @@ const [isAuth, setIsAuth] = useState(false)
   const splitSensitiveField = (field : keyof Pick<ProfileData, "email" | "phoneNumber">) => {
   if(!user) return;
     const fieldValue = user[field] as string;
-   const slicedChars : number = field === "email" ? 2 : 3;
+   const slicedChars : number = field === "email" ? 2 : 
+   ((parsePhoneNumber(user.phoneNumber)?.countryCallingCode)?.length ?? 2) + 1;
   
   if(field === "email") {
    const splitedField = (i:number) => fieldValue?.split("@")[i]
    const stars =  [Array(splitedField(0).length - slicedChars).fill("*").map((item) => item).join("")]
     return  isAuth ? user[field] :  splitedField(0).slice(0,2) + stars + splitedField(1);
   }
-  return isAuth ?  fieldValue : "*".repeat(fieldValue.length - slicedChars) + fieldValue.slice(-3) 
+
+  return isAuth 
+  ? formatPhoneNumberIntl(fieldValue)
+  : fieldValue.slice(0,slicedChars) + "*".repeat(fieldValue.length - slicedChars) 
+
   }
 
+  
 
-  const handleUnspecifiedFields = (field : keyof ProfileData) => {
+  const handleUnspecifiedFields = (field : (keyof ProfileData) | 'country') => {
     if(!user) return;
-    const filedValue = user[field]
-    if(!filedValue || filedValue.trim() === "") return "Unspecified"
+    const filedValue = user[field];
+    if(!filedValue || filedValue.trim() === "") return t("card.roles.default", {ns : "card"})
     return filedValue;
   }
+  const countryCode = user?.phoneNumber && 
+   parsePhoneNumber(user?.phoneNumber)?.country;
+
+  const ImageFlag = `https://api.iconify.design/circle-flags/${countryCode?.toLowerCase()}.svg`
 
   if(isUserLoading || isMessagesLoading ) return <LoadingSpinner/>
 
@@ -97,7 +114,7 @@ const [isAuth, setIsAuth] = useState(false)
     {/* <ToastMessage msg={error ? errMsg : msg }
     msgType={ !error && !message ? "" : message ? 'success' : error ? "error" : ""}/> */}
 
-     <div className="h-auto w-full relative  mt-24">
+     <div className="h-auto w-full relative mt-24 select-none">
        <div className="relative max-w-3xl w-full mx-auto space-y-0 p-4 ">
         <form 
          className="bg-base-300 rounded-xl shadow-sm border border-base-content/20 p-6 space-y-4">
@@ -114,7 +131,7 @@ const [isAuth, setIsAuth] = useState(false)
                     <div className="relative">
                        
                           <div className={`avatar select-none pointer-events-none rounded-full
-                           size-32 overflow-hidden border-2 border-base-content/50
+                           size-32 overflow-hidden
                           `} >
                         <img src={user?.profilePic} alt="Profile" />
                     </div>
@@ -162,8 +179,9 @@ const [isAuth, setIsAuth] = useState(false)
                       <span className="label-text">
                               {t("labels.email", {ns:"common"})}
                       </span>
-                       <div className="input input-bordered flex items-center text-center">
-                      {splitSensitiveField('email') ?? ""}  
+                       <div className="input input-bordered flex items-center justify-between text-center">
+                      <span>{splitSensitiveField('email')}</span>
+                     <ClipBoardComponent isAuthorized={isAuth} field={user?.email} />
                       </div> 
                      
                     </label>
@@ -175,8 +193,14 @@ const [isAuth, setIsAuth] = useState(false)
                       <span className="label-text">
                               {t("labels.phoneNumber", {ns:"common"})}
                       </span>
-                      <div className="input input-bordered flex items-center text-center">
-                     {splitSensitiveField("phoneNumber") ?? ""} 
+                      <div id={`${i18n.language === "ar" && "phone-number"}`}
+                       className={clsx("input input-bordered flex items-center justify-between text-center",
+                       
+                      )}>
+                     {splitSensitiveField("phoneNumber")} 
+                      <ClipBoardComponent isAuthorized={isAuth}
+                       field={user?.phoneNumber}
+                       />
                       </div> 
                     </label>
                       
@@ -206,6 +230,25 @@ const [isAuth, setIsAuth] = useState(false)
                         
                       </div> 
                     </label>
+
+                     <label className="space-y-2 flex flex-col">
+                    <span className="label-text">
+                      {t("labels.country", {ns:"common"})}
+                    </span>
+                  <div className={`input input-bordered
+                     flex items-center text-center text-sm ${countryCode ? "text-base-content gap-2" 
+                         : "text-base-content/50" } `}>
+                      { countryCode ?
+                       t(`countries.${countryCode}`
+                       , {ns:"countries", defaultValue: t("card.roles.default", {ns : "card"})}) 
+                       : t("card.roles.default", {ns : "card"})
+                       }  
+                      {
+                        ImageFlag && countryCode &&( <img className='pointer-events-none' src={ImageFlag} alt="flag" /> )
+                      }
+                       
+                      </div> 
+                  </label>
 
                       <label className="space-y-2 flex flex-col ">
                     <span className="label-text">

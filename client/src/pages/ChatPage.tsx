@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { useMessageStore } from '../store/messageStore'
 import { Search } from 'lucide-react'
 import ChatHeader from '../components/chat/ChatHeader'
-import type { UserData } from '../store/auhStore'
+import type { UserData } from '../../../backend/src/shared/types/types'
 import { useTranslation } from 'react-i18next'
 import i18n from '../config/reacti18next'
  

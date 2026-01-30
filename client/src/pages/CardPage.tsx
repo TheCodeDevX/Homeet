@@ -1,16 +1,17 @@
-import { ArrowLeft, BedDouble,  CheckIcon,  FolderOpen,  Loader2,  SendHorizonalIcon, Star, UserMinus, UserPlusIcon, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, Bath, Bed, BedDouble, BedSingleIcon, Building2, Heart, Info, Maximize2, MessageCircle, MessageSquare, Pin, Square } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import avatar from "../assets/avatar.png"
 import verificationIcon from '../assets/verificationIcon.svg'
 import { ImLocation } from "react-icons/im"
-import { amenities, currencies, prefixCurrencySymbols, type Facilities } from "../constants"
-import { useListingStore, type RentalType } from "../store/listingStore"
+import { amenities, currencies, lightThemes, prefixCurrencySymbols, THEMES, type Facilities } from "../constants"
+import { useListingStore } from "../store/listingStore"
 import { useEffect, useRef, useState} from "react"
 import { useParams } from "react-router-dom"
 import Carousel from "../components/Carousel"
 import LoadingSpinner from "../components/Spinner"
 import { useTranslation } from "react-i18next"
-import { useAuthStore, type UserData, type UserRole } from "../store/auhStore"
+import { useAuthStore } from "../store/auhStore"
+import * as types from "../../../backend/src/shared/types/types"
 import i18n from "../config/reacti18next"
 import { useMessageStore } from "../store/messageStore"
 import { useFollowRequestStore } from "../store/followReqStore"
@@ -21,6 +22,22 @@ import {useMediaQuery} from "react-responsive"
 import gsap from "gsap"
 import {useGSAP} from "@gsap/react"
 import ToolTip from "../components/ToolTip"
+import flatpickr from 'flatpickr'
+import "flatpickr/dist/flatpickr.css";
+import FlatPickr, { type DateTimePickerHandle } from 'react-flatpickr'
+import Button from "../components/Button"
+import Price from "../components/Price"
+import { useThemeStore } from "../store/themeStore"
+import useBooking from "../hooks/useBooking"
+import CardPageSkeleton from "../components/skeletons/CardPageSkeleton"
+import useGsapAnimation from "../hooks/useGsapAnimation"
+import DatePicker from "../components/DatePicker"
+import clsx from "clsx"
+import CloseButton from "../components/CloseButton"
+import CommentSection from "../components/CommentSection"
+import * as helpers from "../utils/helpers"
+import { useBookingStore } from "../store/bookingStore"
+// import useGsapAnimation from "../hooks/useGsapAnimation"
 
 
 
@@ -37,20 +54,36 @@ import ToolTip from "../components/ToolTip"
    const navigate = useNavigate()
    const {user} = useAuthStore()
    const lang = i18n.language
-  const {getListing, isCardLoading, listing } = useListingStore()
+  const {getListing, isCardLoading, listing, ratings, getRatings } = useListingStore()
   const [isFollowing, setIsFollowing] = useState(false)
   const {setSelectedUser} = useMessageStore()
   const container = useRef<HTMLDivElement>(null)
   const parent = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [toolTip, setToolTip] = useState("")
-  const tl = useRef<gsap.core.Timeline>(null)
+ const tl = useRef<gsap.core.Timeline>(null)
  const ctx = useRef<gsap.Context>(null)
+
+  const timeline = useRef<gsap.core.Timeline>(null)
+ const context = useRef<gsap.Context>(null);
+ const isOpenRefTwo = useRef(false);
+  const containerTwo = useRef<HTMLDivElement>(null)
+  const parentTwo = useRef<HTMLDivElement>(null)
+
  const isOpenRef = useRef(false);
+ const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+ const [isShow, setIsShow] = useState(false)
+ const ref = useRef<HTMLDivElement>(null)
  
+//  const dateRef = useRef<HTMLInputElement | null>(null);
+ 
+ const {checkIn, checkOut, selectedDateRef, selectedDate, setSelectedDate} = useBooking();
+
+//  const gsapAnimation = useGsapAnimation(container.current)
+
+ 
+ const {theme} = useThemeStore()
   
-  const {sendFollowReq,  isReqLoading, hasPendingFollowReq,
-     setHasPendingFollowReq, getIncomingRequests, followReq} = useFollowRequestStore()
+  const {sendFollowReq,  isReqLoading} = useFollowRequestStore()
   useEffect(() => {
     if(id) {
       getListing(id)
@@ -61,106 +94,180 @@ import ToolTip from "../components/ToolTip"
      setIsFollowing((listing?.user?.followers?.includes(user?._id as string)) ?? false)
   }, [listing, id, user])
 
+  useEffect(() => {
+   if(id) {
+   getRatings(id)
+   }
+    }, [id])
 
-  const handleNavigation = () => {
-    if(listing?.user){
-      setSelectedUser(listing.user as UserData);
-      navigate("/chat");
-    }
-  }
 
-  const handleFollowReq = async(LisId:string) => {
-    if(!LisId) return;
-    try {
-      await sendFollowReq(LisId);
-      setIsFollowing(prev => !prev)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const handleNavigation = () => {
+  //   if(listing?.user){
+  //     setSelectedUser(listing.user as types.UserData);
+  //     navigate("/chat");
+  //   }
+  // }
+
+
+
 
 
 
 
   // const images = listing?.images.slice(0,3) ?? []
 
-     const isPrefixCurrencySymbol = prefixCurrencySymbols.includes(listing?.user?.currency?.toUpperCase() as string)
+ 
   const amenitiesMap = Object.fromEntries(amenities.map(a => [a.label, a.icon]))
 
   const avgRating = listing?.avgRating
 
    const {t} = useTranslation()
        const facilities = t("card.facilities", {ns:"card", returnObjects:true}) as Record<string, Facilities>
-       const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, UserRole>
-       const categories = t("card.categories", {ns:"card", returnObjects:true}) as Record<string , RentalType>
+       const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, types.UserRole>
+      //  const categories = t("card.categories", {ns:"card", returnObjects:true}) as Record<string , pricingType>
 
 
-    const Initialvars = {opacity:0, y:100, ease:"back.in", visibility:"visible"};
 
-   useGSAP(() => {
 
-     const elements = gsap.utils.toArray(container.current?.getElementsByTagName("button") as HTMLCollection)
-      tl.current = gsap.timeline()
-    ctx.current = gsap.context(() => {
-    const {current} = tl; 
-    if(isOpen){
-    current?.to(container.current, Initialvars )
-    .to(container.current, {visibility:"hidden"})
-    } else {
-     current?.fromTo(container.current, Initialvars, { opacity:1, y:0, visibility:"visible", ease:"back.out", duration:1})
-      .fromTo(elements,
-        {opacity:0, yPercent:100},
-      {
-      stagger:0.15,
-      opacity:1,
-      duration:0.3,
-      yPercent:0,
-      ease : "circ.inOut"
-    }, "<")
-    } 
-     
-    }, parent);
-    return () => {
-      ctx.current?.revert()
-    };
-   }, {dependencies:[isOpen], scope:parent});
+    useGsapAnimation({containerRef:container, state:isOpen, isOpenRef,ctx, tl,
+      parentRef:parent, withoutStagger:true});
 
- useEffect(() => {
-  isOpenRef.current = isOpen;
- }, [isOpen])
+      useEffect(() => { 
+       const onClose =  (e: MouseEvent) => {
+        if(parent.current?.contains(e.target as Node) || isOpenRef.current) return;
+        setIsOpen(false);
+        tl.current?.to(container.current, {autoAlpha:0})
+      } 
+      document.addEventListener("mousedown", onClose);
+     return () => document.removeEventListener("mousedown", onClose)
+    }, []);
+    
+    useGsapAnimation({
+       containerRef:containerTwo,
+       state:isShow,
+       isOpenRef:isOpenRefTwo,
+       ctx:context,
+       tl:timeline,
+       parentRef:parentTwo,
+       withoutStagger : true,
+      });
 
-   useEffect(() => { 
-      const onClose =  (e: MouseEvent) => {
-       if(parent.current?.contains(e.target as Node) || isOpenRef.current) return;
-       setIsOpen(false)
-       tl.current?.to(container.current, {autoAlpha:0})
-     } 
-     document.addEventListener("mousedown", onClose);
-    return () => document.removeEventListener("mousedown", onClose)
-   }, [])
-   
-  
-   
+
+
+
+    
 
 
    // Variables 
    const isMobile = useMediaQuery({maxWidth:640})
-   const isCorrectUser = listing?.user?._id?.toString() !== user?._id?.toString() && listing?.user?._id
+   const isLargeScreen = useMediaQuery({minWidth:1520})
   
+   // flatpickr
+  // useEffect(() => {
+  //   if(!dateRef.current) return;
+  //   const instance = flatpickr(dateRef.current);
+  //    console.log("instance", instance )
+  // }, []);
+
+  useEffect(() => {
+    if(isLargeScreen || !isLargeScreen) {
+      setIsShow(false)
+    }
+  }, [isLargeScreen])
+
+  //  useEffect(() => {
+  //       const onClose = (e: MouseEvent) => {
+  //        if(!containerTwo.current?.contains(e.target as Node)) {
+  //         setIsShow(false)
+  //        }
+  //       }
+  
+  //       document.addEventListener("mousedown", onClose)
+  //       return () => document.removeEventListener("mousedown", onClose)
+  // }, [])
+
+
+  const isAllowedUser = user?._id?.toString() !== listing?.user?._id?.toString();
+  const handleClick = () => setIsShow(prev => !prev);
+
+
  
-  if(isCardLoading) return <LoadingSpinner/>
+  if(isCardLoading) {
+    return <CardPageSkeleton/>
+  } else document.body.style.overflow = 'auto'
    return (
-     <div className="relative mt-24">
-      <div className=" max-w-2xl w-full mx-auto space-y-0 lg:p-4 p-2">
-       
-  
-          
+    <>
+{ isAllowedUser && !isLargeScreen &&
+   
+  <div ref={containerTwo} 
+     className={clsx("fixed top-28 w-[400px] z-[99999] bg-base-300 p-4 rounded opacity-0 invisible",
+       "left-1/2 -translate-x-1/2"
+     )}
+    >
+     <DatePicker 
+     listing={listing}
+     checkIn={selectedDateRef.current.checkIn}
+     checkOut={selectedDateRef.current.checkOut}
+     selectedDateRef={selectedDateRef}
+     handleClick={() => setIsShow(false)}
+     selectedDate={selectedDate}
+     setSelectedDate={setSelectedDate}
+     />
+     </div>
+   
+ }
+
+ {id && <CommentSection
+  ratings={ratings}
+  isSidebarOpen={isSidebarOpen}
+  setIsSidebarOpen={setIsSidebarOpen}
+  listingId={id}/>}
+     
+     <div className={`relative mt-24`}>
+       {/* Date Picker */}
+   { isAllowedUser && isLargeScreen &&
+     <div ref={containerTwo} 
+     className={clsx("fixed top-28 w-[400px] z-[99999] bg-base-300 p-4 rounded opacity-0 invisible",
+       "right-4"
+     )}
+    >
+     <DatePicker 
+      handleClick={() => setIsShow(false)}
+      listing={listing}
+      checkIn={selectedDateRef.current.checkIn}
+      checkOut={selectedDateRef.current.checkOut} 
+      selectedDateRef={selectedDateRef}
+      selectedDate={selectedDate}
+      setSelectedDate={setSelectedDate}
+     />
+     </div>
+ }
+
+ {/* <div className="absolute max-sm:right-8 top-4">
+  <button onClick={() => setIsSidebarOpen(true)}
+   className="btn btn-primary">
+    <ArrowRight/> <p className="flex items-center gap-2">Comment Section</p>
+  </button>
+ </div> */}
+
+ 
+
+      <div className="max-w-2xl w-full mx-auto space-y-0 lg:p-4 p-2">
         <div className="bg-base-300 border border-base-content/20 rounded-xl p-6 shadow-2xl space-y-4">
-          <div>
+          <div className="flex items-center justify-between">
             <button onClick={() => navigate(-1)}  className="flex items-center gap-2
-             font-bold hover:text-white transition-colors duration-200">
+             font-bold hover:text-base-content/80 transition-colors duration-200">
             <ArrowLeft/> {t("buttons.goback", {ns:"common"})}
             </button>
+
+           { ratings.length > 0 &&  <button onClick={() => setIsSidebarOpen(prev => !prev)}
+             className={`flex items-center gap-2 font-semibold ${isSidebarOpen 
+              ? "text-blue-400 hover:text-blue-400/80" 
+              : "text-base-content hover:text-base-content/80"}
+              transition-colors duration-200`}>
+             {t("buttons.comments", {ns:"common"})} <MessageCircle size={18}/>
+  
+            </button>}
           </div>
             
             <div className="flex flex-col items-center w-full">
@@ -169,10 +276,10 @@ import ToolTip from "../components/ToolTip"
               
                <div ref={parent} className="relative h-fit w-fit ">
                  <div onClick={() => isMobile ? setIsOpen(prev => !prev) :
-                  isCorrectUser && navigate(`/profile/${listing?.user?._id}`)} 
-                className={`peer rounded-full flex items-center justify-center overflow-hidden border-2 border-primary/50
-                ${isCorrectUser ? 
-                "hover:border-primary hover:scale-95 transition-all duration-300 cursor-pointer"
+                  isAllowedUser && navigate(`/profile/${listing?.user?._id}`)} 
+                className={`peer rounded-full flex items-center justify-center overflow-hidden
+                ${isAllowedUser ? 
+                "hover:scale-95 transition-all duration-300 cursor-pointer"
                 : "cursor-default"
               }`}>
                   <img className="size-20 object-cover" src={listing?.user?.profilePic || avatar}
@@ -181,8 +288,8 @@ import ToolTip from "../components/ToolTip"
                     
                    
                 </div>
-                {isCorrectUser && <ToolTip/>}
-             { isCorrectUser && isMobile &&
+                {isAllowedUser && <ToolTip/>}
+             { isAllowedUser && isMobile &&
                 <div id="card" ref={container} 
                 className={`absolute ${lang === "ar" ? "right-full" : "left-full"} top-1/2
                  -translate-y-1/2 border border-primary/20 rounded-2xl opacity-0`}>
@@ -212,14 +319,23 @@ import ToolTip from "../components/ToolTip"
                   </div>
 
                   <div className="card bg-base-100 shadow-xl overflow-hidden">
-                  <div className="flex flex-wrap items-center justify-between py-4 px-2">
-                <UserProfile isBtn user={listing?.user as UserData | null}/>
-                <div className="flex items-center justify-center max-md:flex-wrap gap-2">
-                <FollowButton size="size-4" fontSize="text-xs "
-                handleFollowReq={handleFollowReq}
+                  <div className="flex w-[200px] flex-wrap items-center justify-between py-4 px-2">
+                <UserProfile isBtn user={listing?.user as types.UserData | null}/>
+                <div className="flex items-center justify-center max-md:flex-wrap gap-2 mx-2">
+                <FollowButton size="size-4" fontSize="text-xs"
+                handleFollowReq={() => helpers.handleFollowReq({
+                    recipientId:listing?.user?._id?.toString() as string,
+                    userId: user?._id,
+                    sendFollowReq, setIsFollowing})}
                 isFollowing={isFollowing} 
                 isReqLoading={isReqLoading}
-                handleNavigation={handleNavigation}
+                handleNavigation={
+                  () => helpers.handleNavigation({
+                  listingUser:listing?.user,
+                  navigate,
+                  setSelectedUser
+                })
+                }
                 />
                   </div>
                 </div>
@@ -241,10 +357,19 @@ import ToolTip from "../components/ToolTip"
               </div>
             { listing?.user?._id?.toString() !== user?._id?.toString() && <div className="flex gap-4 max-sm:hidden">
                 
-            <FollowButton handleNavigation={handleNavigation}
-             handleFollowReq={handleFollowReq}
+            <FollowButton handleNavigation={
+                  () => helpers.handleNavigation({
+                  listingUser:listing?.user,
+                  navigate,
+                  setSelectedUser})
+                }
+              handleFollowReq={() => helpers.handleFollowReq({
+                recipientId:listing?.user?._id?.toString() as string,
+                userId: user?._id,
+                sendFollowReq, setIsFollowing})}
               isFollowing={isFollowing}
-               isReqLoading={isReqLoading}/>
+              isReqLoading={isReqLoading}/>
+              
              
              </div>}
               </div>
@@ -279,34 +404,88 @@ import ToolTip from "../components/ToolTip"
                           </div>
                  </section>
 
+                 <section className="flex flex-col">
+                  <p className="flex gap-2 items-center font-bold text-xl mb-2">
+                    {t("labels.specs.text", {ns:"common"})} <Info size={18}/></p>
+                
+                <div className="flex flex-wrap items-center gap-2">
+                   <div  className='flex items-center gap-2
+                                  bg-base-200 border border-base-content/20 p-2 px-4 rounded-md
+                                   hover:bg-base-100 select-none text-base-content '>
+                                   <Bed/> {t("labels.specs.beds", {ns:"common"})}:
+                                    <strong className="text-base-content">
+                                      {listing?.beds ?? 0}
+                                    </strong>
+                                
+                   </div>
+
+                    <div  className='flex items-center gap-2
+                                  bg-base-200 border border-base-content/20 p-2 px-4 rounded-md
+                                   hover:bg-base-100 select-none text-base-content '>
+                                   <Building2/> {t("labels.specs.floors", {ns:"common"})}:
+                                    <strong className="text-base-content">
+                                       {listing?.floor ?? 0}
+                                    </strong>
+                                
+                   </div>
+
+                    <div  className='flex items-center gap-2
+                                  bg-base-200 border border-base-content/20 p-2 px-4 rounded-md
+                                   hover:bg-base-100 select-none text-base-content '>
+                                   <BedSingleIcon/> {t("labels.specs.bedrooms", {ns:"common"})}:
+                                    <strong className="text-base-content">
+                                       {listing?.bedrooms ?? 0}
+                                    </strong>
+                                
+                   </div>
+
+                    <div  className='flex items-center gap-2
+                                  bg-base-200 border border-base-content/20 p-2 px-4 rounded-md
+                                   hover:bg-base-100 select-none text-base-content '>
+                                   <Maximize2/> {t("labels.specs.size", {ns:"common"})}:
+                                    <strong className="text-base-content">
+                                       {listing?.size ?? 0}
+                                    </strong>
+                                
+                   </div>
+
+                    <div  className='flex items-center gap-2
+                                  bg-base-200 border border-base-content/20 p-2 px-4 rounded-md
+                                   hover:bg-base-100 select-none text-base-content '>
+                                   <Bath/> {t("labels.specs.bathrooms", {ns:"common"})}:
+                                    <strong className="text-base-content">
+                                       {listing?.bathrooms ?? 0}
+                                    </strong>
+                                
+                   </div>
+                </div>
+
+                                
+                 </section>
+
                  <div className="flex items-center justify-between">
-                  <div className="">
-                    <p className="sm:text-3xl text-xl font-black line-clamp-1">
-                  <span className={`font-black`}>
-                  {isPrefixCurrencySymbol && currencies.find(c => c.code.toLowerCase()
-                   === listing?.user?.currency)?.symbol}
-                  </span>
-                  <span className={`font-black`}>{listing?.price}</span> 
-                 <span className={`font-black mx-1`}>
-                  {!isPrefixCurrencySymbol && currencies.find(c => c.code.toLowerCase()
-                   === listing?.user?.currency)?.symbol}
-                  </span>
-                </p>
-                      
-                      </div>
+                  <Price listing={listing}/>
+                  
                 <div className='text-3xl font-bold flex items-center gap-1 '>
                   <RiStarFill className='text-yellow-500 flex' size={30}/> 
                   <p className="flex items-baseline gap-1">
                   {avgRating?.toString().includes(".") ? avgRating.toFixed(1) : avgRating} {" "}
                   <span className='text-xl text-base-content/50 relative -top-0.5'>(
-                  {lang === "ar" && " "} {t("labels.reviews", {count: listing?.count, ns: "common"})} {lang !== "ar" && " "} )</span>
+                  {lang === "ar" && " "} {t("labels.reviews", 
+                    {count: listing?.count, ns: "common"})} {lang !== "ar" && " "} )</span>
                   </p>
                 </div> 
                  </div>
-               
+
+                { isAllowedUser &&
+                    <Button classes="!py-3" onClick={handleClick}>
+                    Reserve
+                    </Button>  
+                }
         </div>
       </div>
      </div>
+     </>
    )
  }
  

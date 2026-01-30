@@ -1,11 +1,14 @@
 import { create } from "zustand";
-import type { UserData } from "./auhStore";
+import * as types from ".././../../backend/src/shared/types/types"
 import { handleAxiosError } from "./helpers/errorHelper";
 import { UserApi } from "../lib/axios.config";
 
+ export interface UserProfile extends types.UserData {
+   country?: string
+   }
 
  interface UserStates {
-  user : UserData | null
+  user : UserProfile | null
   isUserLoading : boolean,
   error : string | null,
   getUser : (id:string) => void

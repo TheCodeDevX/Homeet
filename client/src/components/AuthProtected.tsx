@@ -1,8 +1,10 @@
 import { type PropsWithChildren } from "react";
-import { useAuthStore, type UserRole } from "../store/auhStore";
+import { useAuthStore } from "../store/auhStore";
 import { Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import LoadingSpinner from "./Spinner";
+import type {UserRole} from '../../../backend/src/shared/types/types'
+
 
   export const ProtectRoute = ({children} : PropsWithChildren) => {
 
@@ -10,7 +12,9 @@ import LoadingSpinner from "./Spinner";
       const {pathname} = location;
 
   const {isAuthenticated, user, isCheckingAuth, isLoading} = useAuthStore();
-
+//   console.log(user , "User ???")
+//  if(!user) return "User not found check out and try again!";
+  if(isCheckingAuth) return <LoadingSpinner/>
   if(!isAuthenticated && !isLoading) return <Navigate to="/login" replace/>
   if(!user?.isVerified && !isLoading) return <Navigate to="/verify-email" replace/>
   if(!user?.onBoarded && !isLoading) return <Navigate to="/onboarding" replace/>

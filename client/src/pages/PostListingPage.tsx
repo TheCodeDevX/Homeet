@@ -6,11 +6,13 @@ import { useListingStore, type FormData } from "../store/listingStore"
 import CounterBtn from "../components/CounterBtn"
 import { useTranslation } from "react-i18next"
 import i18n from "../config/reacti18next"
+import { useAuthStore } from "../store/auhStore"
 
  
 const PostListingPage = () => {
-  // const [unit, setUnit] = useState<Exclude<FormData["rentalType"], "">>("monthly")
+  // const [unit, setUnit] = useState<Exclude<FormData["pricingType"], "">>("monthly")
     const {createListing, isListingsLoading} = useListingStore()
+    const {user} = useAuthStore()
     const [imagesPreview, setImagesPreview] = useState<(string | any)[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null)  
 
@@ -20,13 +22,16 @@ const PostListingPage = () => {
     description: "",
     location:"",
     images: [],
-    rentalType: "placeholder",
+    pricingType: "placeholder",
     amenities : [],
     price: 0,
     bedrooms:0,
     beds:0,
     size:0,
     floor:0,
+    adults:0,
+    children:0,
+    pets:0,
     bathrooms:0,
   });
 
@@ -68,7 +73,7 @@ const PostListingPage = () => {
       return new Promise<string>((resolve, reject) => {
 
         if(!file.type.startsWith("image/")){
-          reject("please select an image file")
+          reject(new Error("ONLY_IMG_FILE"))
         }
 
         const reader = new FileReader();
@@ -132,7 +137,7 @@ const PostListingPage = () => {
     e.preventDefault()
 
 
-    if(!formState.rentalType) console.log("please pick a renatl type!")
+    if(!formState.pricingType) console.log("please pick a renatl type!")
     
     try {
        const data = {...formState}
@@ -205,15 +210,16 @@ const PostListingPage = () => {
 
                 <label>
                 <p className="lg:text-lg md:text-md text-sm font-semibold mb-2">
-                   {t("labels.rentalType", {ns:"common"})}
+                   {t("labels.pricingType", {ns:"common"})}
                 </p>
               <select className={`select select-bordered w-full lg:text-md text-sm 
-              ${formState.rentalType === "placeholder" ? "text-bseplaceholder-base-content/60":"text-base-content"}
-              `} name="rentalType"
-               value={formState.rentalType} 
-                onChange={handleChange}>
-              <option disabled value="placeholder" className="">
-                {t("placeholders.rentalType", {ns:"common"})}
+              ${formState.pricingType === "placeholder" ? "text-bseplaceholder-base-content/60":"text-base-content"}
+              `} name="pricingType"
+                 defaultValue={"placeholder"}
+                 value={formState.pricingType} 
+                 onChange={handleChange}>
+              <option disabled value="placeholder">
+                {t("placeholders.pricingType", {ns:"common"})}
               </option>
                <option className="text-base-content" value="nightly">
                 {t("content.filters.category.content.options.nightly", {ns:"sidebar"})}
@@ -221,7 +227,7 @@ const PostListingPage = () => {
                 <option  className="text-base-content" value="monthly">
                   {t("content.filters.category.content.options.monthly", {ns:"sidebar"})}
                 </option>
-                 <option  className="text-base-content" value="for sale">
+                 <option  className="text-base-content" value="one_time">
                   {t("content.filters.category.content.options.forSale", {ns:"sidebar"})}
                  </option>
               </select>
@@ -377,7 +383,7 @@ const PostListingPage = () => {
     </div>
 
     <div>
-      <span className="mb-2 md:text-md text-sm">{t("labels.specs.floor", {ns:"common"})}</span>
+      <span className="mb-2 md:text-md text-sm">{t("labels.specs.floors", {ns:"common"})}</span>
       <label className="flex flex-col relative">
         <input type="number"  name="floor" value={formState.floor}
          onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
@@ -395,7 +401,11 @@ const PostListingPage = () => {
     </div>
 
     <div>
-      <span className="mb-2 md:text-md text-sm">{t("labels.specs.rentalPrice", {ns:"common"})}</span>
+      <span className="mb-2 md:text-md text-sm">
+        {t(`labels.${user?.role === "seller" ? "specs.salePrice"
+           : (user?.role === "none" || !user?.role) ? "price" 
+           : "specs.rentalPrice"}`, {ns:"common"})}
+           </span>
       <label className="flex flex-col relative">
         <input type="number" name="price" value={formState.price}
         onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
@@ -413,9 +423,76 @@ const PostListingPage = () => {
         )}
       </label>
     </div>
+    
 
   </div>
+
+  
 </div>
+
+ <div>
+  <h1 className="lg:text-lg text-md font-bold mb-1">{t("labels.guestCapacity", {ns: "common"})}</h1>
+  <span className="lg:text-sm text-xs">{t("labels.guestLabel", {ns: "common"})}</span>
+  <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
+    <div>
+      <span className="mb-2 md:text-md text-sm">{t("labels.adults", {ns: "common"})}</span>
+      <label className="flex flex-col relative">
+        <input type="number"  name="adults" value={formState.adults} 
+        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn btnType="increasement" onClick={(e) => {e.preventDefault();
+         setFormState(prev => ({...prev, adults: prev.adults ? prev.adults + 1 : 1 }))}}/>
+        
+
+          {!formState.adults || formState.adults < 1 ? (<></>) : (
+        <>
+           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
+            setFormState(prev => ({...prev, adults: prev.adults &&
+          prev.adults <= 0 ? 0 : prev.adults && prev.adults - 1  }))}}/>
+          </>
+       )}
+      </label>
+    </div>
+
+     <div>
+      <span className="mb-2 md:text-md text-sm">{t("labels.children", {ns: "common"})}</span>
+      <label className="flex flex-col relative">
+        <input type="number"  name="children" value={formState.children} 
+        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn btnType="increasement" onClick={(e) => {e.preventDefault();
+         setFormState(prev => ({...prev, children: prev.children ? prev.children + 1 : 1 }))}}/>
+        
+
+          {!formState.children || formState.children < 1 ? (<></>) : (
+        <>
+           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
+            setFormState(prev => ({...prev, children: prev.children &&
+          prev.children <= 0 ? 0 : prev.children && prev.children - 1  }))}}/>
+          </>
+       )}
+      </label>
+    </div>
+
+     <div>
+      <span className="mb-2 md:text-md text-sm">{t("labels.pets", {ns: "common"})}</span>
+      <label className="flex flex-col relative">
+        <input type="number"  name="pets" value={formState.pets} 
+        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn btnType="increasement" onClick={(e) => {e.preventDefault();
+         setFormState(prev => ({...prev, pets: prev.pets ? prev.pets + 1 : 1 }))}}/>
+        
+
+          {!formState.pets || formState.pets < 1 ? (<></>) : (
+        <>
+           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
+            setFormState(prev => ({...prev, pets: prev.pets &&
+          prev.pets <= 0 ? 0 : prev.pets && prev.pets - 1  }))}}/>
+          </>
+       )}
+      </label>
+    </div>
+    </div>
+    </div>
+
  <button type="submit" className="btn w-full btn-primary ">{!isListingsLoading ?
                 (<>{t("buttons.createListing", {ns:"common"})} <Check/></>) : (
                 <><Loader className="animate-spin text-center mx-auto size-5"/></>

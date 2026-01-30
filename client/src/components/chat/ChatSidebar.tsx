@@ -1,16 +1,15 @@
 import { useMessageStore } from "../../store/messageStore"
 import avatar from '../../assets/avatar.png'
-import { useAuthStore, type UserData } from "../../store/auhStore";
+import { useAuthStore } from "../../store/auhStore";
 import { Search, Users2 } from "lucide-react";
 import SidebarSkeleton from "../skeletons/SidebarSkeleton";
 import { useTranslation } from "react-i18next";
 import i18n from "../../config/reacti18next";
 import { useListingStore } from "../../store/listingStore";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFollowRequestStore } from "../../store/followReqStore";
-import LoadingSpinner from "../Spinner";
-import { useUserStore } from "../../store/userStore";
+import type { UserData } from "../../../../backend/src/shared/types/types";
  
  const ChatSidebar = ({filteredUsers} : {filteredUsers : UserData[]}) => {
   const {setSelectedUser, users, selectedUser, isUsersLoading, setIsUserLoading, getUsers, addOrRemoveUser} = useMessageStore();
@@ -87,7 +86,7 @@ import { useUserStore } from "../../store/userStore";
            : isUsersLoading ? (<SidebarSkeleton/>) : filteredUsers.map((user) => (
          
            <button id="child" data-id={user._id} 
-            ref={el => {refs.current[user._id as string] = el} } key={user._id} onClick={() => {
+            ref={el => {refs.current[user._id as string] = el} } key={user._id as string} onClick={() => {
              setSelectedUser(user)}}
              
              className={`hover:bg-primary/10 p-4 h-[calc(485px/5)] max-md:h-[97px] flex flex-col
@@ -132,7 +131,7 @@ import { useUserStore } from "../../store/userStore";
                 </div>
               </div> */}
             <div className={`flex flex-col ${lang === "ar" ? "text-right" : "text-left"}`}>
-                <h1 className="text-md font-semibold">{user.firstName}</h1>
+                <h1 className="text-md font-semibold line-clamp-1">{user.firstName}</h1>
                 <span className={`text-xs ${onlineUsers.includes(user) ? " text-green-500" : " text-gray-500"} -mt-1`}>
                   {`${ onlineUsers.includes(user) 
                   ? t("status.online", {ns:"status"})

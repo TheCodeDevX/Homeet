@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react"
 import { useAuthStore } from "../../store/auhStore"
 import { useMessageStore } from "../../store/messageStore"
-import { Loader, MessageSquarePlus, Pause, Play } from "lucide-react"
+import { MessageSquarePlus, Pause, Play, RotateCw } from "lucide-react"
 import avatar from '../../assets/avatar.png'
 import {motion} from 'framer-motion'
 import ChatSkeleton from "../skeletons/ChatSkeleton"
 import { useTranslation } from "react-i18next"
 import i18n from "../../config/reacti18next"
 import { formatDate } from "../../utils/formatDate"
+import { sliceText } from "../../utils/sliceText"
 
 
  
@@ -18,9 +19,9 @@ import { formatDate } from "../../utils/formatDate"
   const audioRef = useRef<{[id:string] : HTMLAudioElement | null}>({})
   const [msgId, setMsgtId] = useState("") 
   const [isPlaying, setIsPlaying] = useState<null | string>(null)
-  const [currTime, setCurTime] = useState<{[id:string] : number}>({})
+  const [currTime, setCurTime] = useState<{[id:string] : number}>({});
+  const [isShow, setIsShow] = useState<{[id:string] : boolean}>({}) 
   
-
 
 
 
@@ -65,7 +66,7 @@ import { formatDate } from "../../utils/formatDate"
       
        const handleDurationChange = () => {
         if(!audio.duration) return;
-        setCurTime((prev) => ({...prev, [msgId] : audio.currentTime  }))
+        setCurTime((prev) => ({...prev, [msgId] : audio.currentTime}))
         
        }
 
@@ -140,16 +141,19 @@ import { formatDate } from "../../utils/formatDate"
         ( <div className="p-2">
        {selectedUser ? (
         messages.map((message) => (
-        
           <div key={message._id} ref={scrollRef}
-         className={`chat ${selectedUser._id === message.senderId ? "chat-start" : "chat-end" } `}>
-         
+         className={`chat ${selectedUser._id === message.senderId 
+         ? `${lang === 'ar' ? 'chat-end' : 'chat-start'}`
+          : `${lang === 'ar' ? 'chat-start' : 'chat-end'}` } `}>
            <div className={`flex ${selectedUser._id === message.senderId
-             ? "flex-row" : "flex-row-reverse"} items-center gap-2`}>
-           <img src={selectedUser._id === message.senderId  ? selectedUser?.profilePic || avatar : user?.profilePic || avatar}
+             ? `${lang === 'ar' ? "flex-row-reverse" : "flex-row"}`
+              : `${lang === 'ar' ? "flex-row" : "flex-row-reverse"}`} items-start gap-2`}>
+           <img src={selectedUser._id === message.senderId  ? selectedUser?.profilePic ||
+            avatar : user?.profilePic || avatar}
             alt="" className="rounded-full size-12" />
            
-         <div className={`chat-bubble ${selectedUser._id === message.senderId ? "bg-neutral" : "bg-base-content text-base-300 "} `}>
+         <div className={`chat-bubble ${selectedUser._id === message.senderId ? "bg-neutral"
+           : "bg-base-content text-base-300 "} `}>
           
            {message.image && ( 
             <img className="rounded-xl h-32 w-fit object-contain" src={message.image.toString()} alt={"Image"} />
@@ -167,11 +171,12 @@ import { formatDate } from "../../utils/formatDate"
               isPlaying === message._id && audioRef.current[message._id] ? (
                   <button onClick={() => handlePausing(message._id as string)} 
                   className="btn btn-ghost btn-circle flex items-center justify-center"> 
-                <Pause size={20}/>
+               <Pause size={20}/>
               </button>
               ) : (
-                 <button onClick={() => handlePlaying(message._id as string)} className="btn btn-ghost btn-circle flex items-center justify-center"> 
-               { <Play size={20}/>}
+                 <button onClick={() => handlePlaying(message._id as string)} 
+                 className="btn btn-ghost btn-circle flex items-center justify-center"> 
+               { currTime[message._id as string] === 100 ?  <RotateCw size={20}/> : <Play size={20}/>}
               </button>
               )}
              
@@ -182,7 +187,7 @@ import { formatDate } from "../../utils/formatDate"
                {  message._id && (<motion.span
                  animate={{width:`${
                   (currTime[message._id] /  message.audioDuration) * 100 }%`}} 
-                  className="absolute bg-secondary h-2"/>) }
+                  className="absolute bg-primary h-2"/>) }
               
               </div>
                <span className="text-xs absolute mt-1 opacity-60">{isNaN(currTime[message._id as string])
@@ -203,8 +208,31 @@ import { formatDate } from "../../utils/formatDate"
           {message.text && (
          
            <div className="max-w-sm overflow-hidden">
-             <p className={`${message.image ? "mt-2" : "mt-0"}`}>
-              {message.text}
+             <p className={`${message.image ? "mt-2" : "mt-0"}
+              `}>
+              {sliceText({
+               text:message.text,
+               threshold:100,
+               start:0,
+               end:isShow[message._id as string] ? undefined : 50,
+               splitAt:" ",
+               joinAt:" ",
+               extra:isShow[message._id as string] ? " " : "..."
+               })}
+              {
+               message.text.split(" ").length > 100 && (
+                <button onClick={() => setIsShow((prev) => ({...prev, [message._id as string] :
+               !prev[message._id as string]}))
+              
+              }
+               className="text-indigo-600 text-md font-semibold
+                hover:text-indigo-800 transition-colors duration-200">
+                 <span> {isShow[message._id as string] ? t("buttons.less", {ns:"common"}) : 
+                  t("buttons.readMore", {ns:"common"})
+                  }</span>
+                 </button>
+               ) 
+              }
               <br />
                 <span className="text-xs opacity-70">
                 {formatDate(message?.createdAt as string)}

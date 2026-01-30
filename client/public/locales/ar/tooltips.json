@@ -5,7 +5,7 @@
         "CHANGE_LANG" : "تغيير اللغة",
         "NOTIFS" : "الإشعارات",
         "LOGOUT" : "تسجيل الخروج",
-        "PROFILE" : "الملف الشخصي",
-        "VIEW_PROFILE": "عرض الملف الشخصي"
+        "PROFILE" : "ملف شخصي",
+        "VIEW_PROFILE": "ملف شخصي"
     }
  }

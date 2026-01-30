@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, type RefObject} from "react"
+import { useEffect, useState, useRef } from "react"
 import { useAuthStore } from "./store/auhStore"
 import { Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 import HomePage from "./pages/HomePage"
@@ -29,6 +29,10 @@ import NotificationPage from "./pages/NotificationPage"
 import gsap from "gsap"
 import { SplitText } from "gsap/all"
 import UserProfilePage from "./pages/UserProfilePage"
+import {useDirectionContext} from "./hooks/useDirectionContext"
+import useNotification from "./hooks/useNotification"
+import { useNotificationStore } from "./store/notificationStore"
+
 
 
 
@@ -40,7 +44,7 @@ const App = () => {
   const authMessageL = useRef<string>("");
   const {message:followReqMsg, error:followReqErr} = useFollowRequestStore()
   const {message, error} = useListingStore()
-  const {lang:storedLanguage, setLang} = useLangStore()
+  // const {lang:storedLanguage, setLang} = useLangStore()
   const runRef = useRef(false)
  
   // const {language} = useLangStore()
@@ -121,24 +125,40 @@ console.log(isAuthenticated)
 
 
 
-
-
+ const {setLangDir} = useDirectionContext()
+ 
+ const direction = lang === "ar" ? "rtl" : "ltr"
 
  useEffect(() => {
     console.warn("this one useEffect(lang)")
+  setLangDir(`${lang}&${direction}`);
    if(lang) {
-  document.documentElement.lang = lang
-  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.lang = lang;
+  document.documentElement.dir = direction;
    }
-   }, [lang, storedLanguage])
+   }, [lang])
 
    
  
   const isHomePage = location.pathname === "/";
   const {theme} = useThemeStore()
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme)
+  }, [theme])
+
+  
+
   gsap.registerPlugin(SplitText)
 
+  //  const {setNotificationsLength, notificationsLength} = useNotification()
+  //   const {getIncomingRequests, followReqs, isReqLoading} = useFollowRequestStore();
+  //   useEffect(() => {
+  //   getIncomingRequests();
+  //   console.log(followReqs, 'follow requests')
+  //   sessionStorage.setItem('notifs', followReqs.length.toString())
+  //   console.log(notificationsLength, 'follow requests "notifs"')
+  // } , [])
 
   if(isCheckingAuth) return <LoadingSpinner/>
   
@@ -146,7 +166,7 @@ console.log(isAuthenticated)
 
   return (
    <div className={`sm:p-4 p-2 flex ${isHomePage ? "items-start" : "items-center"} justify-center min-h-screen `}
-    data-theme={theme}>
+    >
     <Routes>
       <Route path="/" element={<ProtectRoute><Layout showSidebar={true}><HomePage/></Layout></ProtectRoute>} />
       <Route path="/login" element={<RedirectAuthenticatedUser><LoginPage/></RedirectAuthenticatedUser>}/>

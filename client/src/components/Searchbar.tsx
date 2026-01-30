@@ -72,7 +72,7 @@ import clsx from "clsx";
    const lang = i18n.language
   
     return (
-      <div ref={containerRef} className="mb-5 max-xs:mb-8 flex justify-between gap-2">
+      <div ref={containerRef} className="mb-5 max-xs:mb-8 flex justify-between gap-2 select-none">
      <label className="relative w-full">
          <input onFocus={() =>{setFocused(true), setIsOpen(false)}} onBlur={() => setFocused(false)} 
          ref={focusRef} type="text" placeholder={t("placeholders.search", {ns : "common"})} name="query"

@@ -13,13 +13,13 @@ import { useTranslation } from 'react-i18next';
  
     const [stars, setStars] = useState<number |undefined>(0);
     const [feedback, setFeedack] = useState<string | undefined>("")
-    const {rateListing, rating, getRatings} = useListingStore()
+    const {rateListing, rating, getRating} = useListingStore()
     const ref = useRef<HTMLDivElement>(null)
     
 
     // useEffect(() => {
     // if(id){
-    //    getRatings(id)
+    //    getRating(id)
     // }
     // }, [rating])
 
@@ -57,7 +57,7 @@ import { useTranslation } from 'react-i18next';
      <motion.div initial={{opacity:0}}
     animate={{opacity:showModal ?1:0, visibility:showModal?"visible":"hidden"}}
     transition={{duration:0.2, ease:"easeInOut"}}
-     className='fixed inset-0 h-full bg-base-300/90 z-[9999999] text-center '>
+     className='fixed inset-0 h-full bg-base-300/90 z-[9999999] text-center'>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div ref={ref}className="max-w-2xl mx-auto bg-base-content text-base-100 shadow-xl rounded-md  text-base-100 relative">
           <div className="p-6 space-y-4">

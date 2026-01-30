@@ -73,7 +73,7 @@ const SidebarContent = () => {
   
   return (
     <>
-       <div className="p-4 ">
+       <div className="p-4 select-none">
          
      <div className='flex items-center justify-between '>
         <h2 className='text-xl font-bold '> {t("content.title", {ns: "sidebar"})} </h2>
@@ -121,7 +121,7 @@ const SidebarContent = () => {
         <div className="flex flex-col gap-4">
              <label className='flex flex-col gap-2'>
               <span className='label-text '> 
-               {t("content.filters.category.content.label", {ns : "sidebar"})}
+               {t("labels.pricingType", {ns : "common"})}
                </span>
               <select className='select select-bordered select-sm bg-base-300 text-base-content'
               value={filters.category} name='category' onChange={handleFiltersChange}>

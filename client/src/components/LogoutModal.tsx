@@ -26,7 +26,10 @@ const LogoutModal = ({onShowModal, onLogout}: {onShowModal : Dispatch<SetStateAc
        <div className="flex border-t border-t-base-100/20">
         <button className='flex-1 border-r border-r-base-100/20 p-2 font-semibold
          hover:bg-error hover:text-base-300
-         transition-colors duration-300 text-base-300/50' onClick={() => {onShowModal(false)}}>
+         transition-colors duration-300 text-base-300/50' onClick={() => {
+          document.body.style.overflow = 'auto';
+          onShowModal(false);
+          }}>
            {t("logoutModal.actions.cancel", {ns:"modals"})}
         </button>
         <button className='flex-1 text-blue-800 font-semibold p-2

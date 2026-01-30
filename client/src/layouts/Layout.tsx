@@ -4,13 +4,14 @@ import React from "react"
 import SidebarProvider from "../context/SidebarProvider"
 import { useLangStore } from "../store/languagesStore"
 import i18n from "../config/reacti18next"
+import { useLocation } from "react-router-dom"
 
  interface LayoutProps {
     children : React.ReactNode
     showSidebar : boolean
  }
  
- const Layout = ({children, showSidebar } : LayoutProps) => {
+ const Layout = ({children, showSidebar} : LayoutProps) => {
   
    return (
     <SidebarProvider>

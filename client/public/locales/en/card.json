@@ -27,8 +27,8 @@
 
      "categories" : {
        "nightly" : "per night",
-      "monthly" : "per month",
-      "for sale" : "For Sale",
+       "monthly" : "per month",
+       "one_time" : "For sale",
       "placeholder" : "Unspecified"
      }
 

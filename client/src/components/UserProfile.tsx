@@ -1,13 +1,13 @@
 
-import { useAuthStore, type UserData } from '../store/auhStore'
 import avatar from '../assets/avatar.png'
 import clsx from 'clsx'
 import i18n from '../config/reacti18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import ToolTip from './ToolTip'
+import * as types from ".././../../backend/src/shared/types/types"
  
- const UserProfile = ({user, isBtn} : {user : UserData | null, isBtn?:boolean}) => {
+ const UserProfile = ({user, isBtn} : {user : types.UserData | null, isBtn?:boolean}) => {
     
     const lang = i18n.language;
     const {t} = useTranslation()
@@ -32,7 +32,7 @@ import ToolTip from './ToolTip'
     
    return (
     
-    <div className="p-4 mt-auto bottom-8">
+    <div className="p-4 mt-auto bottom-8 select-none">
        <div className="flex items-center gap-2">
          <div className="avatar">
             <ProfilePicture/>

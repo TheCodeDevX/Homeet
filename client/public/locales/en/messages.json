@@ -41,6 +41,8 @@
     "LAST_NAME_REQUIRED": "Last name is required.",
     "LAST_NAME_MUSTBE_STRING": "Last name must contain only letters.",
     "EMAIL_REQUIRED": "Email is required.",
+    "GENDER_REQUIRED" : "Gender is required",
+    "ROLE_REQUIRED" : "Role is required",
     "PASS_REQUIRED": "Password is required.",
     "PASS_MUSTBE_STRING": "Password must be text.",
     "TIP": "Password must be at least 8 characters and include lowercase, uppercase, numbers, and symbols.",
@@ -51,6 +53,10 @@
     "ATLEAST_ONE_IMAGE": "Add at least one photo.",
     "IMG_MUSTBE_NOTEMTY": "Image cannot be empty.",
     "IMAGES_MUSTBE_STRINGS": "Invalid image format.",
+
+    "PETS_REQUIRED" : "Pets required",
+    "ADULTS_REQUIRED" : "Adults required",
+    "CHILDREN_REQUIRED" : "Children required",
 
     "ENTER_RENTALPRICE": "Please select a rental type.",
     "RENTAL_PRICE_REQUIRED": "Rent price is required.",
@@ -98,6 +104,10 @@
   },
 
   "clientMessages": {
-    "ERROR_MATCHING_PASSWORDS": "Passwords don't match."
+    "ERROR_MATCHING_PASSWORDS": "Passwords don't match.",
+    "ONLY_IMG_FILE" : "please select an image file!",
+    "INVALID_PHONE_NUMBER" : "Invalid phone number",
+    "FAILED_COPYING_FIELD" : "Copy failed",
+    "FOLLOW_MESSAGE" : "{{context}} started following you"
   }
 }
