@@ -8,8 +8,7 @@ import { useThemeStore } from '../store/themeStore'
 import avatar from '../assets/avatar.png'
 import { useListingStore, type Rating } from '../store/listingStore'
 import { t } from 'i18next'
-import { formatTime } from '../utils/formatTime'
-import { useAuthStore } from '../store/auhStore'
+import { useAuthStore } from '../store/authStore'
 import {motion} from 'framer-motion'
 import TimeAgo from './TimeAgo'
 import i18n from '../config/reacti18next'
@@ -87,7 +86,7 @@ interface CommentSectionProps {
      <div className="flex flex-col">
        <h1>{rating.user?.firstName}</h1>
        {/* {rating.updatedAt && } */}
-       <TimeAgo time={rating.updatedAt as string} lang={i18n.language}/>
+       <TimeAgo date={rating.updatedAt as string} lang={i18n.language}/>
      </div>
        </div>
      <button disabled={isLoading} onClick={() => handleLikeRating(rating._id, rating.user?._id, rating.likers)}

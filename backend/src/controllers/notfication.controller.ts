@@ -42,12 +42,8 @@ dotenv.config();
  try {
   
   await Notification.updateMany({_id : {$in : notifIds}}, { $set : { status : "read", readAt : new Date() } });
-  const notifications = await Notification.find({status : {$nin : ['archived']},
-     recipient: new mongoose.Types.ObjectId(req.authUser._id)})
-    
-  //  const readNotifs = await Notification.find({status : "read",
-  //  recipient: new mongoose.Types.ObjectId(req.authUser._id)})
-  console.log(notifications, "notifications from markNotifsAsRead")
+  // const notifications = await Notification.find({status : {$nin : ['archived']},
+  //    recipient: new mongoose.Types.ObjectId(req.authUser._id)})
   res.status(200).json({notifIds})
  } catch (error) {
     console.log("error in markNotifsAsRead controller", error);

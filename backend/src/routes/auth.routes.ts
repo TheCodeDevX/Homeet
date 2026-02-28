@@ -3,21 +3,21 @@ import { checkAuth, forgotPassword, googleCallback, handleAuthorized, handleUnau
  from "../controllers/auth.controller.ts";
 import { protect} from "../middlewares/auth.middlewares.ts";
 import passport from "passport";
-import { loginValidationSchema, ProfileSchema, signupValidationSchema } from "../utils/validationSchema.ts";
+import { loginValidationSchema, ProfileSchema, resetPasswordSchema, signupValidationSchema } from "../utils/validationSchema.ts";
 import { handleValidation } from "../middlewares/validation.middlewares.ts";
 
 const router = Router();
 router.post("/signup", signupValidationSchema, handleValidation, signup)
 router.post('/login', loginValidationSchema, handleValidation, login)
-router.post('/logout', logout)
+router.post('/logout', protect, logout)
 router.put("/update-profile", protect, ProfileSchema, handleValidation, updateProfile)
-router.post('/verify-email', verifyEmail)
+router.post('/verify-email', protect, verifyEmail)
 router.post("/forgot-password", forgotPassword);
-router.put("/reset-password/:token", resetPassword)
+router.put("/reset-password/:token", resetPasswordSchema, handleValidation, resetPassword)
 router.get("/checkAuth", protect, checkAuth)
 router.get("/profilePic", protect, profilePic)
-router.post("/refresh-token", refreshToken);
-router.get("/warm-up", warmUp)
+router.post("/refresh-token", protect, refreshToken);
+router.get("/warm-up", protect, warmUp)
 
 router.get("/google", passport.authenticate("google", {scope : ["profile", "email"],
  session:false}))

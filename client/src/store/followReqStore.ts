@@ -1,9 +1,9 @@
 import { create } from "zustand"
 
-import { isAxiosError } from "axios"
 import { FollowReqApi } from "../lib/axios.config"
 import type { UserData } from "../../../backend/src/shared/types/types"
 import { useNotificationStore } from "./notificationStore"
+import { errorHandler } from "./helpers/errorHelper"
 
  type FollowRequestTypes = {
    sender: UserData,
@@ -17,68 +17,49 @@ import { useNotificationStore } from "./notificationStore"
    message : string,
    error : string | null,
    hasPendingFollowReq:boolean,
-   isAlreadyFollowed:boolean,
-   setIsAlreadyFollowed : (bool:boolean) => void,
-   setHasPendingFollowReq : (isPending:boolean) => void, 
    followReq : FollowRequestTypes | null,
    followReqs : FollowRequestTypes[]
    sendFollowReq : (id : string, fqId?:string, userId?:string) => void,
-   getIncomingRequests : () => Promise<any>
-   // unfollowUser : (id:string) => Promise<any>
+   getIncomingRequests : () => void
   }
 
-  export const useFollowRequestStore = create<FollowRequest>((set, get) => ({
+  export const useFollowRequestStore = create<FollowRequest>((set) => ({
     isReqLoading : false,
     isLoading:false,
-    isAlreadyFollowed:false,
-    setIsAlreadyFollowed : (bool:boolean) => set({isAlreadyFollowed:bool}),
     message: "",
     error: null,
     followReq: null,
     followReqs : [],
     hasPendingFollowReq : true,
-    setHasPendingFollowReq : (isPending) => set({hasPendingFollowReq:isPending}),
     sendFollowReq : async (id, notifId, userId) => {
       set({isReqLoading:true, error:null, message:""})
-      //  set((state) => ({notifications: state.notifications.map((fq) => (
-      //  fq?.toString() === fqIs?.toString() ? 
-     
-      //  ({...notif, sender : {...notif.sender, followers
-      //  : existingFollowReq ? notif.sender.followers?.filter(followerId => followerId !== userId) ?? []
-      //  : [...(notif.sender.followers ?? []), userId?.toString() ?? ""]
-      //  }})
-      //  : notif
-      //   ))}))
-
-     
-      
      try {
-        const res = await FollowReqApi.post(`/follow-request/${id}`);
-        set({followReq: res.data?.followReq,
-         isReqLoading:false,
-          message:res.data?.message, 
-          hasPendingFollowReq:res.data?.existingFollowReq 
+        const res = await FollowReqApi.post(`/follow-request/${id}`); // the recipient here is who has sent
+        // a follow request.
+        set({
+          followReq: res?.data?.followReq,
+          isReqLoading:false,
+          message:res?.data?.message, 
+          hasPendingFollowReq:res?.data?.existingFollowReq 
           });
 
+       if(notifId){
+          // we used notifId only in the notification page
         const updatedNotifications = useNotificationStore.getState().notifications.map((notif) => (
-        notif._id.toString() === notifId?.toString()  ?
-         ({...notif, sender : {...notif.sender, followers
-       : get().hasPendingFollowReq ? notif.sender.followers?.filter(followerId => followerId !== userId) ?? []
-       : [...(notif.sender.followers ?? []), userId?.toString() ?? ""]
-       }})
-       : notif
-        ));
-
-       useNotificationStore.setState({notifications: updatedNotifications})
+        notif?._id?.toString() === notifId?.toString()  ?
+        ({...notif, sender : {...notif?.sender, followers
+        : notif?.sender?.followers?.includes(userId ?? "" as string)
+        ? notif?.sender?.followers?.filter(followerId => followerId !== userId) ?? []
+        : [...(notif?.sender?.followers ?? []), userId?.toString() ?? ""]
+        }})
+        : notif
+        ))
+        useNotificationStore.setState({notifications: updatedNotifications})
+        }
            
      } catch (error) {
-        let errMsg = "FOLLOW_REQ_SENDING_FAILED";
-        if(isAxiosError(error)) {
-         errMsg = error?.response?.data?.message || errMsg;
-        } else if (error instanceof Error) {
-            errMsg = error?.message || errMsg
-        }
-        set({isReqLoading:false,error:errMsg})
+        const err = errorHandler({error, defaultErr:"FOLLOW_REQ_SENDING_FAILED"})
+        set({isReqLoading:false,error:err})
         throw error;
      }
     
@@ -86,32 +67,13 @@ import { useNotificationStore } from "./notificationStore"
 
     getIncomingRequests : async () => {
       set({isLoading:true, error:null})
-    try {
+     try {
         const res = await FollowReqApi.get("/follow-request")
-        set({followReqs:res?.data})
+        set({followReqs:res?.data, isLoading:false})
     } catch (error) {
-        let errMsg = "FOLLOW_REQ_RECEIVING_FAILED";
-        if(isAxiosError(error)) {
-         errMsg = error?.response?.data?.message || errMsg;
-        } else if (error instanceof Error) {
-            errMsg = error?.message || errMsg
-        }
-       set({error:errMsg})
+       const err = errorHandler({error, defaultErr :'FOLLOW_REQ_RECEIVING_FAILED'})
+        set({error:err, isLoading : false});
         throw error;
-       
      }
-     finally {
-        set({isLoading:false})
-     }
-    },
-   //  unfollowUser : async(id) => {
-   //    set({isReqLoading:true, error:null, message:""})
-   //    try {
-   //       await FollowReqApi.delete(`/unfollow-request/${id}`)
-   //    } catch (error) {
-   //      throw error;
-   //    } finally{
-   //       set({isReqLoading:false})
-   //    }
-   //  }
+    }
   }))

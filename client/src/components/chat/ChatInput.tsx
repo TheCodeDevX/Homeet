@@ -4,7 +4,7 @@ import { useMessageStore } from "../../store/messageStore"
 import useRecoder from "../../hooks/useRecoder"
 import { FaStop } from "react-icons/fa"
 import {motion} from 'framer-motion'
-import { useAuthStore } from "../../store/auhStore"
+import { useAuthStore } from "../../store/authStore"
 import { useTranslation } from "react-i18next"
 
 
@@ -47,7 +47,7 @@ import { useTranslation } from "react-i18next"
 
     useEffect(() => {
   
-      const audio = audioRef.current
+      const audio = audioRef.current;
       if(!audio) return;
        const handleDurationChange = () => {
      
@@ -97,7 +97,7 @@ import { useTranslation } from "react-i18next"
     e.preventDefault();
     try {
       if(selectedUser?._id && (text.trim() !== "" || image.trim() !== "")) {
-       await sendMessages(selectedUser?._id,  {text, image})
+       await sendMessages(selectedUser?._id.toString(),  {text, image})
     }
     setText("");
     setImage("");
@@ -180,7 +180,7 @@ import { useTranslation } from "react-i18next"
        { <span className="text-xl">{formatRecorderDate(milisec)}</span>}
        <button className="btn btn-square bg-green-500 hover:bg-green-600 text-base-300" 
        onClick={() => blb &&
-        uploadAudio(blb, selectedUser?._id, user?._id)}  disabled={!recordUrl}><SendHorizonal/></button>
+        uploadAudio(blb, selectedUser?._id?.toString(), user?._id?.toString() ?? "")}  disabled={!recordUrl}><SendHorizonal/></button>
         </div>) : (
         <div className="flex justify-end items-end mt-auto">
       

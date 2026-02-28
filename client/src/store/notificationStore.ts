@@ -1,10 +1,7 @@
 import { create } from "zustand";
 import type { UserData } from "../../../backend/src/shared/types/types";
 import { NotifsApi } from "../lib/axios.config";
-import { isAxiosError } from "axios";
-import { useAuthStore } from "./auhStore";
-import { useFollowRequestStore } from "./followReqStore";
-
+import { errorHandler } from "./helpers/errorHelper";
 
  interface Notification {
     _id: string,
@@ -46,7 +43,7 @@ import { useFollowRequestStore } from "./followReqStore";
   currentPage : 1,
   notifIds : [],
   setCurrentPage : (page) => set({currentPage: page}),
-  setNotifications : (notifications) => set({notifications}),
+  setNotifications : (notifications) => set({notifications}), // for testing
   error: null,
   getIncomingNotifs : async () => {
   set({isLoading:true, error:null})
@@ -57,39 +54,25 @@ import { useFollowRequestStore } from "./followReqStore";
     set(state => ({isLoading:false,
     notifications : state.currentPage > 1 ? [
         ...state.notifications, 
-      ...response.data.incomingNotifs, 
+      ...response.data?.incomingNotifs, 
     
-    ] : response.data.incomingNotifs}))
+    ] : response.data?.incomingNotifs}))
 
   } catch (error) {
-    let errMessage = "error fetching notifications";
-    if(error instanceof Error){
-    errMessage = error.message || errMessage
-    } else if (isAxiosError(error)) {
-     errMessage = error.response?.data.message || errMessage  
-    }
-    set({error:errMessage, isLoading:false})
+    const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_INCOMING_NOTIFICATIONS'})
+    set({error:err, isLoading:false})
     throw error
   }
   },
   markAsRead : async (ids) => {
     set({isNotifLoading:true, error:null})
    try {
-    // set((state) => ({notifications : state.notifications.filter((n) => ids.includes(n._id))
-    //   .map((notif) => ({...notif, status: "read"})) }))
-
     const res = await NotifsApi.put("/read-notifs", {notifIds:ids});
-    set((state) => ({ isNotifLoading : false, 
-      notifIds:res.data.notifIds }))
+    set({ isNotifLoading : false,  notifIds:res.data.notifIds })
      
    } catch (error) {
-    let errMessage = "error updating notifications";
-    if(error instanceof Error){
-    errMessage = error.message || errMessage
-    } else if (isAxiosError(error)) {
-     errMessage = error.response?.data.message || errMessage  
-    }
-    set({error:errMessage, isNotifLoading:false})
+   const err = errorHandler({error, defaultErr:'FAILED_TO_READ_NOTIFICATION'})
+    set({error:err, isNotifLoading:false})
     throw error;
    }  
   },
@@ -99,13 +82,8 @@ import { useFollowRequestStore } from "./followReqStore";
     await NotifsApi.post("/archive-notifs", {notifIds:ids});
 
    } catch (error) {
-    let errMessage = "error updating notifications";
-    if(error instanceof Error){
-    errMessage = error.message || errMessage
-    } else if (isAxiosError(error)) {
-     errMessage = error.response?.data.message || errMessage  
-    }
-    set({error:errMessage, isNotifLoading:false})
+    const err = errorHandler({error, defaultErr:'FAILED_TO_ARCHIVE_NOTIFICATION'})
+    set({error:err, isNotifLoading:false})
     throw error;
    }  
   },
@@ -116,13 +94,8 @@ import { useFollowRequestStore } from "./followReqStore";
     await NotifsApi.post("/delete-archived-notifs", {ids});
 
    } catch (error) {
-    let errMessage = "error updating notifications";
-    if(error instanceof Error){
-    errMessage = error.message || errMessage
-    } else if (isAxiosError(error)) {
-     errMessage = error.response?.data.message || errMessage  
-    }
-    set({error:errMessage, isNotifLoading:false})
+    const err = errorHandler({error, defaultErr:'FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS'})
+    set({error:err, isNotifLoading:false})
     throw error;
    }  
   }

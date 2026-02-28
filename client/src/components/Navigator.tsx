@@ -6,7 +6,7 @@
 import { links } from '../constants'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
-import { useAuthStore } from '../store/auhStore'
+import { useAuthStore } from '../store/authStore'
 import type { BarStyleStates, NavLinks } from './Navbar'
 import i18n from '../config/reacti18next'
 import useNotification from '../hooks/useNotification'

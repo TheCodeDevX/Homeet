@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { useAuthStore } from "../../store/auhStore"
+import { useAuthStore } from "../../store/authStore"
 import { useMessageStore } from "../../store/messageStore"
 import { MessageSquarePlus, Pause, Play, RotateCw } from "lucide-react"
 import avatar from '../../assets/avatar.png'
@@ -25,108 +25,107 @@ import { sliceText } from "../../utils/sliceText"
 
 
 
-  const handlePausing = (id:string) => {
-        const audio = audioRef.current[id] 
-        if(!audio) return;
-        setIsPlaying(null)
-        audio.pause()
-       }
-
-       const handlePlaying = (id:string) => {
-        setMsgtId(id)
-        const audio = audioRef.current[id] 
-        if(!audio) return;
-        audio.play()
-     
-          setIsPlaying(id)  
-         
-       }
-
-      
-
-
-   useEffect(() => {
-     
-      getMessages(selectedUser?._id?.toString() as string)
-      subToMessages()
-      return () => unsubFromMessages()
-   }, [selectedUser])
-
-
-   useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior:"smooth"})
-   }, [messages])
-
-
-   useEffect(() => {
-      const audio = audioRef.current[msgId]
+const handlePausing = (id:string) => {
+      const audio = audioRef.current[id] 
       if(!audio) return;
+      setIsPlaying(null)
+      audio.pause()
+}
+
+      const handlePlaying = (id:string) => {
+      setMsgtId(id)
+      const audio = audioRef.current[id] 
+      if(!audio) return;
+      audio.play()
+    
+        setIsPlaying(id)  
+        
+      }
 
     
-      
-       const handleDurationChange = () => {
-        if(!audio.duration) return;
-        setCurTime((prev) => ({...prev, [msgId] : audio.currentTime}))
-        
-       }
-
-       const handlePlay = () => {
-        if(!msgId) return;
-        let audio = audioRef.current[msgId];
-        if(!audio) return;
-        audio.play()
-        setIsPlaying(msgId)
-        handleDurationChange()
-        
-      
-       }
 
 
-       const handlePause = () => {
-       setIsPlaying(null)
-       audio.pause()
-       }
-
-       const handleEnd = () => {
-
-        setCurTime((prev) => ({...prev, [msgId] : 100}))
-       }
-
-      
-      audio.addEventListener("play", handlePlay )
-
-       audio.addEventListener("pause", handlePause )
-
-       audio.addEventListener("ended", handleEnd  )
-
-       audio?.addEventListener("timeupdate", handleDurationChange);
-       
-
-       return () => {
-         audio?.removeEventListener("timeupdate", handleDurationChange)
-        audio.removeEventListener("play", handlePlay )
-         audio.removeEventListener("pause", handlePause )
-          audio.removeEventListener("ended", handleEnd)
-        
-       }
-
-       
-    
-    }, [msgId, audioRef, isPlaying])
+  useEffect(() => {  
+    getMessages(selectedUser?._id?.toString() as string)
+    subToMessages()
+    return () => unsubFromMessages()
+  }, [selectedUser])
 
 
+  useEffect(() => {
+  scrollRef.current?.scrollIntoView({behavior:"smooth"})
+  }, [messages])
 
 
-   
-   const handleProgressChange = (e:React.MouseEvent, messageId:string) => {
-    const audio = audioRef.current[messageId]
+  useEffect(() => {
+    const audio = audioRef.current[msgId]
     if(!audio) return;
-    const rect = e.currentTarget.getBoundingClientRect()
-    const relativeX = e.clientX - rect.left
-    if(rect.width <= 0) return; 
-    const percent = relativeX / rect.width
-      audio.currentTime = percent *  audio.duration
-   }
+
+  
+    
+      const handleDurationChange = () => {
+      if(!audio.duration) return;
+      setCurTime((prev) => ({...prev, [msgId] : audio.currentTime}))
+      
+      }
+
+      const handlePlay = () => {
+      if(!msgId) return;
+      let audio = audioRef.current[msgId];
+      if(!audio) return;
+      audio.play()
+      setIsPlaying(msgId)
+      handleDurationChange()
+      
+    
+      }
+
+
+      const handlePause = () => {
+      setIsPlaying(null)
+      audio.pause()
+      }
+
+      const handleEnd = () => {
+
+      setCurTime((prev) => ({...prev, [msgId] : 100}))
+      }
+
+    
+    audio.addEventListener("play", handlePlay )
+
+      audio.addEventListener("pause", handlePause )
+
+      audio.addEventListener("ended", handleEnd  )
+
+      audio?.addEventListener("timeupdate", handleDurationChange);
+      
+
+      return () => {
+        audio?.removeEventListener("timeupdate", handleDurationChange)
+      audio.removeEventListener("play", handlePlay )
+        audio.removeEventListener("pause", handlePause )
+        audio.removeEventListener("ended", handleEnd)
+      
+      }
+
+      
+  
+  }, [msgId, audioRef, isPlaying])
+
+
+
+
+  
+  const handleProgressChange = (e:React.MouseEvent, messageId:string) => {
+  const audio = audioRef.current[messageId]
+  if(!audio) return;
+  const rect = e.currentTarget.getBoundingClientRect()
+  const relativeX = e.clientX - rect.left
+  if(rect.width <= 0) return; 
+  const percent = relativeX / rect.width
+    audio.currentTime = percent *  audio.duration
+  }
 
 
 
@@ -142,17 +141,17 @@ import { sliceText } from "../../utils/sliceText"
        {selectedUser ? (
         messages.map((message) => (
           <div key={message._id} ref={scrollRef}
-         className={`chat ${selectedUser._id === message.senderId 
+         className={`chat ${selectedUser._id === message.senderId?.toString() 
          ? `${lang === 'ar' ? 'chat-end' : 'chat-start'}`
           : `${lang === 'ar' ? 'chat-start' : 'chat-end'}` } `}>
-           <div className={`flex ${selectedUser._id === message.senderId
+           <div className={`flex ${selectedUser._id === message.senderId?.toString()
              ? `${lang === 'ar' ? "flex-row-reverse" : "flex-row"}`
               : `${lang === 'ar' ? "flex-row" : "flex-row-reverse"}`} items-start gap-2`}>
            <img src={selectedUser._id === message.senderId  ? selectedUser?.profilePic ||
             avatar : user?.profilePic || avatar}
             alt="" className="rounded-full size-12" />
            
-         <div className={`chat-bubble ${selectedUser._id === message.senderId ? "bg-neutral"
+         <div className={`chat-bubble ${selectedUser._id === message.senderId?.toString() ? "bg-neutral"
            : "bg-base-content text-base-300 "} `}>
           
            {message.image && ( 
@@ -197,7 +196,9 @@ import { sliceText } from "../../utils/sliceText"
             
              </div>
             
-                  <span className="text-xs text-center opacity-70">{formatDate(message.createdAt as string)}</span>
+                  <span className="text-xs text-center opacity-70">
+                    {formatDate(message.createdAt as string) ?? t("clientMessages.INVALID_DATE", {ns: "messages"})}
+                    </span>
                
           </div>
          ) }
@@ -235,7 +236,7 @@ import { sliceText } from "../../utils/sliceText"
               }
               <br />
                 <span className="text-xs opacity-70">
-                {formatDate(message?.createdAt as string)}
+                {formatDate(message?.createdAt as string) ?? t("clientMessages.INVALID_DATE", {ns: "messages"})}
                 </span>
            </p>
            </div>

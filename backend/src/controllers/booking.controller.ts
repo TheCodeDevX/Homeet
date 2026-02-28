@@ -9,12 +9,14 @@ import Listing from "../models/listing.models";
 import { createError } from "../utils/createError";
 import { userSchema } from "../models/user.models";
 import {DateTime} from "luxon"
+import {format} from "date-fns"
+import mongoose from "mongoose";
 
 
- export const checkAvailability = async (userCheckIn:string, userCheckOut:string, listingId : string ) => {
+ export const checkAvailability = async (listingId : string, userCheckIn:string, userCheckOut?:string) => {
     const listing = await Listing.findById(listingId);
       if(!listing) {
-         createError("listing not found", 404)
+         createError("LISTING_ID_NOT_FOUND", 404)
          return;
       }
      
@@ -24,22 +26,29 @@ import {DateTime} from "luxon"
          const checkIn = booking.checkIn;
          const checkOut = booking.checkOut;
 
-         const {overlap, overlapRange} = dateRangeOverlap(
+         if(!userCheckOut) {
+          const overlap = toDate(checkIn) < toDate(userCheckIn) &&  toDate(checkOut) > toDate(userCheckIn)    
+          if(overlap)  return {overlap : true}
+          return {overlap : false};
+         } else {
+          const {overlap, overlapRange} = dateRangeOverlap(
           toDate(checkIn),
           toDate(checkOut),
           toDate(userCheckIn),
           toDate(userCheckOut)
          )
 
-       if(overlap) return { overlap : true, overlapRange };
-         
+        if(overlap) return { overlap : true, overlapRange }; 
+        return {overlap: false} // book this property
        }
-       return {overlap: false} // book this property
+      
+ }
+        
  }
 
  const dateRangeOverlap = (checkInA: Date, checkOutA: Date, checkInB: Date, checkOutB: Date) => {
   if(checkInA < checkOutB && checkInB < checkOutA) return {overlap : true, overlapRange :
-     `${toTime(checkInA)}-${toTime(checkOutB)}`};
+     `${format(checkInA, "d MMM h:mmaa")} - ${format(checkOutB, "d MMM h:mmaa")}`};
   return {overlap:false}
 
  }
@@ -59,11 +68,10 @@ import {DateTime} from "luxon"
 
    export const bookProperty = async(req:Request, res:Response, next:NextFunction) => {
     const {listingId} = req.params;
-    const {checkIn, checkOut, adults, children, pets} = req.body;
+    const {checkIn, checkOut, adults, children, pets, duration, totalPrice} = req.body;
+
     try {
- 
-      const userCheckIn = DateTime.fromFormat(checkIn, 'yyyy/MM/dd').toISO() as string;
-      const userCheckOut = DateTime.fromFormat(checkOut, 'yyyy/MM/dd').toISO() as string;
+  
       console.log('Book Property', {...req.body})
         if(!listingId) {
          createError("listing id not found", 404)
@@ -74,15 +82,45 @@ import {DateTime} from "luxon"
          createError("listing not found", 404)
          return;
       }
+
+      if(listing.bookings.some((b) => new mongoose.Types.ObjectId(b._id) === (req.authUser._id))) {
+         createError("ALREADY_BOOKED", 400);
+         return;
+      }
+
+      const userCheckIn = DateTime.fromFormat(checkIn, 'yyyy/MM/dd').toISO() as string;
+      const userCheckOut = listing.pricingType === "one_time"
+      ? undefined 
+      : DateTime.fromFormat(checkOut, 'yyyy/MM/dd').toISO() as string;
+
+      // if(listing.adults < adults) {
+      //    createError("the number of adults should be less ", 400)
+      //    return
+      // }
+
+      //  if(listing.children < children) {
+      //    createError("the number of children should be less ", 400)
+      //    return
+      // }
     
-     const availability = await checkAvailability(userCheckIn, userCheckOut, listingId)
-     if(availability?.overlap) return res.status(400).json({message : `there is an overlap between
-      ${availability?.overlapRange}. This property is already booked at the selected time`})
+    
+     const availability = await checkAvailability(listingId, userCheckIn, userCheckOut)
+     if(availability?.overlap) return res.status(400).json({message : `OVERLAP&${availability.overlapRange}`})
    
    const bookingAlreadyExists = listing.bookings.some(booking => booking.userId === req.authUser._id.toString());  
   console.log("bookingAlreadyExists", bookingAlreadyExists)
+ 
    if(!bookingAlreadyExists) {
-      await listing.updateOne({ $push : {bookings : {
+      let costPrice : number = 0;
+      if(listing.pricingType === "monthly") {
+        costPrice = (duration?.months * listing.price);
+      } else if (listing.pricingType === "nightly") {
+        costPrice = (duration?.nights * listing.price); 
+      } else if (listing.pricingType === "one_time"){
+         costPrice = listing.price;
+      }
+
+      const booking = await listing.updateOne({ $push : {bookings : {
       checkIn : userCheckIn,
       checkOut : userCheckOut,
       firstName : req.authUser.firstName,
@@ -93,12 +131,14 @@ import {DateTime} from "luxon"
       childrenCount : children,
       petsCount : pets,
       userId : req.authUser._id,
-   }}})
-   res.status(200).json({message : "This property is available"})
-   } else return res.status(400).json({message : "You've already booked this property!"})
+      costPrice
+   }}});
+
+   // const my_booking = listing.bookings.find(b => b.userId === req.authUser._id);
+   res.status(200).json({message : "CONFIRMED_BOOKING", booking})
+   } else return res.status(400).json({message : "ALREADY_BOOKED"})
        
    }
-    
    catch (error) {
     console.log('error in bookProperty controller', error)  
     next(error)

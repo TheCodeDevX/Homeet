@@ -19,6 +19,8 @@
       "INVALID_DATA": "Veuillez vérifier vos informations et réessayer.",
       "INVALID_EMAIL": "Veuillez saisir une adresse email valide.",
       "INVALID_PASS": "Mot de passe incorrect. Veuillez réessayer.",
+      "INVALID_TOKEN" : "Jeton invalide!",
+      "INVALID_LENGTH" : "La longueur du jeton doit être 64 caractères",
 
       "SUCCESSFUL_LOGIN": "Bon retour !",
       "SUCCESSFUL_SIGNUP": "Compte créé avec succès !",
@@ -47,6 +49,10 @@
       "PASS_REQUIRED": "Le mot de passe est requis.",
       "PASS_MUSTBE_STRING": "Le mot de passe doit être du texte.",
       "TIP": "Le mot de passe doit contenir au moins 8 caractères incluant minuscules, majuscules, chiffres et symboles.",
+      "CHECK_IN_REQUIRED": "L'enregistrement est obligatoire",
+      "CHECK_OUT_REQUIRED": "Le départ est obligatoire",
+      "OVERLAP": "il y a un chevauchement entre {{overlapRange}}. Cette propriété est déjà réservée à l'heure sélectionnée",
+      "ALREADY_BOOKED": "Vous avez déjà réservé cette propriété!",
 
       "TITLE_REQUIRED": "Veuillez ajouter un titre à votre annonce.",
       "DESC_REQUIRED": "Veuillez ajouter une description.",
@@ -58,6 +64,7 @@
       "PETS_REQUIRED" : "Le champ animaux de compagnie est obligatoire",
       "ADULTS_REQUIRED" : "Le champ adultes est obligatoire",
       "CHILDREN_REQUIRED" : "Le champ enfants est obligatoire",
+
 
       "ENTER_RENTALPRICE": "Veuillez sélectionner un type de location.",
       "RENTAL_PRICE_REQUIRED": "Le prix de location est requis.",
@@ -71,7 +78,7 @@
       "SUCCESSFUL_UPDATED_LISTING": "Annonce mise à jour avec succès.",
       "INVALID_ID_FORMAT": "Quelque chose s'est mal passé. Veuillez réessayer.",
       "LIS_UNFOUND": "Cette annonce n'existe plus.",
-      "DELETED_LIS": "Annonce supprimée.",
+      "LISTING_DELETED_SUCCESSFULLY": "Annonce supprimée.",
 
       "INVALID_RATING": "Veuillez sélectionner une note valide.",
       "SUCCESSFUL_RATING": "Merci pour votre note !",
@@ -87,10 +94,10 @@
       "document not found": "Nous n'avons pas trouvé ce que vous cherchez.",
       "USER_SIGNUP_FAILED": "Inscription échouée. Veuillez réessayer.",
       "USER_VERIFICATION_FAILED": "Vérification de l'email échouée. Veuillez réessayer.",
-      "USER_LOGIN_FAILED": "Connexion échouée. Veuillez vérifier vos identifiants.",
+      "USER_LOGING_FAILED": "Connexion échouée. Veuillez vérifier vos identifiants.",
       "ERROR_FORGETTING_PASSWORD": "Impossible d'envoyer le lien de réinitialisation. Veuillez réessayer.",
-      "Error_RESETING_PASSWORD": "Réinitialisation du mot de passe échouée. Veuillez réessayer.",
-      "USER_LOGING_FAILED": "Déconnexion échouée. Veuillez réessayer.",
+      "ERROR_RESETING_PASSWORD": "Réinitialisation du mot de passe échouée. Veuillez réessayer.",
+      "USER_LOGOUT_FAILED": "Déconnexion échouée. Veuillez réessayer.",
       "PROFILE_UPDATING_FAILED": "Impossible de mettre à jour votre profil. Veuillez réessayer.",
       "USERS_FETCHING_FAILED": "Impossible de charger les utilisateurs. Veuillez actualiser la page.",
       "MESSAGES_FETCHING_FAILED": "Impossible de charger les messages. Vérifiez votre connexion.",
@@ -101,7 +108,31 @@
       "DELETED_FOLLOW_REQ": "Demande de suivi annulée.",
       "FOLLOW_REQ_SENDING_FAILED": "Impossible d'envoyer la demande de suivi. Veuillez réessayer.",
       "FOLLOW_REQ_RECEIVING_FAILED": "Impossible de charger les demandes de suivi. Veuillez actualiser.",
-      "USER_FINDING_FAILED": "Utilisateur non trouvé."
+      "USER_FINDING_FAILED": "Utilisateur non trouvé.",
+      "CONFIRMED_BOOKING" : "Réservation confirmée!",
+      "BOOKING_FAILED" : "Échec de la création d'une réservation",
+      "LISTING_ID_NOT_FOUND": "ID de l'annonce non trouvé",
+      "FETCH_USER_ERROR" : "Erreur lors de la récupération des données utilisateur",
+      "INVALID_RECEIVER_ID" : "Identifiant du destinataire invalide",
+      "EMPTY_AUDIO_RECORDING": "Votre enregistrement audio est vide. Veuillez enregistrer un fichier audio et réessayer.",
+      "INVALID_AUDIO_RECORDING" : "Audio invalide",
+      "UNDEFINED_SENDER_ID": "L'identifiant de l'expéditeur est manquant. Veuillez réessayer.",
+      "MESSAGE_NOT_FOUND": "Message introuvable.",
+      "INVOLVED_USERS_NOT_FOUND": "Utilisateurs concernés introuvables.",
+      "IRRELEVANT_USERS": "Vous n'êtes pas autorisé à effectuer cette action.",
+      "FAILED_TO_FETCH_LISTINGS": "Impossible de récupérer les annonces. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_FETCH_LISTING": "Impossible de récupérer l'annonce'. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_FETCH_USER_LISTINGS": "Impossible de récupérer les annonces de cet utilisateur. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_DELETE_LISTING": "Impossible de supprimer l'annonce. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_UPDATE_LISTING": "Impossible de mettre à jour l'annonce. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_RATE_LISTING": "Impossible de noter l'annonce. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_FETCH_RATING": "Impossible de récupérer la note. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_FETCH_RATINGS": "Impossible de récupérer les notes. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_LIKE_RATING": "Impossible d'aimer la note. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_FETCH_INCOMING_NOTIFICATIONS": "Impossible de récupérer les notifications entrantes. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_READ_NOTIFICATION": "Impossible de marquer la notification comme lue. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_ARCHIVE_NOTIFICATION": "Impossible d'archiver la notification. Veuillez réessayer ultérieurement.",
+      "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "Impossible de supprimer les notifications archivées. Veuillez réessayer ultérieurement."
     },
 
     "clientMessages": {
@@ -109,6 +140,11 @@
       "ONLY_IMG_FILE" : "Veuillez sélectionner un fichier image!",
       "INVALID_PHONE_NUMBER": "Numéro de téléphone invalide",
       "FAILED_COPYING_FIELD": "Échec de la copie",
-      "FOLLOW_MESSAGE": "{{context}} a commencé à vous suivre"
+      "FOLLOW_MESSAGE": "{{context}} a commencé à vous suivre",
+      "INVALID_DATE": "Date invalide",
+      "ERR_REFRESHING_TOKEN" : "Échec du renouvellement du jeton d'accès!",
+      "NO_PASSWORD_PROVIDED": "Aucun mot de passe fourni",
+      "CONFIRM_YOUR_PASS": "Veuillez confirmer votre mot de passe avant de soumettre"
+
     }
 }

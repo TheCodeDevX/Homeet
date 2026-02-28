@@ -23,7 +23,6 @@ import mongoose from "mongoose";
  }
 
  export const createError = (msg: string, status : number) => { 
-  //  const error = new Error(msg)
   const error = new AppError(msg, status);
    error.statusCode = status || 500;
    throw error;

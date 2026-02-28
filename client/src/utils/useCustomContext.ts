@@ -1,0 +1,9 @@
+import { useContext, type Context } from "react";
+
+export const useCustomContext = <T,P>(createdContext:Context<T>, customHookName:P)  => {
+    const context = useContext(createdContext)
+    if(!context) {
+    throw new Error(`${customHookName || "useCustomHookName"} must be used within a provider`)
+    }
+    return context;
+}

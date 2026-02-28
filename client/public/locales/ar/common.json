@@ -33,7 +33,9 @@
         "less": "أقل",
         "comments" : "التعليقات",
         "followBack": "رد المتابعة",
-        "mutualFollow": "متابعة متبادلة"
+        "mutualFollow": "متابعة متبادلة",
+        "checkAvailability": "تحقق من التوفر",
+        "reserve" : "حجز"
     },
 
       "placeholders" : {
@@ -80,6 +82,7 @@
         "years_one": "عُلّق منذ سنة",
         "years_other": "عُلّق منذ {{count}} سنوات",
         "newFollowers": "متابعون جدد",
+        "totalPrice" : "( السعر الإجمالي )",
         "gender" : {
             "label" : "الجنس",
             "placeholder" : "اختر جنسك",
@@ -149,7 +152,11 @@
         "adults" : "البالغون",
         "children" : "الأطفال",
         "pets" : "الحيوانات الأليفة",
-        "price" : "السعر"
+        "price" : "السعر",
+        "guestContent": "{{adults}} بالغين، {{children}} أطفال، {{pets}} حيوانات أليفة",
+        "checkIn": "تسجيل الدخول",
+        "checkOut": "تسجيل الخروج",
+        "guests": "الضيوف"
 
      }
  }

@@ -6,7 +6,7 @@ import { useListingStore, type FormData } from "../store/listingStore"
 import CounterBtn from "../components/CounterBtn"
 import { useTranslation } from "react-i18next"
 import i18n from "../config/reacti18next"
-import { useAuthStore } from "../store/auhStore"
+import { useAuthStore } from "../store/authStore"
 
  
 const PostListingPage = () => {

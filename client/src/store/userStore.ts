@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import * as types from ".././../../backend/src/shared/types/types"
-import { handleAxiosError } from "./helpers/errorHelper";
+import { errorHandler } from "./helpers/errorHelper";
 import { UserApi } from "../lib/axios.config";
 
  export interface UserProfile extends types.UserData {
    country?: string
-   }
+}
 
  interface UserStates {
   user : UserProfile | null
@@ -19,16 +19,15 @@ import { UserApi } from "../lib/axios.config";
   user: null,
   isUserLoading:false,
   error:null,
-  getUser : async(id) => {
-  set({error:null, isUserLoading:true});
+  getUser : async(id) => { 
+  set({isUserLoading:true, error : null});
   try {
     const res = await UserApi.get(`/user/${id}`)
-    set({user:res.data})
+    set({user:res?.data, isUserLoading:false})
   } catch (error) {
-    const errMessage = handleAxiosError(error)
-    set({error:errMessage})
-  } finally{
-    set({isUserLoading:false})
+    const err = errorHandler({error, defaultErr: "FETCH_USER_ERROR"})
+    set({error:err, isUserLoading:false})
+    throw error
   }
   }
  }))

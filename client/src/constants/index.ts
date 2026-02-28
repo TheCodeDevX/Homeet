@@ -3,7 +3,7 @@ import { AirVent, BedDouble, Bell, BellIcon, Building2, Car, Cat, Dumbbell,
   TreeDeciduousIcon, Utensils, WashingMachine, Waves, Wifi } from "lucide-react";
 import {  type ComponentType, type SVGProps } from "react";
 import { RiHome2Line, RiLogoutCircleLine } from "react-icons/ri";
-import type { Lang } from "../store/languagesStore";
+import type { Lang } from "../store/languageStore";
 
  export type Links = "HOME" | "POST_LISTING" | "DASHBOARD" | "NOTIFICATIONS" | "CHAT"
  export type Tooltips = "NAV" | "NOTIFS" | "CHANGE_THEME" | "CHANGE_LANG" | "LOGOUT" | "PROFILE"
@@ -632,3 +632,8 @@ export const countries = [
   { name: "Zambia", code: "ZM", phone: 260 },
   { name: "Zimbabwe", code: "ZW", phone: 263 },
 ];
+
+export const availableThemes : Array<Theme>
+ = ["dark", "light", "cupcake", "forest", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade" , "night" , "coffee" , "winter" , "dim" , "nord" , "sunset"]
+
+ export const availableLangs : Array<Lang> = ["ar" , "en" , "es" , "fr"]

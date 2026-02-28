@@ -32,7 +32,9 @@
         "less" : "Less",
         "comments" : "Comments",
         "followBack" : "Follow Back",
-        "mutualFollow" : "Mutual Follow"
+        "mutualFollow" : "Mutual Follow",
+        "checkAvailability" : "Check availability",
+        "reserve" : "Reserve"
     },
 
       "placeholders" : {
@@ -79,6 +81,7 @@
         "years_one": "Commented a year ago",
         "years_other": "Commented {{count}} years ago",
         "newFollowers": "New Followers",
+        "totalPrice" : "( Total price )",
         "gender" : {
             "label" : "Gender",
             "placeholder" : "Pick Your Gender",
@@ -152,7 +155,10 @@
         "children" : "Children",
         "pets" : "Pets",
         "price" : "Price",
-        "guestContent" : "{{adults}} adults, {{children}} children, {{pets}} pets"
+        "guestContent" : "{{adults}} adults, {{children}} children, {{pets}} pets",
+        "checkIn" : "Check In",
+        "checkOut" : "Check Out",
+        "guests" : "Guests"
 
      }
  }

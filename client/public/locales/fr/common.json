@@ -32,7 +32,9 @@
         "less": "Moins",
         "comments" : "Commentaires",
         "followBack": "Suivre en retour",
-        "mutualFollow": "Suivi mutuel"
+        "mutualFollow": "Suivi mutuel",
+        "checkAvailability": "Vérifier la disponibilité",
+        "reserve" : "Réservation"
     },
 
       "placeholders" : {
@@ -79,6 +81,7 @@
         "years_one": "Il y a {{count}} an",
         "years_other": "Il y a {{count}} ans",
         "newFollowers": "Nouveaux abonnés",
+        "totalPrice" : "( Prix total )",
         "gender" : {
             "label" : "Genre",
             "placeholder" : "Choisissez Votre Genre",
@@ -148,7 +151,11 @@
         "adults" : "Adultes",
         "children" : "Enfants",
         "pets" : "Animaux de compagnie",
-        "price" : "Prix"
+        "price" : "Prix",
+        "guestContent": "{{adults}} adultes, {{children}} enfants, {{pets}} anim",
+        "checkIn": "Arrivée",
+        "checkOut": "Départ",
+        "guests": "Invités"     
 
      }
 }

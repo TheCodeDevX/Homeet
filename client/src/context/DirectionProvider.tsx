@@ -1,7 +1,7 @@
 import React, { createContext, useState, type PropsWithChildren, type SetStateAction } from "react"
 
 
- interface DirStates {
+ export interface DirStates {
     langDir : string,
     setLangDir : React.Dispatch<SetStateAction<string>>
  }

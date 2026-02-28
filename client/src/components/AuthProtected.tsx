@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from "react";
-import { useAuthStore } from "../store/auhStore";
+import { useAuthStore } from "../store/authStore";
 import { Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import LoadingSpinner from "./Spinner";
@@ -12,8 +12,6 @@ import type {UserRole} from '../../../backend/src/shared/types/types'
       const {pathname} = location;
 
   const {isAuthenticated, user, isCheckingAuth, isLoading} = useAuthStore();
-//   console.log(user , "User ???")
-//  if(!user) return "User not found check out and try again!";
   if(isCheckingAuth) return <LoadingSpinner/>
   if(!isAuthenticated && !isLoading) return <Navigate to="/login" replace/>
   if(!user?.isVerified && !isLoading) return <Navigate to="/verify-email" replace/>
@@ -24,9 +22,9 @@ import type {UserRole} from '../../../backend/src/shared/types/types'
   }
 
 
-   export const RedirectAuthenticatedUser = ({children} : PropsWithChildren) => {
-    const {isAuthenticated, user} = useAuthStore();
-    if(isAuthenticated && user?.isVerified && user?.onBoarded) return <Navigate to="/" replace/>
-    return <>{children}</>
+  export const RedirectAuthenticatedUser = ({children} : PropsWithChildren) => {
+  const {isAuthenticated, user} = useAuthStore();
+  if(isAuthenticated && user?.isVerified && user?.onBoarded) return <Navigate to="/" replace/>
+  return <>{children}</>
   }
   

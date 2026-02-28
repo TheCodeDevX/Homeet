@@ -1,16 +1,15 @@
 import { create } from "zustand";
 import type { Theme } from "../constants";
 
- interface ThemeSTates {
+export interface ThemeStates {
     theme : Theme,
     setTheme : (theme : Theme) => void;
-    
  }
  
-  export const useThemeStore  = create<ThemeSTates>((set) => ({
-    theme :  localStorage?.getItem("theme") as Theme || "dark" ,
+  export const useThemeStore  = create<ThemeStates>((set) => ({
+    theme :  localStorage?.getItem?.("theme") as Theme || "dark" ,
     setTheme : (theme) => {
-        localStorage.setItem("theme", theme)
-        set({theme:theme})
+     localStorage.setItem("theme", theme)
+     set({theme:theme})
     }
   }) )

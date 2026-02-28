@@ -14,6 +14,42 @@ import { genRefreshToken } from '../lib/generateRefreshToken.ts';
 import { connectDB } from '../config/db.ts';
 import type { AuthResponse, LogoutResponse, ProfileData, ProfileResponse, UserDocument, UserResponse, VerifyEmailResponse } from '../shared/types/types.ts';
 
+
+// @desc   Authenticate user and send token in http-Only cookie
+// @route  POST /api/auth/login
+// @access Public
+export const login = async(req:Request, res:Response, next:NextFunction) => {
+ try {
+   const {email , password} = req.body;
+   const user = await User.findOne({email});
+   if(!user) {
+      createError('INVALID_EMAIL', 401);
+      return;
+   }
+
+   const isCorrectPassword = await user.matchPassword(password);
+   if(!isCorrectPassword) {
+      createError("INVALID_PASS", 401); // Unauthorized
+      return;
+   }
+   
+   genToken(res, user._id);
+    if(!user.isVerified && ( new Date(user.refreshTokenExpiresAt) < new Date() ) ) {
+      genRefreshToken(res, user);
+   }
+
+   const loginResponse : AuthResponse = {user, message : "SUCCESSFUL_LOGIN", success:true}   
+
+   res.status(200).json(loginResponse)
+   console.log(user)
+
+ } catch (error) {
+   console.error("error in login controller",error)
+   next(error)
+ }
+  
+};
+
 // @desc   Register a new user 
 // @route  POST /api/auth/signup
 // @access Public
@@ -42,7 +78,7 @@ export const signup = async(req:Request, res:Response, next:NextFunction) => {
  genRefreshToken(res, newUser);
 await sendVerificationEmail(newUser.email, capitalizedName(newUser.firstName), newUser.verificationToken)
 
-const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP", success : true} 
+const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP", success: true} 
 
  res.status(201).json(signupResponse)
 
@@ -53,39 +89,98 @@ const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP
  }
 }
 
-// @desc   Authenticate user and send token in http-Only cookie
-// @route  POST /api/auth/login
+
+// @desc   Verify user's email
+// @route  POST /api/auth/verify-email
 // @access Public
-export const login = async(req:Request, res:Response, next:NextFunction) => {
+
+ export const verifyEmail = async(req:Request, res:Response, next:NextFunction) => {
  try {
-   const {email , password } = req.body;
-   const user = await User.findOne({email});
-   if(!user) {
-      createError('INVALID_EMAIL', 401);
+    const {code} : {code : number} = req.body;
+    let user = await User.findOne({ verificationToken: code });
+    if(!user) {
+      createError("INVALID_VERIFICATION_CODE", 401);
       return;
+    }
+
+  user = await User.findOne({
+   verificationToken: code,
+   verificationTokenExpiresAt :{ $gt: new Date() },
+  })
+
+  
+  if(!user) {
+  return res.json({success : false, message : "EXPIRED_VERIFICATION_CODE"});
+  }
+   const token = genToken(res, user._id);
+  await sendWelcomeMessage(capitalizedName(user.firstName), token , user.email)
+
+  await User.updateOne({_id:user._id}, {
+   $set : {
+   isVerified: true,
+   },
+
+   $unset : {
+   verificationToken : null ,
+   verificationTokenExpiresAt: null,
+   refreshToken : null,
+   refreshTokenExpiresAt : null
    }
 
-   const isCorrectPassword = await user.matchPassword(password);
-   if(!isCorrectPassword) {
-      createError("INVALID_PASS", 401); // Unauthorized
-      return;
-   }
-   genToken(res, user._id);
-    if(!user.isVerified && ( new Date(user.refreshTokenExpiresAt) < new Date() ) ) {
-         genRefreshToken(res, user);
+  });
+
+  res.clearCookie("refreshToken");
+  const verfiyEmailResponse : VerifyEmailResponse = {
+   success: true, 
+   message : "VERIFIED_EMAIL"
+  }
+  res.status(200).json(verfiyEmailResponse)
+ } catch (error) {
+   console.error("error in verifyEmail Controller")
+   next(error);
+ }
+
+ }
+
+  // @desc   Generating refresh-token  
+// @route  POST /api/auth/profilePic
+// @access Private
+
+export const refreshToken = async(req:Request, res:Response, next:NextFunction) => {
+   try {
+      console.log("hit refreshToken", req.query.code)
+      const {code} = req.query;
+      const {refreshToken} = req.cookies
+
+      const storedVerificationToken = crypto.createHash("sha256").update(refreshToken).digest("hex")
+
+      const user = await User.findOneAndUpdate({
+         verificationToken : code,
+         verificationTokenExpiresAt : { $lt : new Date() },
+         refreshToken : storedVerificationToken,
+         refreshTokenExpiresAt: { $gt : new Date() }
+      },
+       { $set :  { 
+            verificationTokenExpiresAt : new Date( Date.now() + 1000 * 60 * 15 ),
+            verificationToken : Math.floor(100000 + Math.random() * 900000),
+           
+          }});
+          
+
+      if(!user) {
+         Object.keys(req.cookies).forEach((c) => res.clearCookie(c));
+         createError("UNAUTH_USER", 401);
+         return;
       }
 
-   const loginResponse : AuthResponse = {user, message : "SUCCESSFUL_LOGIN", success:true}   
+          res.status(200).json({success : true, accessToken : user.verificationToken});
+          console.log(user.verificationToken)
 
-   res.status(200).json(loginResponse)
-   console.log(user)
-
- } catch (error) {
-   console.error("error in login controller",error)
-   next(error)
- }
-  
-};
+   } catch (error) {
+      console.error("error in refreshToken controller", error);
+      next(error);
+   }
+}
 
 // @desc   Log out user by clearing the JWT cookie 
 // @route  POST /api/auth/logout
@@ -93,7 +188,7 @@ export const login = async(req:Request, res:Response, next:NextFunction) => {
 export const logout = async(req:Request, res:Response, next:NextFunction) => {
 try {
    res.clearCookie('jwt');
-   const logoutResponse : LogoutResponse = {message:"SUCCESSFUL_LOGOUT", success:true}
+   const logoutResponse : LogoutResponse = {message: "SUCCESSFUL_LOGOUT", success:true}
    res.status(200).json(logoutResponse);
 } catch (error) {
    console.error("error in logout controller", error);
@@ -156,97 +251,7 @@ try {
 }
 
 
-// @desc   Verify user's email
-// @route  POST /api/auth/verify-email
-// @access Public
 
- export const verifyEmail = async(req:Request, res:Response, next:NextFunction) => {
- try {
-    const {code} : {code : number} = req.body;
-    const isCorrectCode = await User.findOne({ verificationToken: code });
-    if(!isCorrectCode) {
-      createError("INVALID_VERIFICATION_CODE", 401);
-      return;
-    }
-
-  const user = await User.findOne({
-   verificationTokenExpiresAt :{ $gt: new Date() }
-  })
-
-  
-  if(!user) {
-  const errKey = "EXPIRED_VERIFICATION_CODE"
-  return res.json(errKey);
-  }
-   const token = genToken(res, user._id);
-  await sendWelcomeMessage(capitalizedName(user.firstName), token , user.email)
-
-  await User.updateOne({_id:user._id}, {
-   $set : {
-   isVerified: true,
-   },
-
-   $unset : {
-   verificationToken : null ,
-   verificationTokenExpiresAt: null,
-   refreshToken : null,
-   refreshTokenExpiresAt : null
-   }
-
-  });
-
-  res.clearCookie("refreshToken");
-  const verfiyEmailResponse : VerifyEmailResponse = {
-   success: true, 
-   message : "VERIFIED_EMAIL"
-  }
-  res.status(200).json(verfiyEmailResponse)
- } catch (error) {
-   console.error("error in verifyEmail Controller")
-   next(error);
- }
-
- }
-
- // @desc   Generating refresh-token  
-// @route  POST /api/auth/profilePic
-// @access Private
-
-export const refreshToken = async(req:Request, res:Response, next:NextFunction) => {
-   try {
-      console.log("hit refreshToken", req.query.code)
-      const {code} = req.query;
-      const {refreshToken} = req.cookies
-
-      const storedVerificationToken = crypto.createHash("sha256").update(refreshToken).digest("hex")
-
-      const user = await User.findOneAndUpdate({
-         verificationToken : code,
-         verificationTokenExpiresAt : { $lt : new Date() },
-         refreshToken : storedVerificationToken,
-         refreshTokenExpiresAt: { $gt : new Date() }
-      },
-       { $set :  { 
-            verificationTokenExpiresAt : new Date( Date.now() + 1000 * 60 * 15 ),
-            verificationToken : Math.floor(100000 + Math.random() * 900000),
-           
-          }});
-          
-
-      if(!user) {
-         Object.keys(req.cookies).forEach((c) => res.clearCookie(c));
-         createError("UNAUTH_USER", 401);
-         return;
-      }
-
-          res.status(200).send(user.verificationToken);
-          console.log(user.verificationToken)
-
-   } catch (error) {
-      console.error("error in refreshToken controller", error);
-      next(error);
-   }
-}
 
  // @desc   Handle forgot passowrd logic
 // @route  POST /api/auth/forgot-password
@@ -255,15 +260,24 @@ export const refreshToken = async(req:Request, res:Response, next:NextFunction) 
  export const forgotPassword = async(req:Request, res:Response, next:NextFunction) => {
    try {
       const {email} = req.body;
+      const secret = process.env.SECRET_TOKEN
       const user = await User.findOne({email});
       if(!user) {
          createError("UNFOUND_EMAIL", 400);
          return;
       }
 
+      if(!secret) return
       // generate random token 
-      const resetPasswordToken = crypto.randomBytes(32).toString("hex");
-      const  resetPasswordExpiresAt = new Date(Date.now() + 1000 * 60 * 60)
+      const randomHexadecimal = crypto.randomBytes(32).toString("hex");
+      res.cookie("my-token", randomHexadecimal, {
+         httpOnly : true,
+         sameSite : "lax",
+         secure :  process.env.NODE_ENV !== 'development',
+         maxAge : 1000 * 60 * 60
+      })
+      const resetPasswordToken = crypto.createHmac("sha256", secret).update(randomHexadecimal).digest("hex");
+      const  resetPasswordExpiresAt = new Date(Date.now() + 1000 * 60 * 60).toISOString()
 
       await User.updateOne({_id:user._id}, { resetPasswordToken, resetPasswordExpiresAt })
       await sendResetPasswordRequest(capitalizedName(user.firstName), user.email, resetPasswordToken)
@@ -275,23 +289,46 @@ export const refreshToken = async(req:Request, res:Response, next:NextFunction) 
  }
 
  // @desc  Reset user's password
-// @route  PUT /api/auth/reset-password/:token
+// @route  PUT /api/auth/reset-password/:id
 // @access Public
 
  export const resetPassword = async(req:Request, res:Response, next:NextFunction) => {
+   console.log(req.params)
  try {
-     const {token} = req.params;
-   const {password} = req.body;
+   const {token} = req.params;
+   const {password} : {password : string} = req.body;
+   const secret = process.env.SECRET_TOKEN;
+   const receivedToken = req.cookies["my-token"]
+   console.log('NEW DATE', new Date())
+   if(!token || !receivedToken) {
+      createError("no token provided", 401);
+      return;
+   }
+   if(!secret) return;
+   const checkHmac = crypto.createHmac("sha256", secret).update(receivedToken).digest("hex");
+   const isValidToken = crypto.timingSafeEqual(Buffer.from(checkHmac, "hex"), Buffer.from(token, "hex"));
 
+   if(!isValidToken) {
+      createError("INVALID_TOKEN", 401);
+      return
+   }
    const user = await User.findOne({resetPasswordToken: token, resetPasswordExpiresAt: {$gt : new Date()}});
+   // 2026-02-11T18:
+   // 40:06.800Z (Date.now()) and 2026-02-11T19:37:25.974+00:00 (resetPass from db)
+
+   if(!password || typeof password !== "string") {
+      createError("INVALID_PASS", 400);
+      return;
+   }
+   
    if(!user) {
-      createError("INVALID_OR_EXPIRED_RLINK", 401)
+   createError("INVALID_OR_EXPIRED_RLINK", 401)
    return;
    }
-      // hash and update passoword
+   // hash and update passoword
    const hashedPassword = await bcrypt.hash(password, 10);
    await User.updateOne({_id:user._id}, { $set : {password: hashedPassword ,
-       resetPasswordToken:null, resetPasswordExpiresAt:null} })
+   resetPasswordToken:null, resetPasswordExpiresAt:null} })
    await sendResetSuccessEmail(capitalizedName(user.firstName), user.email)
    res.status(200).json({success:true, message : "RESET_PASSWORD"})
  } catch (error) {
@@ -344,10 +381,10 @@ export const profilePic = async(req:Request, res:Response, next:NextFunction) =>
 export const warmUp = async(req:Request, res:Response, next:NextFunction) => {
  try {
    const conn = await User.exists({email : "user@example.com"})
-   res.status(200).json(conn)
-   console.log("The server is warmed up now!", conn)
+   res.status(200).json('The server is warmed up now!')
  } catch (error) {
    res.status(503).json("The server is unavailable now, please try again later after being warmed up!")
+   next(error)
  }
 }
 

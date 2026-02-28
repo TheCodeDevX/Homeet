@@ -1,9 +1,9 @@
 import { NotificationContext } from "../context/NotificationProvider"
-import { customContext } from "../utils/customContext"
+import { useCustomContext } from "../utils/useCustomContext"
 
  
  const useNotification = () => {
-  return customContext(NotificationContext, 'useNotification')
+  return useCustomContext(NotificationContext, 'useNotification')
  }
  
  export default useNotification

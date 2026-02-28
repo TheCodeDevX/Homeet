@@ -18,13 +18,13 @@ interface ListingType {
 
  const DashboardPage = () => {
   const {t} = useTranslation()
-  const {getUserListings,userListings, deleteListing, isDashboardLoading} = useListingStore()
+  const {getUserListings,userListings, deleteListing, isDashboardLoading, isDeleting} = useListingStore()
 
    const [query , setQuery] = useState("")
    const [isSliced, setIsSliced] = useState<{[id:string] : boolean}>({})
   useEffect(() => {
     getUserListings()
-  }, [])
+  }, [isDeleting])
   const navigate = useNavigate()
   const fields : (keyof ListingType)[] = ["title", "description", "location", "createdAt"]
   const filteredListings =userListings.filter(listing => (
@@ -101,7 +101,7 @@ interface ListingType {
                 {t("dashboard.actions.edit", {ns:"dashboard"})}
                  <Pen size={15}/></span>
             </button>
-             <button onClick={() => deleteListing(listing._id ?? "") } className='btn btn-xs btn-error'>
+             <button onClick={async () => await deleteListing(listing._id ?? "") } className='btn btn-xs btn-error'>
              <span className="flex items-center gap-2">
               {t("dashboard.actions.delete", {ns:"dashboard"})}
                <Trash size={15}/></span>

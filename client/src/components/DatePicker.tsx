@@ -5,7 +5,7 @@ import Button from './Button';
 import Price from './Price';
 import FlatPickr from 'react-flatpickr'
 import type { ApiData } from '../store/listingStore';
-import { useAuthStore } from '../store/auhStore';
+import { useAuthStore } from '../store/authStore';
 import { lightThemes, THEMES } from '../constants';
 import { useThemeStore } from '../store/themeStore';
 import { Check, ChevronDown, Loader, X } from 'lucide-react';
@@ -13,12 +13,13 @@ import CloseButton from './CloseButton';
 import CounterBtn from './CounterBtn';
 import i18n from '../config/reacti18next';
 import { t } from 'i18next';
-import {motion} from 'framer-motion'
+import {motion, number} from 'framer-motion'
 import flatpickr from 'flatpickr';
 import {DateTime} from "luxon"
 import {format} from 'date-fns'
 import useBooking from '../hooks/useBooking';
 import { useBookingStore } from '../store/bookingStore';
+import toast from 'react-hot-toast';
 
 interface DatePickerProps extends HTMLAttributes<HTMLDivElement> {
     listing : ApiData | null
@@ -46,8 +47,10 @@ interface DatePickerProps extends HTMLAttributes<HTMLDivElement> {
       adults : 0,
       children : 0,
       pets : 0,
-      months:0
-    })
+    });
+    const [totalPrice, setTotalPrice] = useState(0)
+    const [numberOfMonths, setNumberOfMonths] = useState(0);
+    const [duration, setDuration] = useState<{months?:number, nights?: number}>({ months : 0, nights : 0 })
 
     const [isOpen, setIsOpen] = useState(false)
     const [refreshKey, setRefreshkey] = useState(0);
@@ -93,39 +96,89 @@ const months = [
 ];
    useEffect(() => {
     if(selectedDateRef.current.checkIn) {
-       let days = [];
-      for(let m =0; m <= formState.months; m++){
-       days.push(months[m].days)
-      }
+     let days : number[] = [];
+
+    for(let m = 0; m <= numberOfMonths; m++){
+     days.push(months[m]?.days)
+    };
       const allDays = days.reduce((acc, days) => acc + days  , 0)
-      console.log(allDays, 'allDays')
+      console.log(allDays, 'allDays') 
      selectedDateRef.current.checkOut = undefined;
-     if(formState.months > 0) {
+
+     if(numberOfMonths > 0 && listing?.pricingType !== "one_time") { 
      const checkOut = new Date(new Date(selectedDateRef.current.checkIn).getTime() +
      (1000 * 60 * 60 * 24 * allDays))
-      selectedDateRef.current.checkOut = format(checkOut, "yyyy/MM/dd")
+      selectedDateRef.current.checkOut = format(checkOut, "yyyy/MM/dd");
     }
     }
 
     console.log("checkOutDate", selectedDateRef.current.checkOut)
-   }, [formState.months])
+   }, [numberOfMonths])
+
+      const checkIn = selectedDateRef.current.checkIn || sessionStorage.getItem('checkIn')
+      const checkOut = selectedDateRef.current.checkOut || sessionStorage.getItem('checkOut')
+   
+  useEffect(() => {
+    if(checkIn && checkOut) {
+      const diff = new Date(checkOut).getTime() - new Date(checkIn).getTime()
+      const numberOfDays = +(diff / (1000 * 60 * 60 * 24)).toFixed(0);
+      setFormState((prev) => ({...prev, dayLength:numberOfDays}))
+       console.warn(numberOfDays, 'num of days')  
+    }
+   }, [checkIn, checkOut, numberOfMonths])
 
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const dates : {checkIn : string, checkOut : string} = {
+    const dates : {checkIn : string, checkOut?: string} = {
       checkIn : selectedDateRef.current.checkIn ?? sessionStorage.getItem("checkIn") ?? "",
-      checkOut : selectedDateRef.current.checkOut ?? sessionStorage.getItem("checkOut")  ?? ""         
+      checkOut : listing?.pricingType === "one_time" ? undefined : selectedDateRef.current.checkOut 
+      ?? sessionStorage.getItem("checkOut")  ?? "",         
      }
+
+     const data = {...formState,...dates, duration, totalPrice};
      try {
-      if(!dates.checkIn || !dates.checkOut) return;
-      await createBooking(listing?._id, {...formState, ...dates})
+      if(!dates.checkIn && listing?.pricingType === "one_time") return;
+       if (!(dates.checkIn || dates.checkOut) && listing?.pricingType !== "one_time") return;
+      await createBooking(listing?._id, data)
      } catch (error) {
       console.log(error)
      }
   }
 
+
+  useEffect(() => {
+  const pricingType = listing?.pricingType;
+  const price = listing?.price;
+  if(pricingType && price && checkOut && checkIn) {
+   const handlePrice = () => {
+    let diff = new Date(checkOut).getTime() - new Date(checkIn).getTime() 
+       switch(pricingType) {
+       case "monthly" : 
+       diff = diff / ( 1000 * 60 * 60 * 24 * 30)
+       setDuration((prev) => ({...prev, months : +diff.toFixed(0) }))
+       if(numberOfMonths === 0) return "0";
+       return diff * price;
+      
+
+       case "nightly" :
+       diff = diff / ( 1000 * 60 * 60 * 24);
+       setDuration((prev) => ({...prev, nights : +diff.toFixed(0) }))
+       if(diff <= 0 || !checkOut || !checkIn) return "0"
+       const result = diff * price
+       return result ;
+      
+      default : return undefined;
+    };
+    };
+    const finalPrice = handlePrice();
+    if(!finalPrice) return;
+    setTotalPrice(+(finalPrice === "0" ? 0 : finalPrice.toFixed(2)));
+   }
+
+
+  }, [checkOut, checkIn, numberOfMonths])
 
 
 
@@ -135,10 +188,11 @@ const months = [
 
     <div className={"w-full"}>
      <CloseButton handleClose={handleClick}/>
-       <Price listing={listing}/>
+       <Price isDynamic={listing?.pricingType === "one_time" ? false : true}
+        key={totalPrice} price={totalPrice < 0 ? 0 : totalPrice} listing={listing}/>
       <form onSubmit={handleSubmit} className="w-full flex flex-col">
         <div className="w-full">
-        <span className="mb-2 md:text-md text-sm">Check In</span>
+        <span className="mb-2 md:text-md text-sm">{t("labels.checkIn", {ns : 'common'})}</span>
        <FlatPickr value={selectedDateRef.current.checkIn}
          className="input flex text-left placeholder:text-left w-full text-sm" 
         // placeholder="check-in"
@@ -194,35 +248,36 @@ const months = [
      <div>
       <span className="mb-2 md:text-md text-sm">Months</span>
       <label className="flex flex-col relative">
-        <input name='months' type="number" value={formState.months} 
-        onChange={handleChange} min={0} 
-        max={1000}
+        <input name='months' type="number" value={numberOfMonths} 
+        onChange={handleChange} min={0}  
+        max={12}
          className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
       
-        <div onClick={() => setFormState(prev => ({...prev, months: prev.months + 1}))}
+        <div onClick={() => setNumberOfMonths(prev => prev === 12 ? 12 : prev + 1)}
          className={`w-8 h-8 z-[10] cursor-pointer absolute flex justify-center items-center top-1/2 -translate-y-1/2 hover:bg-base-100
          rounded-full bg-neutral text-neutral-content border hover:text-base-content
           border-base-content/15 hover:border-base-content transition-colors duration-200 select-none
           ${lang === "ar" ? "left-2" : "right-2" }
           `}>+</div>
 
-        <div onClick={() => setFormState(prev => ({...prev, months: prev.months > 0  ? prev.months - 1 : 0}))}
+        <div onClick={() => setNumberOfMonths(prev => prev === 0 ? 0 : prev - 1)}
          className={`w-8 h-8 z-[10] absolute flex justify-center items-center top-1/2 -translate-y-1/2 hover:bg-base-100
          rounded-full bg-neutral text-neutral-content border hover:text-base-content
           border-base-content/15 hover:border-base-content transition-colors duration-200 select-none
-          ${lang === "ar" ? "left-12" : "right-12" } ${formState.months === 0 ? 'cursor-not-allowed opacity-10' : 'cursor-pointer'}
+          ${lang === "ar" ? "left-12" : "right-12" } ${numberOfMonths === 0 ? 'cursor-not-allowed opacity-10' : 'cursor-pointer'}
           `}>-</div>
         
 
         
       </label>
     </div>
-    : listing?.pricingType === "one_time" ? <></>
+    : listing?.pricingType === "one_time" ? 
+     <></>
     : <div>
-        <span className="mb-2 md:text-md text-sm">Check Out</span>
+        <span className="mb-2 md:text-md text-sm">{t("labels.checkOut", {ns : 'common'})}</span>
      <FlatPickr className="input flex text-left placeholder:text-left w-full text-sm " 
         // placeholder="Check-out"
-         value={selectedDateRef.current.checkOut}
+         value={checkOut?.toString()}
         onChange={(dates: Date[]) => {
           console.log(dates, 'onchange for checkOut') // [Wed Dec 17 2025 12:00:00 GMT+0100 (GMT+01:00)]
          const date = format(dates[0], "yyyy/MM/dd")
@@ -269,17 +324,19 @@ const months = [
       }}/>
     </div>  }
    <div>
-         <span className="mb-2 md:text-md text-sm">{t("Guests", {ns:"common"})}</span>
+         <span className="mb-2 md:text-md text-sm">{t("labels.guests", {ns:"common"})}</span>
         <div ref={ref} className="flex flex-col relative">
         <div  onClick={() => setIsOpen(prev => !prev)}
         className={`input flex items-center cursor-pointer relative ${lang === "ar" ? "pr-2" : "pr-28"}`} >
 
         <ChevronDown className={`absolute ${!isOpen ? "rotate-0" : "rotate-180"} 
-          right-2 top-1/2 -translate-y-1/2 stroke-[1.5px] size-[20px] transition-all duration-100`}/>
+        ${lang === "ar" ? "left-2" : "right-2"}
+          top-1/2 -translate-y-1/2 stroke-[1.5px] size-[20px] transition-all duration-100`}/>
        {t("labels.guestContent", {ns:"common",
          adults : formState.adults || listing?.adults || 0,
          children : formState.children || listing?.children || 0,
-         pets: formState.pets || listing?.pets || 0 })}
+         pets: formState.pets || listing?.pets || 0 
+       })}
         </div>
 
         { <motion.div 
@@ -325,37 +382,28 @@ const months = [
          
             </div>
 
-              <div className='p-4 relative'> 
-            
+          <div className='p-4 relative'> 
             <div className="flex items-center justify-between">
-              <span>{t("labels.pets", {ns:"common"})}</span>
-            
+             <span>{t("labels.pets", {ns:"common"})}</span>
               <div className='flex items-center gap-2'>
-               <CounterBtn type2 btnType="decreasement" onClick={() =>
-                 setFormState((prev) => ({...prev, pets : prev.pets > 0 ? prev.pets - 1 : 0 }))}/>
-               <span> {formState.pets} </span>
-               <CounterBtn type2 btnType="increasement" onClick={() =>
-                 setFormState((prev) => ({...prev, pets : prev.pets + 1 }))}/>
+                <CounterBtn type2 btnType="decreasement" onClick={() =>
+                  setFormState((prev) => ({...prev, pets : prev.pets > 0 ? prev.pets - 1 : 0 }))}/>
+                <span> {formState.pets} </span>
+                <CounterBtn type2 btnType="increasement" onClick={() =>
+                  setFormState((prev) => ({...prev, pets : prev.pets + 1 }))}/>
               </div>
             </div>
-         
-            </div>
-
-             
-
-
-          
-
-         </motion.div>}
+          </div>
+         </motion.div>
+         }
       </div>
        
        </div>
        </div>
-       <div className='text-4xl text-red-500'>{message}</div>
 
     <Button type="submit" classes='!mt-4'>
        {!isBookingLoading ? (<>
-                        check availability
+                       {t("buttons.checkAvailability", {ns : "common"})}
                     </>) : (
         <><Loader className="animate-spin text-center mx-auto size-5"/></>
                  )}

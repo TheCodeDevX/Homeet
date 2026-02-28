@@ -10,7 +10,7 @@ import FallbackCard from "../components/FallbackCard"
 import {useTranslation} from 'react-i18next'
 import CardSkeleton from "../components/skeletons/CardSkeleton"
 import { useFollowRequestStore } from "../store/followReqStore"
-import { getTimeInMilliseconds } from "../utils/getTime"
+import { getTimeInMilliseconds } from "../utils/getTimeInMilliseconds"
 import type { BarStyleStates } from "../components/Navbar"
 
  const HomePage = () => {
@@ -74,11 +74,11 @@ import type { BarStyleStates } from "../components/Navbar"
     // Date
     switch(sort.date) {
     case "old" : filteredData = filteredData.sort((a,b) => 
-       getTimeInMilliseconds(a.createdAt ?? "") - getTimeInMilliseconds(b.createdAt ?? ""))
+       getTimeInMilliseconds(a.createdAt) - getTimeInMilliseconds(b.createdAt))
     break; 
 
      case "new" : filteredData = filteredData.sort((a,b) => 
-       getTimeInMilliseconds(b.createdAt ?? "") - getTimeInMilliseconds(a.createdAt ?? ""))
+       getTimeInMilliseconds(b.createdAt) - getTimeInMilliseconds(a.createdAt))
      break;
 
      default : filteredData;

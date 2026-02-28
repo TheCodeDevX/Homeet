@@ -1,7 +1,7 @@
 import { SidebarContext } from "../context/SidebarProvider"
-import { customContext } from "../utils/customContext"
+import { useCustomContext } from "../utils/useCustomContext"
 
 
  export const useSidebarToggle = () => {
-  return customContext(SidebarContext, "useSidebarContext")
+  return useCustomContext(SidebarContext, "useSidebarContext")
   }

@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom"
 import Carousel from "../components/Carousel"
 import LoadingSpinner from "../components/Spinner"
 import { useTranslation } from "react-i18next"
-import { useAuthStore } from "../store/auhStore"
+import { useAuthStore } from "../store/authStore"
 import * as types from "../../../backend/src/shared/types/types"
 import i18n from "../config/reacti18next"
 import { useMessageStore } from "../store/messageStore"
@@ -322,21 +322,22 @@ import { useBookingStore } from "../store/bookingStore"
                   <div className="flex w-[200px] flex-wrap items-center justify-between py-4 px-2">
                 <UserProfile isBtn user={listing?.user as types.UserData | null}/>
                 <div className="flex items-center justify-center max-md:flex-wrap gap-2 mx-2">
+
                 <FollowButton size="size-4" fontSize="text-xs"
-                handleFollowReq={() => helpers.handleFollowReq({
-                    recipientId:listing?.user?._id?.toString() as string,
-                    userId: user?._id,
-                    sendFollowReq, setIsFollowing})}
-                isFollowing={isFollowing} 
-                isReqLoading={isReqLoading}
-                handleNavigation={
-                  () => helpers.handleNavigation({
+                  handleFollowReq={() => helpers.handleFollowReq({
+                  recipientId:listing?.user?._id?.toString() as string,
+                  userId: user?._id,
+                  sendFollowReq, setIsFollowing
+                  })}
+                  isFollowing={isFollowing}                
+                  isReqLoading={isReqLoading}
+                  handleNavigation={() => helpers.handleNavigation({
                   listingUser:listing?.user,
                   navigate,
                   setSelectedUser
-                })
-                }
+                  })}
                 />
+                
                   </div>
                 </div>
                 </div>
@@ -464,7 +465,7 @@ import { useBookingStore } from "../store/bookingStore"
                  </section>
 
                  <div className="flex items-center justify-between">
-                  <Price listing={listing}/>
+                  <Price isDynamic={false} listing={listing}/>
                   
                 <div className='text-3xl font-bold flex items-center gap-1 '>
                   <RiStarFill className='text-yellow-500 flex' size={30}/> 
@@ -479,7 +480,7 @@ import { useBookingStore } from "../store/bookingStore"
 
                 { isAllowedUser &&
                     <Button classes="!py-3" onClick={handleClick}>
-                    Reserve
+                     {t("buttons.reserve", {ns : "common"})}
                     </Button>  
                 }
         </div>

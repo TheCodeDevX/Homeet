@@ -1,14 +1,16 @@
 
+import { isValidObjectId } from "mongoose";
 import cloudinary from "../lib/cloudinary.ts";
 import Message from "../models/messages.models.ts";
 import User from "../models/user.models.ts";
+import { MessageData, MessageResponse, NewMessageResponse } from "../shared/types/types.ts";
 import { getReceiverSocketId, io } from "../socket.ts";
 import { createError } from "../utils/createError.ts";
 import {Request, Response, NextFunction} from "express"
 
 
 
-// @desc   Get Users for sidebar
+// @desc   Get Users for the sidebar
 // @route  GET /api/message/users
 // @access Private
  export const getUsers = async(req:Request, res:Response, next:NextFunction) => {
@@ -31,11 +33,17 @@ import {Request, Response, NextFunction} from "express"
  export const getMessages = async(req:Request, res:Response, next:NextFunction) => {
     try {
     const senderId = req.authUser._id
-    const {id:receiverId} = req.params
+    const {id:receiverId} = req.params;
+
+    if(!isValidObjectId(receiverId)) {
+      createError("INVALID_RECEIVER_ID", 404);
+      return;
+    }
 
     const messages = await Message.find({$or : [ { senderId, receiverId }, {senderId:receiverId, receiverId:senderId}]});
-     res.status(201).json({messages});
-     console.log("get messages ", messages)
+    const MessageResponse : MessageResponse = { messages, success : true }
+     res.status(201).json(MessageResponse);
+     console.log("get messages", messages)
       
     } catch (error) {
         console.error("error in getMessages controller", error);
@@ -52,11 +60,18 @@ import {Request, Response, NextFunction} from "express"
     const {image, text} = req.body;
     const senderId = req.authUser._id
     const {id:receiverId} = req.params
+
+     if(!isValidObjectId(receiverId)) {
+      createError("INVALID_RECEIVER_ID", 404);
+      return;
+    }
+    
     let imageUrl = "";
     
    if(image) {
     const uploadResponse = await cloudinary.uploader.upload(image);
-    imageUrl = uploadResponse.secure_url;}
+    imageUrl = uploadResponse.secure_url
+  }
 
 
      const newMessage = new Message({
@@ -75,13 +90,11 @@ import {Request, Response, NextFunction} from "express"
      } else {
       console.log("this user is offline , will not emit")
      }
-
-     res.status(201).json({message:newMessage});
-     
-
+     const MessageResponse : NewMessageResponse = {message : newMessage, success : true}
+     res.status(201).json(MessageResponse);
     } catch (error) {
-        console.error("error in sendMessages controller", error);
-        next(error);
+      console.error("error in sendMessages controller", error);
+      next(error);
     }
 
  }

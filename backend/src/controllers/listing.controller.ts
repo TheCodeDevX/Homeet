@@ -145,7 +145,7 @@ import {Request, Response, NextFunction} from "express"
       const {id} = req.params;
       console.log(req.authUser)
       await Listing.findByIdAndDelete(id);
-      res.status(200).json({ message : "DELETED_LIS"})
+      res.status(200).json({ message : "LISTING_DELETED_SUCCESSFULLY"})
     } catch (error) {
       console.error("error in deleteListing controller", error)
       next(error)

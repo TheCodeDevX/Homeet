@@ -5,7 +5,7 @@ import { useListingStore } from "../store/listingStore";
  const usePagination = () => {
          //  Pagination 
    const {currentPage, setCurrentPage, listingsLength, listings:Listings} = useListingStore()      
-  const limit = 3;
+  const limit = 12;
   const totalPages = Math.ceil(listingsLength  / limit);
 
 

@@ -46,8 +46,7 @@ import {Types, Document} from "mongoose";
     type: string;
 }
 
-// shared types
-
+//* Auth Types
 export type RequiredFields = Required<Pick<UserDocument,
 "firstName" | "lastName" | "email" | "password" | "gender" | "phoneNumber" | "role">>
 
@@ -60,12 +59,37 @@ export type UserData = RequiredFields & OptionalFields
 export type UserRole = Pick<UserData, "role">["role"];
 
 export type ProfileData =  Pick<UserData, "firstName" | "lastName" | "bio" | "email" | "role" | "phoneNumber" 
-| "currency" | "profilePic" | "address" | "gender" 
->
+| "currency" | "profilePic" | "address" | "gender" >
+
 export type MinimalResponse =  Pick<AuthResponse, 'success' | "message">
 
-// Responses 
+//* Message Types
+export interface MessageData {
+  text?:string
+  image?:string
+  audio?: string
+  senderId?:string | Types.ObjectId
+  receiverId?:string | Types.ObjectId
+  _id?:string,
+  audioDuration?: number,
+  createdAt?: string,
+  updatedAt?: string,
+ }
 
+ export interface MessageDocument extends Document {
+  text?:string
+  image?:string
+  audio?: string
+  senderId:string | Types.ObjectId
+  receiverId:string | Types.ObjectId
+  _id:string,
+  audioDuration?: number,
+  createdAt: string,
+  updatedAt: string,
+ }
+
+// Responses 
+//* Auth Responses
 type UserDataUnion = keyof UserData
 export interface UserResponse {
 user : Pick<UserDocument, UserDataUnion> 
@@ -85,17 +109,7 @@ export interface ProfileResponse {
   }
 export type LogoutResponse =  MinimalResponse
 export type VerifyEmailResponse = MinimalResponse
-// {
-//     firstName:string,
-//     lastName: string ,
-//     email: string,
-//     password: string
-//     isVerified? : boolean,
-//     verificationToken?: number,
-//     onBoarded? : boolean,
-//     _id?:string,
-//     followers : string[]
-    
-//  } & {bio?:string, gender?: "male" | "female" | "", address?:string ,
-//     phoneNumber?:string, profilePic?:string, 
-//    role: UserRole, currency?: string  }
+
+//* Message Responses
+export type MessageResponse = {messages : MessageData[], success : boolean}
+export type NewMessageResponse = {success : boolean, message : MessageData}

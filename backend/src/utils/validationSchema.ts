@@ -1,4 +1,4 @@
-import { body, check } from "express-validator";
+import { body, check, param } from "express-validator";
 
 
 
@@ -47,6 +47,32 @@ import { body, check } from "express-validator";
 
  ];
 
+ export const resetPasswordSchema = [
+     body('password').trim().notEmpty().withMessage('PASS_REQUIRED').bail()
+    .isString().withMessage("PASS_MUSTBE_STRING")
+    .isStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase:1,
+        minSymbols:1,
+        minNumbers:1,
+    }).withMessage("TIP"),
+
+    param("token").trim().notEmpty().withMessage("INVALID_TOKEN").bail()
+    .isLength({max:64, min:64}).withMessage("INVALID_LENGTH")
+ ]
+
+ export const bookingSchema = [
+     body('checkIn').trim().notEmpty().withMessage('CHECK_IN_REQUIRED'),
+     body('checkOut').optional(),
+     body('adults').isLength({min : 0}).withMessage('ADULTS_REQUIRED'),
+     body('children').isLength({min : 0}).withMessage('CHILDREN_REQUIRED'),
+     body('pets').isLength({min : 0}).withMessage('PETS_REQUIRED'),
+     body('duration').isObject().optional(),
+     body('totalPrice').isLength({min : 0}).optional(),
+    param("listingId").trim().notEmpty()
+ ]
+
 
  export const ListingValidationSchema = [
     check("title").trim().notEmpty().withMessage("TITLE_REQUIRED"),
@@ -89,6 +115,7 @@ import { body, check } from "express-validator";
  ]
 
  export const ProfileSchema = [
+
     check("firstName").trim().notEmpty().withMessage("FIRST_NAME_REQUIRED"),
     check("lastName").trim().notEmpty().withMessage("LAST_NAME_REQUIRED"),
     check("email").trim().notEmpty().withMessage("EMAIL_REQUIRED"),

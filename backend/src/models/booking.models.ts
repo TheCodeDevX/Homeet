@@ -21,7 +21,6 @@ import validator from "validator"
        required : [true , 'Email is required'],
        trim : true,
        lowercase : true,
-       unique : true,
        sparse:true,
        validate : {
          validator :  function(v : string) {
@@ -62,6 +61,11 @@ import validator from "validator"
       type : String,
       required : true,
       },
+
+      costPrice : {
+        type : Number,
+        required : true,
+      }
 
 
 

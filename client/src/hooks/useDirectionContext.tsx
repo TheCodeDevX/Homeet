@@ -1,9 +1,9 @@
 import { DirContext } from "../context/DirectionProvider"
-import { customContext } from "../utils/customContext"
+import { useCustomContext } from "../utils/useCustomContext"
 
  
  export const useDirectionContext = () => {
-    return customContext(DirContext, 'useDirContext');
+    return useCustomContext(DirContext, 'useDirContext');
  }
  
  

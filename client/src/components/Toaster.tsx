@@ -38,8 +38,8 @@ import i18n from '../config/reacti18next'
       // })
       tl.fromTo(container.current, {opacity:0, scale:0},
          { opacity:1, scale:1, ease:"back.out", duration:1}, "<")
-      tl.to(iconRef.current, {scale:isSuccess ? 2 : 1.5, ease:"circ", duration:0.5})
-      .to(iconRef.current, {scale:1, ease:"circ", duration:0.5})
+      tl.to(iconRef.current, {scale:isSuccess ? 2 : 1.5, ease:"circ", duration:1 / 2})
+      .to(iconRef.current, {scale:1, ease:"circ", duration:1 / 2})
      
      
      
@@ -47,8 +47,8 @@ import i18n from '../config/reacti18next'
    return (
       <motion.div
       initial={{y:-40, opacity:0}}
-       transition={{duration:1, type:"spring", damping:40, stiffness:200}}
-      animate={{ y : t.visible ? 0 : -40, opacity: t.visible ? 1 : 0 }}
+      transition={{duration:1, type:"spring", damping:40, stiffness:200}}
+      animate={{ y : t.visible ? 0 : -40, opacity: t.visible ? 1 : 0}}
      className={`flex flex-col`}>
     
    <div className={`flex justify-center`}>
@@ -65,7 +65,9 @@ import i18n from '../config/reacti18next'
      rounded-full border`}>{color === "green" ? <Check ref={iconRef}/> : <X  ref={iconRef} id='icon'/>}</div> 
      
       <p ref={paraRef} className={`${color === "green" ? "text-green-500" : "text-red-500"}
-         flex items-center text-xs font-semibold`}>{msg}</p>
+         flex items-center text-xs font-semibold`}>
+          {msg}
+      </p>
    </div>
    </div>
  </motion.div>

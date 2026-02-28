@@ -1,34 +1,24 @@
 import { useMessageStore } from "../../store/messageStore"
 import avatar from '../../assets/avatar.png'
-import { useAuthStore } from "../../store/auhStore";
-import { Search, Users2 } from "lucide-react";
+import { useAuthStore } from "../../store/authStore";
+import { Users2 } from "lucide-react";
 import SidebarSkeleton from "../skeletons/SidebarSkeleton";
 import { useTranslation } from "react-i18next";
 import i18n from "../../config/reacti18next";
-import { useListingStore } from "../../store/listingStore";
 import { useEffect, useLayoutEffect, useRef} from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useFollowRequestStore } from "../../store/followReqStore";
 import type { UserData } from "../../../../backend/src/shared/types/types";
  
  const ChatSidebar = ({filteredUsers} : {filteredUsers : UserData[]}) => {
-  const {setSelectedUser, users, selectedUser, isUsersLoading, setIsUserLoading, getUsers, addOrRemoveUser} = useMessageStore();
-  // const {followReqs, followReq} = useFollowRequestStore()
-  const {user:authUser, onlineUsers:OnlineUsers} = useAuthStore();
-  const {listing} = useListingStore()
+  const {setSelectedUser, users, selectedUser, isUsersLoading, getUsers} = useMessageStore();
+  const { onlineUsers:OnlineUsers} = useAuthStore();
   const scrollRef = useRef<HTMLDivElement>(null)
-  const {followReq} = useFollowRequestStore()
+
  
 
 
   const onlineUsers = users.filter(users => OnlineUsers.includes(users._id as string) )
-  const location = useLocation()
-  const navigate = useNavigate()
   const refs = useRef<Record<string, HTMLButtonElement | null>>({})
 
-  // useEffect(() => {
-    
-  // }, [onlineUsers])
 
 
   useLayoutEffect(() => {
@@ -42,14 +32,14 @@ import type { UserData } from "../../../../backend/src/shared/types/types";
   useEffect(() => {
     console.warn("run again")
    const debounce = setTimeout(() => {
-      getUsers(false);
+      getUsers({shouldLoad :false});
    }, 400)
 
    return ( ) => clearTimeout(debounce);
   }, [getUsers, OnlineUsers])
 
   useEffect(() => {
-    getUsers(true)
+    getUsers({shouldLoad : true})
   }, [])
 
  
@@ -115,28 +105,14 @@ import type { UserData } from "../../../../backend/src/shared/types/types";
                   ) }
                 </div>
                 </div>
-                {/* <div className="avatar size-12 relative">
-                <img src={user.profilePic || avatar} alt="Profile Picture" className="rounded-full" />
-                <div className="flex">
-                  {  onlineUsers.includes(user) ? (
-                  <div>
-                 <span className='absolute inline-block bottom-0 right-0 size-2.5 bg-green-500 rounded-full animate-ping'/>
-                 <span className='absolute inline-block bottom-0 right-0 size-2.5 bg-green-500 rounded-full'/>
-                  </div>
-                  ) : (
-                    
-                 <span className='absolute inline-block bottom-0 right-0 size-2.5 bg-gray-500 rounded-full'/>
-                 
-                  ) }
-                </div>
-              </div> */}
-            <div className={`flex flex-col ${lang === "ar" ? "text-right" : "text-left"}`}>
+                
+              <div className={`flex flex-col ${lang === "ar" ? "text-right" : "text-left"}`}>
                 <h1 className="text-md font-semibold line-clamp-1">{user.firstName}</h1>
                 <span className={`text-xs ${onlineUsers.includes(user) ? " text-green-500" : " text-gray-500"} -mt-1`}>
                   {`${ onlineUsers.includes(user) 
                   ? t("status.online", {ns:"status"})
                   : t("status.offline", {ns:"status"})}`}</span>
-            </div>
+              </div>
               </div>
             </button> 
           

@@ -27,15 +27,6 @@ import Notification from "../models/notifications.models.ts";
           return;
          }
 
-        // const existingFollowReq = recipient.followers.includes(userId.toString() as string);
-        // console.log(existingFollowReq)
-
-
-        // if(recipient.followers.includes(userId as string)) {
-        //   createError("ALREADY_A_FOLLOWER", 400);
-        //   return;
-        // }
-
         const newFollowRequest = {
          sender : userId,
          recipient : recipientId
@@ -87,7 +78,6 @@ import Notification from "../models/notifications.models.ts";
        }).populate(["sender", "recipient"])
 
       res.status(200).json(incomingReq);
-      console.log(incomingReq, "from getIncRequest")
     } catch (error) {
       console.log("error in sendFollowRequest controller", error);
       next(error);

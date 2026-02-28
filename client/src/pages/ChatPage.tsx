@@ -3,7 +3,7 @@
 import ChatSidebar from '../components/chat/ChatSidebar'
 import ChatInput from '../components/chat/ChatInput'
 import ChatContainer from '../components/chat/ChatContainer'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useMessageStore } from '../store/messageStore'
 import { Search } from 'lucide-react'
 import ChatHeader from '../components/chat/ChatHeader'
@@ -12,9 +12,8 @@ import { useTranslation } from 'react-i18next'
 import i18n from '../config/reacti18next'
  
  const ChatPage = () => {
-   const {users, getUsers, selectedUser} = useMessageStore();
+   const {users, selectedUser} = useMessageStore();
    const [query, setQuery] = useState("")
-   const [isOnBoarded, setIsOnBoarded] = useState(true)
  
  
 

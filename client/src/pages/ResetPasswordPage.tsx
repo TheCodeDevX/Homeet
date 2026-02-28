@@ -1,8 +1,8 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import Light from "../components/Light";
 import {motion} from 'framer-motion'
-import { useAuthStore } from "../store/auhStore";
+import { useAuthStore } from "../store/authStore";
 import { Eye, EyeClosed, Loader, Lock, Shield } from "lucide-react";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -15,28 +15,52 @@ const ResetPasswordPage = () => {
     const {token} = useParams();
     const navigate = useNavigate();
     const [password, setPassword] = useState("");
+    const [storedToken, setStoredToken] = useState('')
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
      const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const {error, isLoading, resetPassword, message} = useAuthStore()
 
 
+    useEffect(()=> {
+    if(token) {
+      setStoredToken(token);
+    }
+    }, [token])
+
     const handleSubmit = async(e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if(!password) {
+        toast.custom((toast) => (
+        <ToasterCompo color="red" msg={t("clientMessages.NO_PASSWORD_PROVIDED", {ns:"messages"})} t={toast}/>
+        ))
+        return;
+        }
+
+        if(!confirmPassword) {
+        toast.custom((toast) => (
+        <ToasterCompo color="red" msg={t("clientMessages.CONFIRM_YOUR_PASS", {ns:"messages"})} t={toast}/>
+        ))
+        return;
+        }
+
         if(password !== confirmPassword) {
-       toast.custom((toast) => (
+        toast.custom((toast) => (
         <ToasterCompo color="red" msg={t("clientMessages.ERROR_MATCHING_PASSWORDS", {ns:"messages"})} t={toast}/>
         ))
         return;
         }
-       
+
+         if(!storedToken) return toast.error("NO TOKEN PROVIDED")
         try {
-         await  resetPassword(password, token)
+         await resetPassword(password, storedToken)
           setTimeout(() => navigate("/login"), 3000)
         } catch (error) {
-            console.error(error)
+          console.error(error)
         }
     }
+
+    console.log(password, 'password')
      
   return (
     <motion.div
@@ -63,7 +87,8 @@ const ResetPasswordPage = () => {
         </span>
         <Input type={showPassword ? "text" : "password"}
          value={password} onChange={(e) => setPassword(e.target.value)} onClickEye={() => setShowPassword(prev => !prev)}
-         placeholder={t("labels.password", {ns:"common"})} eyeIcon={showPassword ? Eye : EyeClosed} icon={Lock} required />
+         placeholder={t("labels.password", {ns:"common"})} eyeIcon={showPassword ? Eye : EyeClosed} icon={Lock}
+           />
 
         </label>
           { <span className="text-xs text-primary flex items-center gap-1.5 mt-1.5"><Shield size={15}/>
@@ -77,10 +102,11 @@ const ResetPasswordPage = () => {
         <span className={`label-text text-base-content`}>
               {t("labels.confirmPass", {ns:"common"})}
         </span>
-        <Input type={showPassword ? "text" : "password"}
-         value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onClickEye={() => setShowConfirmPassword(prev => !prev)}
+        <Input type={showConfirmPassword ? "text" : "password"}
+         value={confirmPassword}
+         onChange={(e) => setConfirmPassword(e.target.value)} onClickEye={() => setShowConfirmPassword(prev => !prev)}
          placeholder={t("labels.confirmPass", {ns:"common"})}
-          eyeIcon={showConfirmPassword ? Eye : EyeClosed} icon={Lock} required />
+          eyeIcon={showConfirmPassword ? Eye : EyeClosed} icon={Lock}  />
 
         </label>
         

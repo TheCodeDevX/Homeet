@@ -1,6 +1,6 @@
-import { isAxiosError } from "axios";
 import { create } from "zustand";
 import { BookingApi } from "../lib/axios.config";
+import { errorHandler } from "./helpers/errorHelper";
 
  interface BookingType {
     checkIn?: string,
@@ -9,6 +9,8 @@ import { BookingApi } from "../lib/axios.config";
     children : number,
     pets : number,
     createdAt?: string,
+    totalPrice : number,
+    duration : { months?: number, nights?: number }, 
     _id : string,
  }
 
@@ -32,16 +34,10 @@ import { BookingApi } from "../lib/axios.config";
     set({isBookingLoading : true, error : null})
     try {
      const response = await BookingApi.post(`/book-property/${listingId}`, booking)
-     set({booking: response.data.booking, isBookingLoading:false, message: response.data.message})
-
+     set({booking: response?.data?.booking, isBookingLoading:false, message: response?.data?.message})
     } catch (error) {
-    let errMsg = "error creating booking";
-    if(isAxiosError(error)) {
-        errMsg = error?.response?.data?.message || errMsg;
-    } else if (error instanceof Error) {
-        errMsg = error?.message || errMsg
-    }
-    set({isBookingLoading:false,error:errMsg})
+    const err  = errorHandler({error, defaultErr :"BOOKING_FAILED"})
+    set({isBookingLoading:false, error:err})
     throw error;
     }
     }

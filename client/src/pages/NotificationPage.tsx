@@ -14,7 +14,7 @@ import  FallbackCard from '../components/FallbackCard'
 import i18n from '../config/reacti18next'
 import { t } from 'i18next'
 import * as helpers from "../utils/helpers"
-import { useAuthStore } from '../store/auhStore'
+import { useAuthStore } from '../store/authStore'
 import { useNotificationStore } from '../store/notificationStore'
 import { m } from 'framer-motion'
  
@@ -22,7 +22,7 @@ import { m } from 'framer-motion'
     const {user} = useAuthStore()
     const {listing} = useListingStore()
     const {setSelectedUser} = useMessageStore()
-    const {sendFollowReq, setIsAlreadyFollowed, isAlreadyFollowed, followReq} = useFollowRequestStore();
+    const {sendFollowReq, followReq} = useFollowRequestStore();
     const {getIncomingNotifs, notifications, currentPage, isLoading, setNotifications, 
     setCurrentPage, markAsRead, notifIds, isNotifLoading, markAsArchived, deleteArchivedNotifs}
     = useNotificationStore()
@@ -125,7 +125,6 @@ useEffect(() => {
   
 
 
- console.warn(isAlreadyFollowed, 'isAlreadyFollowed')
    return (
      <div className=' h-auto mt-24 p-2 sm:p-4 absolute inset-0 top-0 '>
       <div className="max-w-5xl w-full h-full mx-auto sm:p-4 p-2 ">
@@ -183,12 +182,10 @@ useEffect(() => {
                     </h2>
                    <img className='pointer-events-none select-none' src={verificationIcon} alt="" />
               </figure>
-
-              
               
               <p className='text-sm text-base-content/80'> 
               {t("clientMessages.FOLLOW_MESSAGE", {ns: "messages", context : notif?.sender?.firstName })}
-            </p>
+             </p>
           
 
              </header>
@@ -197,11 +194,10 @@ useEffect(() => {
           { notif?.sender?.role !== "tenant" && 
             <button onClick={() =>
                helpers.handleFollowReq({
-               userId:notif.recipient?._id?.toString(),
+               userId:notif.recipient?._id?.toString(), // the authenticated user
                recipientId:notif.sender._id,
                notifId: notif._id.toString(),
                sendFollowReq,
-               setIsAlreadyFollowed,
             })
           } className={`btn sm:px-10 px-5 max-sm:w-full
              ${notif.sender?.followers?.includes(notif.recipient?._id as string) ?? false

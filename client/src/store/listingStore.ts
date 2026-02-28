@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { listingApi, ratingApi } from "../lib/axios.config";
-import { isAxiosError } from "axios";
 import type { ID, UserData } from "../../../backend/src/shared/types/types";
-import { useAuthStore } from "./auhStore";
+import { useAuthStore } from "./authStore";
+import { errorHandler } from "./helpers/errorHelper";
 
 export type PricingType = "nightly" | "monthly" | "one_time" | "placeholder";
 export interface FormData {
@@ -57,23 +57,25 @@ export interface FormData {
     currentPage : number,
     listingsLength : number,
     rating : Rating | null,
+    likes : number,
+    likers : string[],
     isAlreadyLiked: boolean,
     isDashboardLoading : boolean,
+    isDeleting : boolean
     setIsAlreadyLiked : (bool:boolean) => void,
     userHasLikedRating:boolean,
     ratings : Rating[]
     setCurrentPage : (page:number) => void
-    createListing : (data : FormData) => Promise<any>
+    createListing : (data : FormData) => void
     getListings : () => Promise<any>
-    getListing : (listingId?:string) => Promise<any>
-    getUserListings : () => Promise<any>
+    getListing : (listingId?:string) => void
+    getUserListings : () => void
     deleteListing : (id:string) => void
     updateListing : (id:string, data:FormData) => void
-    rateListing : (id:string, data: {stars?:number, feedback?:string}) => Promise<any>
+    rateListing : (id:string, data: {stars?:number, feedback?:string}) => void
     getRating : (id:string) => void
     getRatings : (id:string) => void
-    likeRating : (id:string, likers: string[]) => void
-   //  getLikes : (id:string) => void; 
+    likeRating : (id:string) => void
 
  }
 
@@ -87,12 +89,13 @@ export interface FormData {
     ratings : [],
     isAlreadyLiked:false,
     isDashboardLoading:false,
-    likes:null,
+    likes:0,
     likers : [],
     userHasLikedRating:false,
     isLoading:false,
     isListingsLoading : false,
     isCardLoading : false,
+    isDeleting:false,
     error:null,
     message : "",
     currentPage:1,
@@ -102,19 +105,15 @@ export interface FormData {
 
     createListing : async(data) => {
      try {
-      set({ error:null, isListingsLoading:true})
-         const res = await listingApi.post("/listings/post-listing", data);
-         set({ listing:res.data?.listing, isListingsLoading:false,
-             message:res.data?.message })
+      set({error:null, isListingsLoading:true})
+      const res = await listingApi.post("/listings/post-listing", data);
+      set({
+      listing:res.data?.listing,
+      message:res.data?.message
+      })
      } catch (error) {
-        let errMsg = "Error creating listing"
-        if(isAxiosError(error)) {
-            errMsg = error?.response?.data?.errors[0]?.msg ||  error?.response?.data?.message || errMsg;
-        } else if (error instanceof Error){
-            errMsg = error?.message || errMsg;
-        }
-       
-        set({listing:null, error: errMsg, message:""})
+       const err = errorHandler({error, defaultErr: 'LISTING_CREATION_ERROR'})
+        set({listing:null, error: err})
         throw error;
      }
 
@@ -127,19 +126,11 @@ export interface FormData {
 
     const currentPage = get().currentPage;
         try {
-             const res = await listingApi.get(`/listings?limit=${3}&page=${currentPage}`);
+             const res = await listingApi.get(`/listings?limit=${12}&page=${currentPage}`);
              set({ isLoading:false, listings:res?.data?.listings, listingsLength:res?.data?.listingsLength})     
-             return res.data.listings
-             
         } catch (error) {
-             let errMsg = "Error fetching listings"
-        if(isAxiosError(error)) {
-            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg;
-        } else if (error instanceof Error){
-            errMsg = error?.message || errMsg;
-        }
-       
-        set({listings:[], error: errMsg})
+         const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_LISTINGS'})
+        set({listings:[], error: err})
         throw error;
         } finally {
          set({isLoading:false})
@@ -151,15 +142,10 @@ export interface FormData {
         try {
             const res = await listingApi.get(`/listings/${listingId}`)
             set({listing:res.data.listing, isLoading:false})
-            return res.data.listing
-        } catch (error) {
-            let errMsg = "Error fetching listing"
-            if(isAxiosError(error)){
-             errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg;
-        } else if (error instanceof Error){
-            errMsg = error?.message || errMsg;
-        }
-        set({error:errMsg, listing:null})
+       } catch (error) {
+        const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_LISTING'})
+        set({listings:[], error: err})
+        throw error
         }
         finally {
          set({isCardLoading:false})
@@ -171,15 +157,11 @@ export interface FormData {
         try {
             const res = await listingApi.get("/dashboard")
             set({userListings:res.data.listings})
-            return res.data.listings
+    
         } catch (error) {
-            let errMsg = "Error fetching listing"
-            if(isAxiosError(error)){
-             errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg;
-        } else if (error instanceof Error){
-            errMsg = error?.message || errMsg;
-        }
-        set({error:errMsg})
+         const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_USER_LISTINGS'})
+        set({error:err})
+        throw error
         }
         finally {
          set({isDashboardLoading:false})
@@ -187,41 +169,30 @@ export interface FormData {
     },
 
      deleteListing : async(id) => {
-      set({isLoading:true, error:null, message:""})
+      set({isDeleting:true, error:null})
       const listings = get().listings
       try {
          
          const res = await listingApi.delete(`/dashboard/${id}`)
          set({isLoading:false, listings: listings.filter((listing) => listing._id !== id), message:res.data.message})
       } catch (error) {
-         let errMsg = "Error Deleting Listing"
-         if(isAxiosError(error)){
-            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
-         } else if(error instanceof Error){
-            errMsg = error?.message || errMsg
-         }
-         set({error:errMsg,  message:""})
+         const err = errorHandler({error, defaultErr: 'FAILED_TO_DELETE_LISTING'})
+         set({error:err})
          throw error;
       }
       finally {
-         set({isLoading:false})
+         set({isDeleting:false})
         }
     },
 
     updateListing : async(id, data) => {
-      set({isLoading:true, error:null, message:""})
+      set({isLoading:true, error:null})
       try { 
          const res = await listingApi.put(`/dashboard/${id}`, data)
          set({isLoading:false, listing:res.data?.listing, message:res.data?.message})
-         return res.data.listing;
       } catch (error) {
-         let errMsg = "Error Updating Listing"
-         if(isAxiosError(error)){
-            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
-         } else if(error instanceof Error){
-            errMsg = error?.message || errMsg
-         }
-         set({error:errMsg, listing:null, message:""})
+        const err = errorHandler({error, defaultErr : 'FAILED_TO_UPDATE_LISTING'})
+         set({error:err})
          throw error;
       }
       finally {
@@ -230,8 +201,7 @@ export interface FormData {
     },
     
     rateListing : async(id, data) => {
-      set({ error:null, message:""});
-      
+      set({error:null});
     try {
        const res = await ratingApi.post(`/${id}`, data);
        set({rating : res.data?.rating, message:res.data?.message})
@@ -242,14 +212,9 @@ export interface FormData {
          ))
       }))
     } catch (error) {
-         let errMsg = "Error Rating a Listing"
-         if(isAxiosError(error)){
-            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
-         } else if(error instanceof Error){
-            errMsg = error?.message || errMsg
-         }
-         set({error:errMsg, message:"", rating:null})
-         throw error;
+      const err = errorHandler({error, defaultErr:'FAILED_TO_RATE_LISTING'})
+      set({error:err})
+      throw error;
     }
    
     },
@@ -261,32 +226,23 @@ export interface FormData {
        set({rating : res.data?.rating, isLoading:false, message:res.data?.message})
      
     } catch (error) {
-         let errMsg = "Error Fetching a Rating"
-         if(isAxiosError(error)){
-            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
-         } else if(error instanceof Error){
-            errMsg = error?.message || errMsg
-         }
-         set({error:errMsg, message:"", rating:null})
+        const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_RATING'})
+         set({error:err})
          throw error;
     }
     finally {
          set({isLoading:false})
    }
     },
+
     getRatings : async (listingID) => {
       set({isLoading:true, error:null})
       try {
          const response = await ratingApi.get(`/${listingID}`);
          set({ratings:response.data, isLoading:false})
       } catch (error) {
-         let errMsg = "Error Fetching Ratings"
-         if(isAxiosError(error)){
-            errMsg = error?.response?.data?.message || error?.response?.data?.errors[0]?.msg || errMsg
-         } else if (error instanceof Error) {
-            errMsg = error.message || errMsg
-         }
-         set({error:errMsg, isLoading:false})
+        const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_RATINGS'})
+         set({error:err, isLoading:false})
          throw error;
       }
     },
@@ -307,31 +263,9 @@ export interface FormData {
          }))
            
       } catch (error) {
-         let errMessage = "Error liking a rating!"
-         if(isAxiosError(error)) {
-            errMessage = error.response?.data?.message || errMessage 
-         } else if(error instanceof Error) {
-            errMessage = error.message;
-         }
-         set({error:errMessage, isLoading:false})
+        const err = errorHandler({error, defaultErr: 'FAILED_TO_LIKE_RATING'})
+         set({error:err, isLoading:false})
          throw error
       }
     },
-
-   //  getLikes : async (id) => {
-   //    set({isLoading:true, error:null})
-   //    try {
-   //       const res = await ratingApi.get(`/likes/user/${id}`)
-   //       set({isLoading:false, userHasLikedRating:res.data.userHasLikedRating})
-   //    } catch (error) {
-   //     let errMessage = "Error fetching data"
-   //       if(isAxiosError(error)) {
-   //          errMessage = error.response?.data?.message || errMessage 
-   //       } else if(error instanceof Error) {
-   //          errMessage = error.message;
-   //       }
-   //       set({error:errMessage, isLoading:false})
-   //       throw error
-   //    }
-   //  }
   }))

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import {motion} from 'framer-motion'
 import Button from "../components/Button";
-import { useAuthStore } from "../store/auhStore";
+import { useAuthStore } from "../store/authStore";
 import {useNavigate } from "react-router-dom";
 import DotAnimation from "../components/DotAnimation";
 import { useTranslation } from "react-i18next";

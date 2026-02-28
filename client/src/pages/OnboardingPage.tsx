@@ -1,6 +1,6 @@
-import { Camera,  Loader,  PenBox } from "lucide-react"
+import { ArrowLeft, ArrowRight, Camera,  Loader,  PenBox } from "lucide-react"
 import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
-import { useAuthStore } from "../store/auhStore"
+import { useAuthStore } from "../store/authStore"
 import type {ProfileData} from '../../../backend/src/shared/types/types'
 import DotAnimation from "../components/DotAnimation"
 import { useEffect, useState, type ChangeEvent } from "react"
@@ -14,6 +14,7 @@ import i18n from "../config/reacti18next"
 import toast from "react-hot-toast"
 import ToasterCompo from "../components/Toaster"
 import PhoneInputComponent from "../components/PhoneInput"
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -92,6 +93,8 @@ const OnboardingPage = () => {
    }
    }
 
+   const navigate = useNavigate()
+
 
    return (
     <>
@@ -99,12 +102,16 @@ const OnboardingPage = () => {
        <div className="relative max-w-3xl w-full mx-auto space-y-0 p-4 ">
            <form onSubmit={handleSubmit(OnSubmit)}
          className="bg-base-300 rounded-xl shadow-sm border border-base-content/20 p-6 space-y-4">
+           <button onClick={() => navigate("/login")}  className="absolute flex items-center gap-2
+             font-bold hover:text-base-content/80 transition-colors duration-200">
+            {i18n.language === "ar" ? <ArrowRight/> : <ArrowLeft/>} {t("buttons.logIn", {ns:"common"})}
+            </button>
            <div className="text-center">
                 <h1 className="lg:text-4xl text-3xl font-black mb-2">
                   {t("title", {ns:"profile"})}
                 </h1>
                 <p className="lg:text-md text-sm">{t("subtitle", {ns:"profile"})} </p>
-               </div>
+           </div>
 
                {/* Profile Picture */}
                

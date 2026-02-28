@@ -1,8 +1,9 @@
 
  import mongoose from 'mongoose'
+import { MessageDocument } from '../shared/types/types';
 
  
-  const MessageSchema = new mongoose.Schema({
+  const MessageSchema = new mongoose.Schema<MessageDocument>({
     senderId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "User"

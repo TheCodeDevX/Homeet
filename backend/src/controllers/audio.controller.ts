@@ -6,15 +6,16 @@ import { createError } from '../utils/createError.ts'
 import {Request, Response, NextFunction} from 'express'
 import { UploadApiResponse } from 'cloudinary'
 import { ReadableByteStreamController } from 'stream/web'
+import { isValidObjectId } from 'mongoose'
 
 
  // @desc  Upload audio file
-// @route  PUT /api/auth/uploading/upload-audio
+// @route  POST /api/auth/uploading/upload-audio
 // @access Private
  export const uploadAudioFiles = async(req:Request, res:Response, next:NextFunction) => {
   try {
-    const {id:receiverId} = req.params
-    const {senderId} = req.body
+    const {id : receiverId} = req.params
+    const {senderId} = req.body;
 
     console.log(receiverId, "receiverId")
     console.log(senderId, "senderId")
@@ -23,6 +24,15 @@ import { ReadableByteStreamController } from 'stream/web'
         createError("NO_AUDIO_FILE", 400)
         return;
     };
+
+    if(!isValidObjectId(receiverId)) {
+        createError("INVALID_RECEIVER_ID", 404);
+        return;
+    }
+    if(!senderId) {
+      createError('UNDEFINED_SENDER_ID', 400)
+      return
+    }
     const bufferStream = new Readable();
 
     bufferStream.push(req.file.buffer)
@@ -40,7 +50,6 @@ import { ReadableByteStreamController } from 'stream/web'
       // which is the cloud in our case
     })
 
-    console.log(uploadRes)
     const receiverSocketId = getReceiverSocketId(String(receiverId));
 
     const message = new Listing({ audio :  uploadRes?.secure_url, text:"", image:"", receiverId, senderId ,
@@ -51,7 +60,7 @@ import { ReadableByteStreamController } from 'stream/web'
       io.to(receiverSocketId).emit("newMessage", message)
     }
     console.log("Audio", message)
-    res.status(201).json({message})
+    res.status(201).json({message, success : true})
 
   } catch (error) {
     console.error("error in uploadAudioFiles controller", error)

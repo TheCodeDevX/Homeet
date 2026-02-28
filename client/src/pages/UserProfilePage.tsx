@@ -1,5 +1,5 @@
 import {useForm} from 'react-hook-form'
-import { useAuthStore } from "../store/auhStore"
+import { useAuthStore } from "../store/authStore"
 import type {ProfileData, UserData} from '../../../backend/src/shared/types/types'
 import {useEffect, useRef, useState} from "react"
 import { useTranslation } from "react-i18next"

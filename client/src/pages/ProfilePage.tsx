@@ -1,6 +1,6 @@
 import { Camera, Loader, PenBox } from "lucide-react"
 import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
-import { useAuthStore} from "../store/auhStore"
+import { useAuthStore} from "../store/authStore"
 import * as types from ".././../../backend/src/shared/types/types"
 import DotAnimation from "../components/DotAnimation"
 import {useEffect, useState, type ChangeEvent, type FormEvent } from "react"

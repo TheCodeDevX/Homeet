@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion'
-import { useAuthStore } from '../store/auhStore'
+import { useAuthStore } from '../store/authStore'
 import Input from '../components/Input'
 import { ArrowLeft, Loader, Mail, SendHorizonal } from 'lucide-react'
 import Button from '../components/Button'

@@ -5,7 +5,7 @@ import { useLayoutEffect, useRef, useState, type ChangeEvent } from 'react'
 import { TbCategory } from "react-icons/tb";
 import { FaBed} from 'react-icons/fa';
 import { amenities, type Facilities } from '../constants';
-import { useAuthStore } from '../store/auhStore';
+import { useAuthStore } from '../store/authStore';
 import { useFiltration } from '../hooks/useFiltration';
 import { useTranslation } from 'react-i18next';
 import i18n from '../config/reacti18next';

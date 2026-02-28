@@ -1,10 +1,10 @@
 import { BookingContext } from "../context/BookingProvider"
-import { customContext } from "../utils/customContext"
+import { useCustomContext } from "../utils/useCustomContext"
 
 
  
  const useBooking = () => {
-    return customContext(BookingContext, "useBooking");
+    return useCustomContext(BookingContext, "useBooking");
  }
  
  export default useBooking

@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react"
-import { useAuthStore } from "./store/auhStore"
-import { Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom'
+import { useEffect, useRef } from "react"
+import { useAuthStore } from "./store/authStore"
+import { Navigate, Route, Routes, useLocation} from 'react-router-dom'
 import HomePage from "./pages/HomePage"
 import SignupPage from "./pages/SignupPage"
 import LoginPage from "./pages/LoginPage"
@@ -22,7 +22,6 @@ import {useTranslation} from 'react-i18next'
 import i18n from "./config/reacti18next"
 import toast, {Toaster} from "react-hot-toast"
 import { useFollowRequestStore } from "./store/followReqStore"
-import { useLangStore } from "./store/languagesStore"
 import ToasterCompo from "./components/Toaster"
 import LoadingSpinner from "./components/Spinner"
 import NotificationPage from "./pages/NotificationPage"
@@ -30,8 +29,7 @@ import gsap from "gsap"
 import { SplitText } from "gsap/all"
 import UserProfilePage from "./pages/UserProfilePage"
 import {useDirectionContext} from "./hooks/useDirectionContext"
-import useNotification from "./hooks/useNotification"
-import { useNotificationStore } from "./store/notificationStore"
+import { useBookingStore } from "./store/bookingStore"
 
 
 
@@ -40,20 +38,15 @@ import { useNotificationStore } from "./store/notificationStore"
 const App = () => {
   const {checkAuth, isAuthenticated, user, connectSocket,error:authErr, message:authMsg, isCheckingAuth, warmUp} = useAuthStore()
  
-  const [authMessage, setAuthMessage] = useState("")
   const authMessageL = useRef<string>("");
   const {message:followReqMsg, error:followReqErr} = useFollowRequestStore()
   const {message, error} = useListingStore()
-  // const {lang:storedLanguage, setLang} = useLangStore()
-  const runRef = useRef(false)
- 
-  // const {language} = useLangStore()
+  const {message:bookingMessage, error:bookingErr} = useBookingStore()
   
  useEffect(() => {checkAuth()} , [checkAuth])
 console.log(isAuthenticated)
   useEffect(() => { connectSocket() }, [user])
   const location = useLocation()
-  const navigate = useNavigate()
  
 
   useEffect(() => {
@@ -96,15 +89,18 @@ console.log(isAuthenticated)
 
   
 
-
+ const bookingError = bookingErr?.split("&")[0]
+ const overlapRange = bookingErr?.split("&")[1]
 
   
 
-  const messages = t("backendMessages", {ns:"messages", returnObjects:true}) as Record<string , string>
   // let msg = messages[msgkey];
   // let errMsg = messages[errkey]
-  let msgkey  = message || authMsg || authMessageL.current || followReqMsg || "";
-  let errkey = error  || authErr || followReqErr || "";
+  let msgkey  = message || authMsg || authMessageL.current || followReqMsg || bookingMessage || "";
+  let errkey = error  || authErr || followReqErr || bookingError || "";
+
+  const messages = t("backendMessages", {ns:"messages", returnObjects:true, overlapRange}) as Record<string , string>
+
 
  
 
@@ -151,14 +147,6 @@ console.log(isAuthenticated)
 
   gsap.registerPlugin(SplitText)
 
-  //  const {setNotificationsLength, notificationsLength} = useNotification()
-  //   const {getIncomingRequests, followReqs, isReqLoading} = useFollowRequestStore();
-  //   useEffect(() => {
-  //   getIncomingRequests();
-  //   console.log(followReqs, 'follow requests')
-  //   sessionStorage.setItem('notifs', followReqs.length.toString())
-  //   console.log(notificationsLength, 'follow requests "notifs"')
-  // } , [])
 
   if(isCheckingAuth) return <LoadingSpinner/>
   

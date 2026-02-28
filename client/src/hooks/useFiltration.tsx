@@ -1,10 +1,10 @@
 import { FiltrationContext } from "../context/FilterProvider"
-import { customContext } from "../utils/customContext"
+import { useCustomContext } from "../utils/useCustomContext"
 
 
 
   export const useFiltration = () => {
-   return customContext(FiltrationContext, "useFiltration")
+   return useCustomContext(FiltrationContext, "useFiltration")
   }
 
  

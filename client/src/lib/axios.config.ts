@@ -35,8 +35,14 @@ import axios from 'axios'
     withCredentials: true
  })
 
-     export const BookingApi = axios.create({
+   export const BookingApi = axios.create({
     baseURL: "http://localhost:8000/api/bookings",
+    withCredentials: true
+ })
+
+ 
+   export const AudioApi = axios.create({
+    baseURL: "http://localhost:8000/api/uploading",
     withCredentials: true
  })
 
