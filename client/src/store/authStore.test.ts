@@ -28,7 +28,6 @@ import { afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vites
 
 import "@testing-library/jest-dom/vitest"
 import { act, renderHook } from "@testing-library/react";
-import type { AuthResponse, LogoutResponse } from "../../../backend/src/shared/types/types";
 import type { ErrorHandlerParameters, LoginData, SignupData } from "../types/types";
 import { authApi } from "../lib/axios.config";
 import { useAuthStore } from "./authStore";
@@ -54,7 +53,7 @@ describe("useAuthStore", () => {
 
   describe("login", () => {
     it("logs in successfully", async () => {
-    const mockUser : AuthResponse["user"] = { _id : '1'};  
+    const mockUser : any = { _id : '1'};  
     const mockLoginData = {email : 'user@gmail.com', password : "xwz"} as LoginData;
 
     const mockResponse = {data : {user : mockUser, message : "logged in successfully", success : true}}
@@ -184,7 +183,7 @@ describe("useAuthStore", () => {
 
   describe("signup", () => {
     it("signs in successfully", async () => {
-    const mockUser : AuthResponse["user"] = { _id : '1'};  
+    const mockUser = { _id : '1'};  
     const mockSignupData : SignupData = {email : 'john@gmail.com', password : "xwz", firstName : 'John', lastName: 'Doe'} 
 
     const mockResponse = {data : {user : mockUser, message : "SUCCESSFUL_SIGNUP"}}
@@ -319,7 +318,7 @@ describe("useAuthStore", () => {
     })
     afterEach(() => spy.mockRestore()) // restore the original function behavior
    it("logs out successfully", async () => {
-     const mockLogoutResponse : {data : LogoutResponse} = {data : {message : "SUCCESSFUL_LOGOUT", success : true}};
+     const mockLogoutResponse : any = {data : {message : "SUCCESSFUL_LOGOUT", success : true}};
 
      mockAxios.post.mockResolvedValueOnce(mockLogoutResponse);
      const {result} = renderHook(() => useAuthStore());
@@ -361,7 +360,7 @@ describe("useAuthStore", () => {
 
    it("completes logout even if socket disconnect fails", async () => {
      
-     const mockLogoutResponse : {data : LogoutResponse} = {data : {message : "SUCCESSFUL_LOGOUT", success : true}};
+     const mockLogoutResponse : any = {data : {message : "SUCCESSFUL_LOGOUT", success : true}};
      mockAxios.post.mockResolvedValueOnce(mockLogoutResponse);
     
     spy.mockImplementation(async () => { 

@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import type { UserData } from "../../../backend/src/shared/types/types";
 import { NotifsApi } from "../lib/axios.config";
 import { errorHandler } from "./helpers/errorHelper";
+import type { UserData } from "../types/types";
 
  interface Notification {
     _id: string,

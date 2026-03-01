@@ -1,5 +1,4 @@
 import { useAuthStore } from "../store/authStore"
-import type {ProfileData} from '../../../backend/src/shared/types/types'
 import {useEffect, useState} from "react"
 import { useTranslation } from "react-i18next"
 import {  useParams } from "react-router-dom"
@@ -11,6 +10,7 @@ import { countries } from '../constants'
 import clsx from 'clsx'
 import i18n from '../config/reacti18next'
 import ClipBoardComponent from '../components/ClipBoardComponent'
+import type { ProfileData } from "../types/types"
 
 
 console.warn(getCountries().length, countries.length, 'countries')

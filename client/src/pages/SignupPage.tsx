@@ -13,7 +13,7 @@ import { useTranslation, Trans } from 'react-i18next'
 import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
-import type { UserData } from '../../../backend/src/shared/types/types'
+import type { UserData } from '../types/types'
 
 const SignupPage = () => {
   const {t} = useTranslation();

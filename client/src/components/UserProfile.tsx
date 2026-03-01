@@ -5,9 +5,9 @@ import i18n from '../config/reacti18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import ToolTip from './ToolTip'
-import * as types from ".././../../backend/src/shared/types/types"
+import type { UserData } from '../types/types'
  
- const UserProfile = ({user, isBtn} : {user : types.UserData | null, isBtn?:boolean}) => {
+ const UserProfile = ({user, isBtn} : {user : UserData | null, isBtn?:boolean}) => {
     
     const lang = i18n.language;
     const {t} = useTranslation()

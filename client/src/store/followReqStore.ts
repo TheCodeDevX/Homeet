@@ -1,9 +1,9 @@
 import { create } from "zustand"
 
 import { FollowReqApi } from "../lib/axios.config"
-import type { UserData } from "../../../backend/src/shared/types/types"
 import { useNotificationStore } from "./notificationStore"
 import { errorHandler } from "./helpers/errorHelper"
+import type { UserData } from "../types/types"
 
  type FollowRequestTypes = {
    sender: UserData,

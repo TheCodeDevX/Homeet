@@ -6,7 +6,7 @@ import SidebarSkeleton from "../skeletons/SidebarSkeleton";
 import { useTranslation } from "react-i18next";
 import i18n from "../../config/reacti18next";
 import { useEffect, useLayoutEffect, useRef} from "react";
-import type { UserData } from "../../../../backend/src/shared/types/types";
+import type { UserData } from "../../types/types";
  
  const ChatSidebar = ({filteredUsers} : {filteredUsers : UserData[]}) => {
   const {setSelectedUser, users, selectedUser, isUsersLoading, getUsers} = useMessageStore();

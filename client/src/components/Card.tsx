@@ -14,8 +14,8 @@ import { FaExclamation } from 'react-icons/fa'
 import RatingModal from './RatingModal'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
-import * as sharedTypes from '../../../backend/src/shared/types/types'
 import i18n from '../config/reacti18next'
+import type { UserRole } from '../types/types'
 
 
  const Card = ({listing}: {listing : ApiData}) => {
@@ -40,7 +40,7 @@ import i18n from '../config/reacti18next'
 
      const {t} = useTranslation()
      const facilities = t("card.facilities", {ns:"card", returnObjects:true}) as Record<string, Facilities>
-     const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, sharedTypes.UserRole>
+     const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, UserRole>
      const lang = i18n.language
      const avgRating = listing?.avgRating
 

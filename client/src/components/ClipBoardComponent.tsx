@@ -4,7 +4,6 @@ import { CopyCheckIcon, CopyIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ToasterCompo from './Toaster';
 import { t } from 'i18next';
-import {AppError} from '../../../backend/src/utils/createError'
 
  interface ClipBoardComponentProps {
  field : string | undefined;
@@ -25,7 +24,7 @@ const ClipBoardComponent = ({field, isAuthorized} : ClipBoardComponentProps) => 
         setIsCopy(true);
         setTimeout(() => setIsCopy(false), 3000);
         } catch (error) {
-        console.error((error as AppError).message);
+        console.error((error as Error).message);
         toast.custom((toast) => (
          <ToasterCompo t={toast} msg={t("clientMessages.FAILED_COPYING_FIELD", {ns:"messages"})} color='red'/>
         ))

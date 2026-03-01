@@ -1,7 +1,6 @@
 import { ArrowLeft, ArrowRight, Camera,  Loader,  PenBox } from "lucide-react"
 import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
 import { useAuthStore } from "../store/authStore"
-import type {ProfileData} from '../../../backend/src/shared/types/types'
 import DotAnimation from "../components/DotAnimation"
 import { useEffect, useState, type ChangeEvent } from "react"
 import {motion} from 'framer-motion'
@@ -14,6 +13,7 @@ import toast from "react-hot-toast"
 import ToasterCompo from "../components/Toaster"
 import PhoneInputComponent from "../components/PhoneInput"
 import { useNavigate } from "react-router-dom"
+import type { ProfileData } from "../types/types"
 
 
 

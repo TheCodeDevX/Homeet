@@ -3,12 +3,12 @@ import { countries } from "../constants";
 import clsx from "clsx";
 import i18n from "../config/reacti18next";
 import type { ControllerRenderProps } from "react-hook-form";
-import * as types from '../../../backend/src/shared/types/types'
 import PhoneInput from 'react-phone-number-input'
+import type { ProfileData } from "../types/types";
 
 
 interface PhoneInputProps {
-    field : ControllerRenderProps<types.ProfileData, "phoneNumber">
+    field : ControllerRenderProps<ProfileData, "phoneNumber">
 }
  
  const PhoneInputComponent = ({field} : PhoneInputProps) => {

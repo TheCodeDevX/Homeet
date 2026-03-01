@@ -10,7 +10,6 @@ import { useParams } from "react-router-dom"
 import Carousel from "../components/Carousel"
 import { useTranslation } from "react-i18next"
 import { useAuthStore } from "../store/authStore"
-import * as types from "../../../backend/src/shared/types/types"
 import i18n from "../config/reacti18next"
 import { useMessageStore } from "../store/messageStore"
 import { useFollowRequestStore } from "../store/followReqStore"
@@ -29,6 +28,7 @@ import DatePicker from "../components/DatePicker"
 import clsx from "clsx"
 import CommentSection from "../components/CommentSection"
 import * as helpers from "../utils/helpers"
+import type { UserData, UserRole } from "../types/types"
 
 
 
@@ -90,20 +90,6 @@ import * as helpers from "../utils/helpers"
     }, [id, getRatings])
 
 
-  // const handleNavigation = () => {
-  //   if(listing?.user){
-  //     setSelectedUser(listing.user as types.UserData);
-  //     navigate("/chat");
-  //   }
-  // }
-
-
-
-
-
-
-
-  // const images = listing?.images.slice(0,3) ?? []
 
  
   const amenitiesMap = Object.fromEntries(amenities.map(a => [a.label, a.icon]))
@@ -112,7 +98,7 @@ import * as helpers from "../utils/helpers"
 
    const {t} = useTranslation()
        const facilities = t("card.facilities", {ns:"card", returnObjects:true}) as Record<string, Facilities>
-       const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, types.UserRole>
+       const roles = t("card.roles", {ns:"card", returnObjects:true}) as Record<string, UserRole>
       //  const categories = t("card.categories", {ns:"card", returnObjects:true}) as Record<string , pricingType>
 
 
@@ -309,7 +295,7 @@ import * as helpers from "../utils/helpers"
 
                   <div className="card bg-base-100 shadow-xl overflow-hidden">
                   <div className="flex w-[200px] flex-wrap items-center justify-between py-4 px-2">
-                <UserProfile isBtn user={listing?.user as types.UserData | null}/>
+                <UserProfile isBtn user={listing?.user as UserData | null}/>
                 <div className="flex items-center justify-center max-md:flex-wrap gap-2 mx-2">
 
                 <FollowButton size="size-4" fontSize="text-xs"

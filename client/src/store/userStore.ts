@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import * as types from ".././../../backend/src/shared/types/types"
 import { errorHandler } from "./helpers/errorHelper";
 import { UserApi } from "../lib/axios.config";
+import type { UserData } from "../types/types";
 
- export interface UserProfile extends types.UserData {
+ export interface UserProfile extends UserData {
    country?: string
 }
 

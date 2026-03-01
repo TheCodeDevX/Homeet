@@ -1,7 +1,6 @@
 import { Camera, Loader, PenBox } from "lucide-react"
 import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
 import { useAuthStore} from "../store/authStore"
-import * as types from ".././../../backend/src/shared/types/types"
 import DotAnimation from "../components/DotAnimation"
 import {useEffect, useState, type ChangeEvent } from "react"
 import {motion} from 'framer-motion'
@@ -10,6 +9,7 @@ import toast from "react-hot-toast"
 import {parsePhoneNumber, isValidPhoneNumber} from 'react-phone-number-input'
 import ToasterCompo from "../components/Toaster"
 import PhoneInputComponent from "../components/PhoneInput"
+import type { ProfileData } from "../types/types"
 
 
 
@@ -29,7 +29,7 @@ import PhoneInputComponent from "../components/PhoneInput"
 
 
   const {register, setValue, trigger, handleSubmit, reset, control,
-     formState : {isSubmitting, errors}, getValues} = useForm<types.ProfileData>();
+     formState : {isSubmitting, errors}, getValues} = useForm<ProfileData>();
 
   useEffect(() => {
     if(user) {
@@ -90,7 +90,7 @@ import PhoneInputComponent from "../components/PhoneInput"
 
  
   
-   const OnSubmit : SubmitHandler<types.ProfileData>  = async(data) => {
+   const OnSubmit : SubmitHandler<ProfileData>  = async(data) => {
     setIsOnBoarding(false)
     try {
        await updateProfile(data)

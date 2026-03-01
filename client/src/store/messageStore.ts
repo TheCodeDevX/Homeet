@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { useAuthStore } from "./authStore";
-import type {MessageData, UserData} from '../../../backend/src/shared/types/types'
 import { AudioApi, MessageApi } from "../lib/axios.config";
 import { errorHandler } from "./helpers/errorHelper";
+import type { MessageData, UserData } from "../types/types";
  
 
  interface MessageStates {

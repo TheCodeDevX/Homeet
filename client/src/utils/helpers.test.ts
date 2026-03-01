@@ -1,7 +1,7 @@
 import {describe, it, expect, vi, afterEach} from "vitest"
 import "@testing-library/jest-dom/vitest"
 import { handleFollowReq, handleNavigation } from "./helpers";
-import type { UserData } from "../../../backend/src/shared/types/types";
+import type { UserData } from "../types/types";
 
  describe("handleNavigation", () => {
   afterEach(() => {

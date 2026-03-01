@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { listingApi, ratingApi } from "../lib/axios.config";
-import type { ID, UserData } from "../../../backend/src/shared/types/types";
 import { useAuthStore } from "./authStore";
 import { errorHandler } from "./helpers/errorHelper";
+import type { UserData } from "../types/types";
 
 export type PricingType = "nightly" | "monthly" | "one_time" | "placeholder";
 export interface FormData {
@@ -36,7 +36,7 @@ export interface FormData {
     value?: number,
     likes?:number,
     likers:string[],
-    _id?: ID,
+    _id?: string,
     user:UserData | null,
     listing : ApiData | null,
     feedback?: string,

@@ -3,7 +3,10 @@ import { useAuthStore } from "../store/authStore";
 import { Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import LoadingSpinner from "./Spinner";
-import type {UserRole} from '../../../backend/src/shared/types/types'
+import type { UserRole } from "../types/types";
+
+
+
 
 
   export const ProtectRoute = ({children} : PropsWithChildren) => {
