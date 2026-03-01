@@ -1,5 +1,5 @@
 import verificationIcon from '../assets/verificationIcon.svg'
-import house from '../assets/TinyHouse.svg'
+import house from "../assets/house.svg"
 import avatar from '../assets/avatar.png'
 import { ImLocation } from 'react-icons/im'
 import { ChevronLeft, ChevronRight, Heart, Image, Info } from 'lucide-react'

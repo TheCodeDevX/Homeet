@@ -4,7 +4,7 @@
  import {motion} from 'framer-motion'
 import useCarouselControls from '../hooks/useCarouselControls'
 import { useListingStore } from '../store/listingStore'
-import home from "../assets/Tinyhouse.svg"
+import home from "../assets/house.svg"
  
  const Carousel = () => {
     const {state, dispatch} = useCarouselControls()
