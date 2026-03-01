@@ -80,7 +80,7 @@ import * as helpers from "../utils/helpers"
   }, [id, getListing])
 
   useEffect(() => {
-     setIsFollowing((listing?.user?.followers?.includes(user?._id as string)) ?? false)
+     setIsFollowing((listing?.user?.followers?.includes(user?._id?.toString() as string)) ?? false)
   }, [listing, id, user])
 
   useEffect(() => {

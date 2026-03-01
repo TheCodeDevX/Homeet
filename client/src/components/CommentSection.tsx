@@ -35,7 +35,7 @@ interface CommentSectionProps {
     ratingUserId:Pick<Exclude<Rating["user"], null>, "_id">["_id"], likers : Rating["likers"]) => {
     if(!ratingId || !ratingUserId || !listingId) return;
     // setRatingId(ratingId.toString())
-    setIsAlreadyLiked(likers.includes(user?._id as string ?? false))
+    setIsAlreadyLiked(likers.includes(user?._id?.toString() as string ?? false))
     console.log("isAlreadyLiked", isAlreadyLiked)
    try {
     await likeRating(ratingId.toString(), likers as string[]);
