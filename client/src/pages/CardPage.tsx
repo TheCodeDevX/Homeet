@@ -1,14 +1,13 @@
-import { ArrowLeft, ArrowRight, Bath, Bed, BedDouble, BedSingleIcon, Building2, Heart, Info, Maximize2, MessageCircle, MessageSquare, Pin, Square } from "lucide-react"
+import { ArrowLeft,Bath, Bed, BedDouble, BedSingleIcon, Building2, Info, Maximize2, MessageCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import avatar from "../assets/avatar.png"
 import verificationIcon from '../assets/verificationIcon.svg'
 import { ImLocation } from "react-icons/im"
-import { amenities, currencies, lightThemes, prefixCurrencySymbols, THEMES, type Facilities } from "../constants"
+import { amenities, type Facilities } from "../constants"
 import { useListingStore } from "../store/listingStore"
 import { useEffect, useRef, useState} from "react"
 import { useParams } from "react-router-dom"
 import Carousel from "../components/Carousel"
-import LoadingSpinner from "../components/Spinner"
 import { useTranslation } from "react-i18next"
 import { useAuthStore } from "../store/authStore"
 import * as types from "../../../backend/src/shared/types/types"
@@ -19,24 +18,17 @@ import { RiStarFill } from "react-icons/ri"
 import UserProfile from "../components/UserProfile"
 import FollowButton from "../components/FollowButton"
 import {useMediaQuery} from "react-responsive"
-import gsap from "gsap"
-import {useGSAP} from "@gsap/react"
 import ToolTip from "../components/ToolTip"
-import flatpickr from 'flatpickr'
 import "flatpickr/dist/flatpickr.css";
-import FlatPickr, { type DateTimePickerHandle } from 'react-flatpickr'
 import Button from "../components/Button"
 import Price from "../components/Price"
-import { useThemeStore } from "../store/themeStore"
 import useBooking from "../hooks/useBooking"
 import CardPageSkeleton from "../components/skeletons/CardPageSkeleton"
 import useGsapAnimation from "../hooks/useGsapAnimation"
 import DatePicker from "../components/DatePicker"
 import clsx from "clsx"
-import CloseButton from "../components/CloseButton"
 import CommentSection from "../components/CommentSection"
 import * as helpers from "../utils/helpers"
-import { useBookingStore } from "../store/bookingStore"
 // import useGsapAnimation from "../hooks/useGsapAnimation"
 
 
@@ -72,23 +64,21 @@ import { useBookingStore } from "../store/bookingStore"
  const isOpenRef = useRef(false);
  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
  const [isShow, setIsShow] = useState(false)
- const ref = useRef<HTMLDivElement>(null)
  
 //  const dateRef = useRef<HTMLInputElement | null>(null);
  
- const {checkIn, checkOut, selectedDateRef, selectedDate, setSelectedDate} = useBooking();
+ const {selectedDateRef, selectedDate, setSelectedDate} = useBooking();
 
 //  const gsapAnimation = useGsapAnimation(container.current)
 
  
- const {theme} = useThemeStore()
   
   const {sendFollowReq,  isReqLoading} = useFollowRequestStore()
   useEffect(() => {
     if(id) {
       getListing(id)
     }
-  }, [id])
+  }, [id, getListing])
 
   useEffect(() => {
      setIsFollowing((listing?.user?.followers?.includes(user?._id as string)) ?? false)
@@ -98,7 +88,7 @@ import { useBookingStore } from "../store/bookingStore"
    if(id) {
    getRatings(id)
    }
-    }, [id])
+    }, [id, getRatings])
 
 
   // const handleNavigation = () => {

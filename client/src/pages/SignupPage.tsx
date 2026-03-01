@@ -6,17 +6,18 @@ import Checkbox from '../components/Checkbox'
 import Button from '../components/Button'
 import AuthButton from '../components/AuthButton'
 import {FaFacebookF, FaGoogle} from 'react-icons/fa'
-import { useAuthStore, type UserData } from '../store/authStore'
+import { useAuthStore } from '../store/authStore'
 import Light from '../components/Light'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
+import type { UserData } from '../../../backend/src/shared/types/types'
 
 const SignupPage = () => {
   const {t} = useTranslation();
-  const {signup, isLoading, error} = useAuthStore();
+  const {signup, isLoading} = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
  

@@ -1,5 +1,5 @@
 
-import { memo, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Card from "../components/Card"
 import Searchbar from "../components/Searchbar"
 import { useListingStore, type ApiData } from "../store/listingStore"
@@ -9,16 +9,13 @@ import usePagination from "../hooks/usePagination"
 import FallbackCard from "../components/FallbackCard"
 import {useTranslation} from 'react-i18next'
 import CardSkeleton from "../components/skeletons/CardSkeleton"
-import { useFollowRequestStore } from "../store/followReqStore"
 import { getTimeInMilliseconds } from "../utils/getTimeInMilliseconds"
-import type { BarStyleStates } from "../components/Navbar"
 
  const HomePage = () => {
 
   
   const {filters, sort} = useFiltration()
-   const {getListings, listings, isListingsLoading, isLoading, listingsLength} = useListingStore()
-   const [barStyle, setBarStyle] = useState<BarStyleStates>({width:0, left:0, opacity:1, right : 0});
+   const {getListings, listings, isLoading} = useListingStore()
 
 
 
@@ -56,7 +53,7 @@ import type { BarStyleStates } from "../components/Navbar"
       case "expensive" : filteredData = filteredData.sort((a,b) => b.price - a.price)
       break;
 
-      default :  filteredData;
+      default : break;
     }
 
     // Rating
@@ -67,7 +64,7 @@ import type { BarStyleStates } from "../components/Navbar"
      case "high" : filteredData = filteredData.sort((a,b) => (b.avgRating ?? 0) -  (a.avgRating ?? 0) )
      break;
 
-     default : filteredData;
+     default : break;
     }
 
    
@@ -81,7 +78,7 @@ import type { BarStyleStates } from "../components/Navbar"
        getTimeInMilliseconds(b.createdAt) - getTimeInMilliseconds(a.createdAt))
      break;
 
-     default : filteredData;
+     default : break;
     }
    }
 
@@ -124,7 +121,7 @@ import type { BarStyleStates } from "../components/Navbar"
     
     const {currentPage, setCurrentPage, pages, totalPages} = usePagination();
 
-    useEffect(() => {getListings()}, [currentPage])
+    useEffect(() => {getListings()}, [currentPage, getListings])
     
     const filteredData = filteredListings(listings, filters)
 

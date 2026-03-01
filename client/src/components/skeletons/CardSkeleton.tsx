@@ -1,9 +1,4 @@
 
-
-import { Heart, Info } from 'lucide-react'
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { Image } from 'lucide-react'
 import { useListingStore } from '../../store/listingStore'
 
 const CardSkeleton = () => {

@@ -4,10 +4,10 @@ import avatar from '../assets/avatar.png'
 import { ImLocation } from 'react-icons/im'
 import { ChevronLeft, ChevronRight, Heart, Image, Info } from 'lucide-react'
 import {motion} from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import {  useState } from 'react'
 import { RiStarFill } from 'react-icons/ri'
 import { useListingStore, type ApiData } from '../store/listingStore'
-import { amenities, currencies, lightThemes, prefixCurrencySymbols, type Facilities } from '../constants'
+import { amenities, currencies, prefixCurrencySymbols, type Facilities } from '../constants'
 import { Link } from 'react-router-dom'
 import useCarouselControls from '../hooks/useCarouselControls'
 import { FaExclamation } from 'react-icons/fa'
@@ -16,19 +16,16 @@ import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
 import * as sharedTypes from '../../../backend/src/shared/types/types'
 import i18n from '../config/reacti18next'
-import { useThemeStore } from '../store/themeStore'
 
 
  const Card = ({listing}: {listing : ApiData}) => {
-  const {getRating, isLoading} = useListingStore()
+  const {isLoading} = useListingStore()
   const {user} = useAuthStore()
   
    
     const [isopen, setIsOpen] = useState(false)
     const [isHover, setIsHover] = useState(false)
      const [showModal, setShowModal] = useState(false)
-     const imgRef = useRef<HTMLImageElement | null>(null)
-    // const btnRef = useRef<HTMLAnchorElement>(null);
 
    
     const {state, dispatch} = useCarouselControls()
@@ -40,8 +37,6 @@ import { useThemeStore } from '../store/themeStore'
     //   setIsOpen((prev) => !prev)
     // }
      const currentImage = listing?.images[state.currentIndex];
-
-     const {theme} = useThemeStore()
 
      const {t} = useTranslation()
      const facilities = t("card.facilities", {ns:"card", returnObjects:true}) as Record<string, Facilities>

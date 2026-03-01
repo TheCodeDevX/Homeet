@@ -1,4 +1,5 @@
-import { createContext, useState, type ChangeEvent, type PropsWithChildren, type SetStateAction } from "react";
+import {  useState, type ChangeEvent, type PropsWithChildren, type SetStateAction } from "react";
+import { FiltrationContext } from "./createdContexts/FiltrationContext";
 
  export type FilterStates = {
     query: string,
@@ -17,7 +18,7 @@ import { createContext, useState, type ChangeEvent, type PropsWithChildren, type
     rating: string;
   }
 
- interface FiltrationContextProps {
+ export interface FiltrationContextProps {
   filters : FilterStates
   setFilters : React.Dispatch<SetStateAction<FilterStates>>
   sort : SortStates
@@ -26,7 +27,6 @@ import { createContext, useState, type ChangeEvent, type PropsWithChildren, type
   clearAllFilters : () => void
  }
 
-export const FiltrationContext = createContext<FiltrationContextProps | undefined>(undefined);
 
   export const FiltrationProvider = ({children} : PropsWithChildren) => {
  

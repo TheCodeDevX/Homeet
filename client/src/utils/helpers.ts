@@ -18,7 +18,10 @@ export const handleFollowReq = async({userId, recipientId, notifId,
   // userId in notificationPage is the recipient ID
   try {
   await sendFollowReq(recipientId.toString(), notifId, userId?.toString());
-  setIsFollowing && setIsFollowing(prev => !prev)
+  if(setIsFollowing) {
+    setIsFollowing(prev => !prev)
+  }
+   
   } catch (error) {
   console.log(error)
   }

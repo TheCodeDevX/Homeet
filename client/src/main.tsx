@@ -9,7 +9,7 @@ import "./config/reacti18next.ts"
 import LoadingSpinner from './components/Spinner.tsx'
 import { DirectionProvider } from './context/DirectionProvider.tsx'
 import { BookingProvider } from './context/BookingProvider.tsx'
-import NotificationProvider from './context/NotificationProvider.tsx'
+import { NotificationProvider } from './context/NotificationProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

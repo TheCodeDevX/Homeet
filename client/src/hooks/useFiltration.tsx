@@ -1,4 +1,4 @@
-import { FiltrationContext } from "../context/FilterProvider"
+import { FiltrationContext } from "../context/createdContexts/FiltrationContext"
 import { useCustomContext } from "../utils/useCustomContext"
 
 

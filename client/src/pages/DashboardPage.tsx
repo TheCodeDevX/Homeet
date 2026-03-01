@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion'
-import {  Loader, Pen, Search, Trash } from 'lucide-react'
+import { Pen, Search, Trash } from 'lucide-react'
 import { useListingStore } from '../store/listingStore'
 import { useEffect, useState } from 'react'
 import {useNavigate } from 'react-router-dom'
@@ -7,7 +7,6 @@ import fallbackImage from "../assets/image.png"
 import FallbackCard from '../components/FallbackCard'
 import { useTranslation } from 'react-i18next'
 import i18n from '../config/reacti18next'
-import LoadingSpinner from '../components/Spinner'
 
 interface ListingType {
   title : string,
@@ -24,7 +23,7 @@ interface ListingType {
    const [isSliced, setIsSliced] = useState<{[id:string] : boolean}>({})
   useEffect(() => {
     getUserListings()
-  }, [isDeleting])
+  }, [isDeleting, getUserListings])
   const navigate = useNavigate()
   const fields : (keyof ListingType)[] = ["title", "description", "location", "createdAt"]
   const filteredListings =userListings.filter(listing => (

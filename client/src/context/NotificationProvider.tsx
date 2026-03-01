@@ -1,14 +1,10 @@
-import { createContext, useEffect, useState, type PropsWithChildren } from "react"
-import { useFollowRequestStore } from "../store/followReqStore";
+import { useState, type PropsWithChildren } from "react"
+import { NotificationContext } from "./createdContexts/NotificationContext";
 
-interface NotificationStates {
-notificationsLength : number
-setNotificationsLength : (length:number) => void;
-}
 
-export const NotificationContext = createContext<NotificationStates | undefined>(undefined)
+
  
- const NotificationProvider = ({children} : PropsWithChildren) => {
+ export const NotificationProvider = ({children} : PropsWithChildren) => {
     const [notificationsLength, setNotificationsLength] = useState(0);
    return (
      <NotificationContext.Provider value={{notificationsLength, setNotificationsLength}}>
@@ -17,5 +13,5 @@ export const NotificationContext = createContext<NotificationStates | undefined>
    )
  }
  
- export default NotificationProvider
+
  

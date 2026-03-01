@@ -1,8 +1,4 @@
 
-
- import { Loader } from 'lucide-react'
-import React from 'react'
- 
  const CardPageSkeleton = () => {
   document.body.style.overflow = "hidden";
    return (

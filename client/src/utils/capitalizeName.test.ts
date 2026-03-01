@@ -1,7 +1,6 @@
 
- import {describe, it, expect, beforeEach, vi, afterEach} from "vitest"
+ import {describe, it, expect} from "vitest"
 import "@testing-library/jest-dom/vitest"
-import { sliceText } from "./sliceText";
 import { capitalizedName } from "./capitalizeName";
 
 

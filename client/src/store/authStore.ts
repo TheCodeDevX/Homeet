@@ -66,7 +66,7 @@ import type { AuthData } from '../types/types'
       try {
          let res = await authApi.post("/verify-email", {code})
          if(res?.data?.message === "EXPIRED_VERIFICATION_CODE") {
-          res = await get().tryToRefreshAccessToken(code);
+          res = (await get().tryToRefreshAccessToken(code));
          }
          if(res?.data?.success) {
          set({isAuthenticated:true, message:res?.data?.message, accessToken:""})
@@ -119,8 +119,6 @@ import type { AuthData } from '../types/types'
         try {
          const res = await authApi.get("/checkAuth")
          set({user:res?.data?.user, isAuthenticated:true})
-        } catch (error) {
-         set({error:null})
         } finally {
          set({isCheckingAuth:false})
        }

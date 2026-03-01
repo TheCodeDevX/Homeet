@@ -1,9 +1,9 @@
 import { HomeIcon} from 'lucide-react'
-import { href, Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import avatar from '../assets/avatar.png'
 import { iconButtons, languages, lightThemes, links, THEMES, type Links, type Tooltips } from '../constants'
 import {motion} from 'framer-motion'
-import React, { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
+import React, { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { useAuthStore } from '../store/authStore'
 import LogoutModal from './LogoutModal'
 import clsx from 'clsx'
@@ -11,11 +11,7 @@ import { useThemeStore } from '../store/themeStore'
 import { useTranslation } from 'react-i18next'
 import i18n from '../config/reacti18next'
 import { useLangStore } from '../store/languageStore'
-import LoadingSpinner from './Spinner'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
 import Navigator from './Navigator'
-import i18next from 'i18next'
 import { useDirectionContext } from '../hooks/useDirectionContext'
 
  export interface BarStyleStates {
@@ -27,9 +23,8 @@ import { useDirectionContext } from '../hooks/useDirectionContext'
 
   export type NavLinks = Record<string , Links>
 
- const Navbar = ({notificationLength}: {notificationLength?:number}) => {
+ const Navbar = () => {
   const {user, logout} = useAuthStore()
-  const [ready, setReady] = useState(false)
    const navigate = useNavigate()
   const location = useLocation();
    const [toolTip, setToolTip] = useState("");
@@ -44,31 +39,25 @@ import { useDirectionContext } from '../hooks/useDirectionContext'
    const barRef = useRef<HTMLSpanElement>(null)
   //  const [isShow, setIsShow] = useState(false)
   const {setLang, lang:storedLang} = useLangStore()
-  const resetBarToActiveLink = () => {
-      const activeLink = containerRef.current?.querySelector(`.nav-item[data-path="${location.pathname}"]`)
-      console.warn("active", activeLink)
-      const containerRect = containerRef.current?.getBoundingClientRect();
-      if(containerRect && activeLink) {
-        const rect = activeLink.getBoundingClientRect();
-        setBarStyle({width:rect.width,
-           left: rect.left - containerRect.left,      
-           opacity:1})
-      } else {
-        setBarStyle((prev) => ({...prev, opacity:0}))
-      }
-   }
+
+  const resetBarToActiveLink = useCallback(() => {
+  const activeLink = containerRef.current?.querySelector(`.nav-item[data-path="${location.pathname}"]`)
+  console.warn("active", activeLink)
+  const containerRect = containerRef.current?.getBoundingClientRect();
+  if(containerRect && activeLink) {
+    const rect = activeLink.getBoundingClientRect();
+    setBarStyle({width:rect.width,
+      left: rect.left - containerRect.left,      
+      opacity:1})
+  } else {
+    setBarStyle((prev) => ({...prev, opacity:0}))
+  }
+  }, [location.pathname])
 
    const {langDir} = useDirectionContext();
 
 
-   useEffect(() => {
-    console.info('let"s see');
-     handleResetLink()
-   }, [langDir])
-
-   const handleResetLink = () => {
-  //  if(location.pathname === "/") return;
-    // setIsShow(false);
+   const handleResetLink = useCallback(() => {
     const containerRect = containerRef?.current?.getBoundingClientRect();
     const rect = containerRef.current?.querySelector(`.nav-item[data-path="${location.pathname}"]`)?.getBoundingClientRect()
     if(!containerRect || !rect) return;
@@ -77,10 +66,9 @@ import { useDirectionContext } from '../hooks/useDirectionContext'
       left: rect.left - containerRect.left,
       opacity:1
     }) 
-   };
+   }, [location.pathname])
 
    const handleHover = (e:ReactMouseEvent<HTMLAnchorElement>) => {
-    // setIsShow(false);
     const containerRect = containerRef?.current?.getBoundingClientRect();
     const rect = e.currentTarget.getBoundingClientRect()
     if(!containerRect || !rect) return;
@@ -91,29 +79,19 @@ import { useDirectionContext } from '../hooks/useDirectionContext'
     }) 
    };
 
-  //  const handleMouseOut = (e:ReactMouseEvent) => {
-  //   // barRef.current?.classList.add("opacity-100")
 
-  //     setBarStyle({opacity:0}) 
-  //  }
+ useEffect(() => {
+    console.info('let"s see');
+     handleResetLink()
+   }, [langDir, handleResetLink])
+
 
    useEffect(() => {
-
     resetBarToActiveLink();
-   }, [location.pathname])
+   }, [location.pathname, resetBarToActiveLink])
 
 
   
-
-
-
-  //  useLayoutEffect(() => {
-  //   window.addEventListener("mousemove", resetBarToActiveLink)
-  //   return () =>  {
-  //     window.removeEventListener("mousemove", resetBarToActiveLink)
-  //   }
-  //  }, [storedLang, i18n.language])
-
 
 
 

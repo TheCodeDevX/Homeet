@@ -8,6 +8,13 @@ import { globalIgnores } from 'eslint/config'
 export default tseslint.config([
   globalIgnores(['dist']),
   {
+    rules : {
+      "@typescript-eslint/no-unused-vars" : ['error', {
+      "varsIgnorePattern": "^_",
+      "argsIgnorePattern": "^_"
+      }]
+    },
+    ignores: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,

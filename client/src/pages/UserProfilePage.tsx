@@ -1,18 +1,15 @@
-import {useForm} from 'react-hook-form'
 import { useAuthStore } from "../store/authStore"
-import type {ProfileData, UserData} from '../../../backend/src/shared/types/types'
-import {useEffect, useRef, useState} from "react"
+import type {ProfileData} from '../../../backend/src/shared/types/types'
+import {useEffect, useState} from "react"
 import { useTranslation } from "react-i18next"
 import {  useParams } from "react-router-dom"
 import { useUserStore } from '../store/userStore'
 import { useMessageStore } from '../store/messageStore'
-import avatar from "../assets/avatar.png"
 import LoadingSpinner from '../components/Spinner'
 import {formatPhoneNumberIntl, getCountries, parsePhoneNumber} from 'react-phone-number-input'
 import { countries } from '../constants'
 import clsx from 'clsx'
 import i18n from '../config/reacti18next'
-import { CopyCheckIcon, CopyIcon } from 'lucide-react'
 import ClipBoardComponent from '../components/ClipBoardComponent'
 
 
@@ -25,7 +22,6 @@ console.warn('new', JSON.stringify(reducedArr, null, 2));
 const {user, getUser, isUserLoading} = useUserStore()
 const {user:authUser} = useAuthStore()
 const {messages, getMessages, isMessagesLoading} = useMessageStore()
-const inputRef = useRef<HTMLInputElement>(null)
 const [isAuth, setIsAuth] = useState(false);
 
 
@@ -38,13 +34,13 @@ const [isAuth, setIsAuth] = useState(false);
     if(user?._id){
     getMessages(user?._id as string)
     }
-   }, [user?._id])
+   }, [user?._id, getMessages])
 
    useEffect(() => {
    if(id) {
    getUser(id);
    }
-   }, [id])
+   }, [id, getUser])
 
    useEffect(() => {
     setIsAuth(messages.some((msg) => msg.senderId?.toString() === authUser?._id));

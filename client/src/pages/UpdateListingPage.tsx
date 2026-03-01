@@ -1,4 +1,4 @@
-import { Check, Loader, PenBox, Upload, X } from "lucide-react"
+import { Loader, PenBox, Upload, X } from "lucide-react"
 import { amenities, type Facilities } from "../constants"
 import {motion} from 'framer-motion'
 import {  useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react"
@@ -9,23 +9,22 @@ import CounterBtn from "../components/CounterBtn"
 import i18n from "../config/reacti18next"
 
 
- interface ImageType {url :string}
 
 const UpdateListingPage = () => {
 
   const {t} = useTranslation()
 
-  let {id} = useParams()
+  const {id} = useParams()
 
   // const [unit, setUnit] = useState<Exclude<FormData["pricingType"], "">>("monthly")
-    const {isLoading, updateListing, listing, getListing, error, message} = useListingStore()
+    const {isLoading, updateListing, listing, getListing} = useListingStore()
    
   
     useEffect(() => {
       if(id){
         getListing(id)
       }
-    }, [])
+    }, [id, getListing])
 
     
 
@@ -48,6 +47,10 @@ const UpdateListingPage = () => {
     size: 0,
     floor: 0,
     bathrooms:0,
+    pets : 0,
+    adults : 0,
+    avgRating : 0,
+    children : 0
   });
 
       useEffect(() => {
@@ -65,6 +68,9 @@ const UpdateListingPage = () => {
     size:listing?.size ?? 0,
     floor:listing?.floor ?? 0,
     bathrooms:listing?.bathrooms ?? 0,
+    children : listing?.children ?? 0,
+    pets : listing?.pets ?? 0,
+    adults : listing?.adults ?? 0
         })
       }
       setImagesPreview(listing?.images ?? [])
@@ -179,11 +185,7 @@ const UpdateListingPage = () => {
     
    }
  
-   const lang = i18n.language;
-    const messages = t("backendMessages", {ns:"messages", returnObjects:true}) as Record<string , string>
-  const msg = messages[message ?? "default"];
-  const errMsg = messages[error ?? "default"]
-
+   const lang = i18n.language
 
     //  translations 
   
@@ -348,12 +350,12 @@ const UpdateListingPage = () => {
         <input type="number" name="beds" value={formState.beds} 
        onChange={handleChange} min={0} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
 
-        <CounterBtn onClick={(e) => {e.preventDefault;
+        <CounterBtn onClick={(e) => {e.preventDefault();
           setFormState(prev => ({...prev, beds: prev.beds ? prev.beds + 1 : 1 }))}} btnType="increasement"/>
 
        {!formState.beds || formState.beds < 1 ? (<></>) : (
         <>
-           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault;
+           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
              setFormState(prev => ({...prev, beds: prev.beds &&
           prev.beds <= 0 ? 0 : prev.beds && prev.beds - 1  }))}}/>
         </>
@@ -408,7 +410,7 @@ const UpdateListingPage = () => {
 
             {!formState.size || formState.size < 1 ? (<></>) : (
         <>
-           <CounterBtn  onClick={(e) => {e.preventDefault; setFormState(prev => ({...prev, size: prev.size &&
+           <CounterBtn  onClick={(e) => {e.preventDefault(); setFormState(prev => ({...prev, size: prev.size &&
           prev.size <= 0 ? 0 : prev.size && prev.size - 1  }))}} btnType="decreasement"/>
         </>
           )}
@@ -439,7 +441,7 @@ const UpdateListingPage = () => {
         <input type="number" name="price" value={formState.price}
         onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
        <CounterBtn onClick={(e) => 
-        {e.preventDefault; setFormState(prev => ({...prev, price: prev.price ? prev.price + 1 : 1 }))}} btnType="increasement"/>
+        {e.preventDefault(); setFormState(prev => ({...prev, price: prev.price ? prev.price + 1 : 1 }))}} btnType="increasement"/>
 
             {!formState.price || formState.price < 1 ? (<></>) : (
         <>

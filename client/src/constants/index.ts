@@ -1,4 +1,4 @@
-import { AirVent, BedDouble, Bell, BellIcon, Building2, Car, Cat, Dumbbell,
+import { AirVent, BedDouble, BellIcon, Building2, Car, Cat, Dumbbell,
     Flame, Languages, Menu, MessageCircle, Palette, PieChart, PlusCircle,
   TreeDeciduousIcon, Utensils, WashingMachine, Waves, Wifi } from "lucide-react";
 import {  type ComponentType, type SVGProps } from "react";

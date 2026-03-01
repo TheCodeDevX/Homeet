@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
   });
 
   import "@testing-library/jest-dom/vitest"
-import { AxiosError, type AxiosInstance } from "axios";
+import {  type AxiosInstance } from "axios";
 import { type Mock, type MockedFunctionDeep } from "@vitest/spy";
 import { act, renderHook } from "@testing-library/react";
 import { FollowReqApi } from "../lib/axios.config";

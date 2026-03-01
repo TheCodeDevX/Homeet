@@ -36,7 +36,7 @@ import { useBookingStore } from "./store/bookingStore"
 
 
 const App = () => {
-  const {checkAuth, isAuthenticated, user, connectSocket,error:authErr, message:authMsg, isCheckingAuth, warmUp} = useAuthStore()
+  const {checkAuth, isAuthenticated, connectSocket,error:authErr, message:authMsg, isCheckingAuth, warmUp} = useAuthStore()
  
   const authMessageL = useRef<string>("");
   const {message:followReqMsg, error:followReqErr} = useFollowRequestStore()
@@ -44,25 +44,23 @@ const App = () => {
   const {message:bookingMessage, error:bookingErr} = useBookingStore()
   
  useEffect(() => {checkAuth()} , [checkAuth])
-console.log(isAuthenticated)
-  useEffect(() => { connectSocket() }, [user])
+
+  useEffect(() => { 
+    connectSocket()
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // connectSocket is stable.
   const location = useLocation()
  
 
   useEffect(() => {
   
     const warpUpTheServer = async() => {
-      try {
-        const response = await warmUp();
-        console.warn(response);
-      } catch (error) {
-        console.error("The server is unavailable now, please try again later after being warmed up!")
-      }
+     await warmUp()
     }
     warpUpTheServer();
     const interval = setInterval(() => warpUpTheServer(), 300000)
-
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
    const lang = i18n.language
@@ -78,12 +76,10 @@ console.log(isAuthenticated)
    window.history.replaceState({}, "", newUrl)
    authMessageL.current = "";
    }, 3000);
-   console.warn("search", location.search)
    return () => {
     clearTimeout(timer);
    }
-
-  }, [])
+  }, []) // runs once on mount, reading URL params on initial load.
 
   
 
@@ -94,10 +90,8 @@ console.log(isAuthenticated)
 
   
 
-  // let msg = messages[msgkey];
-  // let errMsg = messages[errkey]
-  let msgkey  = message || authMsg || authMessageL.current || followReqMsg || bookingMessage || "";
-  let errkey = error  || authErr || followReqErr || bookingError || "";
+  const msgkey  = message || authMsg || authMessageL.current || followReqMsg || bookingMessage || "";
+  const errkey = error  || authErr || followReqErr || bookingError || "";
 
   const messages = t("backendMessages", {ns:"messages", returnObjects:true, overlapRange}) as Record<string , string>
 
@@ -112,7 +106,7 @@ console.log(isAuthenticated)
      <ToasterCompo color={color} msg={messages[msg]} t={t} />
     ))
   
-  }, [msg])
+  }, [msg, color])
  }
 
  useToastMessage({msg:msgkey && msgkey, color:"green"})
@@ -126,13 +120,12 @@ console.log(isAuthenticated)
  const direction = lang === "ar" ? "rtl" : "ltr"
 
  useEffect(() => {
-    console.warn("this one useEffect(lang)")
   setLangDir(`${lang}&${direction}`);
    if(lang) {
   document.documentElement.lang = lang;
   document.documentElement.dir = direction;
    }
-   }, [lang])
+   }, [lang, direction, setLangDir])
 
    
  

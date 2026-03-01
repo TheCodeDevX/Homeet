@@ -1,7 +1,6 @@
 
  import { X } from 'lucide-react'
-import React, { type Dispatch, type SetStateAction } from 'react'
-import { useLangStore } from '../store/languageStore'
+
 import i18n from '../config/reacti18next'
  
  const CloseButton = ({handleClose} : {handleClose: () => void}) => {

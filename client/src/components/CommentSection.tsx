@@ -1,7 +1,7 @@
 
  import clsx from 'clsx'
 import { Calendar, Heart, MessageCircle, Star } from 'lucide-react'
-import { memo, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
+import {  type Dispatch, type SetStateAction } from 'react'
 import CloseButton from './CloseButton'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
@@ -27,7 +27,7 @@ interface CommentSectionProps {
     // const [likers, setLikers] = useState<string[]>([])
    
     const {theme} = useThemeStore();
-    const { getRating, likeRating, isLoading, setIsAlreadyLiked, isAlreadyLiked} = useListingStore()
+    const { likeRating, isLoading, setIsAlreadyLiked, isAlreadyLiked} = useListingStore()
     const {user} = useAuthStore()
  
 

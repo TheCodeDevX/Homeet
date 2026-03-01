@@ -29,8 +29,8 @@ import clsx from "clsx";
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
-
-    useEffect(() => {getListings()}, [!filters.shouldSort])
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {getListings()}, [!filters.shouldSort]) // getListings is stable since it's a zustand store, no need to include
 
 
    
@@ -64,7 +64,9 @@ import clsx from "clsx";
   
   const handleSorting = () => {
    setFilters(prev => ({...prev, shouldSort: prev.shouldSort || isNone ? false : true}))
-   !filters.shouldSort && setIsEmpty(isNone); 
+   if(!filters.shouldSort) {
+     setIsEmpty(isNone)
+   }
   }
 
   // translations :
@@ -74,7 +76,7 @@ import clsx from "clsx";
     return (
       <div ref={containerRef} className="mb-5 max-xs:mb-8 flex justify-between gap-2 select-none">
      <label className="relative w-full">
-         <input onFocus={() =>{setFocused(true), setIsOpen(false)}} onBlur={() => setFocused(false)} 
+         <input onFocus={() =>{setFocused(true); setIsOpen(false)}} onBlur={() => setFocused(false)} 
          ref={focusRef} type="text" placeholder={t("placeholders.search", {ns : "common"})} name="query"
          value={filters.query} onChange={handleFiltersChange}
            className={`input py-4 ${lang === "ar" ? "pr-16" : "pl-16"} max-sm:text-sm

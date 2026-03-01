@@ -26,7 +26,7 @@ import type { UserData } from "../../../../backend/src/shared/types/types";
   refs.current[selectedUser?._id as string]?.scrollIntoView({
     behavior: "smooth"
   })
-  }, [users.length])
+  }, [users.length, selectedUser?._id])
 
 
   useEffect(() => {
@@ -40,7 +40,7 @@ import type { UserData } from "../../../../backend/src/shared/types/types";
 
   useEffect(() => {
     getUsers({shouldLoad : true})
-  }, [])
+  }, [getUsers])
 
  
 

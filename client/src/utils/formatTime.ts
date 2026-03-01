@@ -1,4 +1,3 @@
-import { t } from "i18next";
 
  export function formatTime (dateString: string) : {key : string, ns : string, count?: number, msg?: string} {
  const isValidISOFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/

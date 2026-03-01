@@ -1,4 +1,5 @@
-import { createContext, useMemo, useRef, useState, type Dispatch, type PropsWithChildren, type RefObject, type SetStateAction } from "react";
+import { useRef, useState, type Dispatch, type PropsWithChildren, type RefObject, type SetStateAction } from "react";
+import { BookingContext } from "./createdContexts/BookingContext";
 
 
  export interface BookingStates {
@@ -15,7 +16,7 @@ import { createContext, useMemo, useRef, useState, type Dispatch, type PropsWith
   }
  }
 
- export const BookingContext = createContext<BookingStates | undefined>(undefined);
+ 
 
   export const BookingProvider = ({children} : PropsWithChildren) => {
     const intialDates = {

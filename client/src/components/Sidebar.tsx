@@ -2,14 +2,12 @@ import { useSidebarToggle } from '../hooks/useSidebarToggle';
 import {motion,} from 'framer-motion'
 import SidebarContent from './SidebarContent';
 import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 
 
  const Sidebar = () => {
 
    const {isOpen, setIsOpen} = useSidebarToggle();
    const ref = useRef<HTMLAnchorElement>(null)
-   const location = useLocation()
 
    useEffect(() => {
      const handleClickOutside = (e:MouseEvent) => {
@@ -23,8 +21,8 @@ import { useLocation } from 'react-router-dom';
 
    document.addEventListener("mousedown", handleClickOutside)
    return () => document.removeEventListener("mousedown", handleClickOutside)
-    
-   }, [])
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []) // setIsOpen is stable, there's no need to include.
    return (
    <>
 

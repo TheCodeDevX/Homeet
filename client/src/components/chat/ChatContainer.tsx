@@ -49,7 +49,7 @@ const handlePausing = (id:string) => {
     getMessages(selectedUser?._id?.toString() as string)
     subToMessages()
     return () => unsubFromMessages()
-  }, [selectedUser])
+  }, [selectedUser, getMessages, subToMessages, unsubFromMessages])
 
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const handlePausing = (id:string) => {
 
       const handlePlay = () => {
       if(!msgId) return;
-      let audio = audioRef.current[msgId];
+      const audio = audioRef.current[msgId];
       if(!audio) return;
       audio.play()
       setIsPlaying(msgId)

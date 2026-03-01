@@ -7,9 +7,8 @@ import { useEffect, useState, type ChangeEvent } from "react"
 import {motion} from 'framer-motion'
 import avatar from '../assets/avatar.png'
 import { useTranslation } from "react-i18next"
-import clsx from "clsx"
 import 'react-phone-number-input/style.css'
-import PhoneInput, {isValidPhoneNumber, parsePhoneNumber} from 'react-phone-number-input'
+import {isValidPhoneNumber, parsePhoneNumber} from 'react-phone-number-input'
 import i18n from "../config/reacti18next"
 import toast from "react-hot-toast"
 import ToasterCompo from "../components/Toaster"

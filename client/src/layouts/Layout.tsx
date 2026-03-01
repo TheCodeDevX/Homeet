@@ -1,10 +1,7 @@
 import Sidebar from "../components/Sidebar"
 import Navbar from "../components/Navbar"
 import React from "react"
-import SidebarProvider from "../context/SidebarProvider"
-import { useLangStore } from "../store/languageStore"
-import i18n from "../config/reacti18next"
-import { useLocation } from "react-router-dom"
+import { SidebarProvider } from "../context/SidebarProvider"
 
  interface LayoutProps {
     children : React.ReactNode

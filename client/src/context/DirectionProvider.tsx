@@ -1,13 +1,9 @@
-import React, { createContext, useState, type PropsWithChildren, type SetStateAction } from "react"
+import {useState, type PropsWithChildren } from "react"
+import { DirContext } from "./createdContexts/DirContext";
 
 
- export interface DirStates {
-    langDir : string,
-    setLangDir : React.Dispatch<SetStateAction<string>>
- }
 
 
-export const DirContext = createContext<DirStates | undefined>(undefined);
  
  export const DirectionProvider = ({children} : PropsWithChildren) => {
     const [langDir, setLangDir] = useState('');

@@ -11,7 +11,7 @@ export type Lang = "ar" | "en" | "es" | "fr"
  export const useLangStore = create<LangugaeStates>((set) => ({
  lang : localStorage?.getItem?.("lang") as Lang || "en",
  setLang : (lang) => {
-   set({ lang }),
+   set({ lang });
    localStorage.setItem("lang", lang)
  }
  }))

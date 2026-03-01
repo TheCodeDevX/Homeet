@@ -1,7 +1,6 @@
 import { BrushCleaning, Filter} from 'lucide-react'
-import avatar from '../assets/avatar.png'
 import {ImLocation, ImPriceTag} from 'react-icons/im'
-import { useLayoutEffect, useRef, useState, type ChangeEvent } from 'react'
+import { useRef, useState, type ChangeEvent } from 'react'
 import { TbCategory } from "react-icons/tb";
 import { FaBed} from 'react-icons/fa';
 import { amenities, type Facilities } from '../constants';
@@ -32,7 +31,7 @@ const SidebarContent = () => {
  }
 
  const handleMaxChange = (e:ChangeEvent<HTMLInputElement>) => {
-  let {value, step} = e.target;
+  const {value, step} = e.target;
   
 
    if(+value <= filters.minPrice){

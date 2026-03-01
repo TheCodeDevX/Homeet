@@ -1,4 +1,4 @@
-import { Check, Loader, PenBox, Upload, X } from "lucide-react"
+import { Check, Loader, Upload, X } from "lucide-react"
 import { amenities, type Facilities } from "../constants"
 import {motion} from 'framer-motion'
 import {  useRef, useState, type ChangeEvent, type FormEvent } from "react"
@@ -13,7 +13,7 @@ const PostListingPage = () => {
   // const [unit, setUnit] = useState<Exclude<FormData["pricingType"], "">>("monthly")
     const {createListing, isListingsLoading} = useListingStore()
     const {user} = useAuthStore()
-    const [imagesPreview, setImagesPreview] = useState<(string | any)[]>([]);
+    const [imagesPreview, setImagesPreview] = useState<(string)[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null)  
 
   const [formState, setFormState] = useState<FormData>
@@ -315,12 +315,12 @@ const PostListingPage = () => {
         <input type="number" name="beds" value={formState.beds} 
        onChange={handleChange} min={0} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
 
-        <CounterBtn onClick={(e) => {e.preventDefault;
+        <CounterBtn onClick={(e) => {e.preventDefault();
           setFormState(prev => ({...prev, beds: prev.beds ? prev.beds + 1 : 1 }))}} btnType="increasement"/>
 
        {!formState.beds || formState.beds < 1 ? (<></>) : (
         <>
-           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault;
+           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
              setFormState(prev => ({...prev, beds: prev.beds &&
           prev.beds <= 0 ? 0 : prev.beds && prev.beds - 1  }))}}/>
         </>
@@ -375,7 +375,7 @@ const PostListingPage = () => {
 
             {!formState.size || formState.size < 1 ? (<></>) : (
         <>
-           <CounterBtn  onClick={(e) => {e.preventDefault; setFormState(prev => ({...prev, size: prev.size &&
+           <CounterBtn  onClick={(e) => {e.preventDefault(); setFormState(prev => ({...prev, size: prev.size &&
           prev.size <= 0 ? 0 : prev.size && prev.size - 1  }))}} btnType="decreasement"/>
         </>
           )}
@@ -410,7 +410,7 @@ const PostListingPage = () => {
         <input type="number" name="price" value={formState.price}
         onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
        <CounterBtn onClick={(e) => 
-        {e.preventDefault; setFormState(prev => ({...prev, price: prev.price ? prev.price + 1 : 1 }))}} btnType="increasement"/>
+        {e.preventDefault(); setFormState(prev => ({...prev, price: prev.price ? prev.price + 1 : 1 }))}} btnType="increasement"/>
 
             {!formState.price || formState.price < 1 ? (<></>) : (
         <>

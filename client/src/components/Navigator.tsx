@@ -1,7 +1,5 @@
 
- import React, { useEffect, useRef, useState } from 'react'
- import gsap from 'gsap'
- import { useGSAP } from '@gsap/react'
+ import React, { useEffect } from 'react'
  import {motion} from 'framer-motion'
 import { links } from '../constants'
 import { Link } from 'react-router-dom'
@@ -9,8 +7,6 @@ import clsx from 'clsx'
 import { useAuthStore } from '../store/authStore'
 import type { BarStyleStates, NavLinks } from './Navbar'
 import i18n from '../config/reacti18next'
-import useNotification from '../hooks/useNotification'
-import { useFollowRequestStore } from '../store/followReqStore'
 import { useNotificationStore } from '../store/notificationStore'
 
  interface NavigatorProps {
@@ -25,9 +21,8 @@ import { useNotificationStore } from '../store/notificationStore'
 
  
  
- const Navigator = ({containerRef, resetBarToActiveLink,  barStyle, handleHover, barRef, navLinks} : NavigatorProps) => {
+ const Navigator = ({containerRef, resetBarToActiveLink,  barStyle, handleHover, navLinks} : NavigatorProps) => {
   const {user} = useAuthStore()
-  const {notificationsLength} = useNotification();
   const {getIncomingNotifs, notifications} = useNotificationStore()
 
     const barVariants = {
@@ -71,8 +66,7 @@ import { useNotificationStore } from '../store/notificationStore'
         
         {links.map(({href, size, key,icon:Icon, classes, id}) => (
         <Link
-            onMouseEnter={(e) => { e.stopPropagation(),handleHover(e)}}
-        //  onMouseLeave={(e) => handleMouseOut(e)}
+            onMouseEnter={(e) => { e.stopPropagation(); handleHover(e)} }
             data-path={href}
             to={href}
             key={id}

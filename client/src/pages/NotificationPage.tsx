@@ -1,33 +1,26 @@
 
 
- import { CheckIcon, User, Users } from 'lucide-react'
+ import { CheckIcon, Users } from 'lucide-react'
 import avatar from '../assets/avatar.png'
 import verificationIcon from '../assets/verificationIcon.svg'
 import { useEffect, useRef, useState } from 'react'
 import { useFollowRequestStore } from '../store/followReqStore'
-import { useListingStore } from '../store/listingStore'
 import { useMessageStore } from '../store/messageStore'
-import type { UserData } from ".././../../backend/src/shared/types/types"
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import NotificationsSkeleton from '../components/skeletons/NotificationsSkeleton'
 import  FallbackCard from '../components/FallbackCard'
 import i18n from '../config/reacti18next'
 import { t } from 'i18next'
 import * as helpers from "../utils/helpers"
-import { useAuthStore } from '../store/authStore'
 import { useNotificationStore } from '../store/notificationStore'
-import { m } from 'framer-motion'
  
  const NotificationPage = () => {
-    const {user} = useAuthStore()
-    const {listing} = useListingStore()
     const {setSelectedUser} = useMessageStore()
-    const {sendFollowReq, followReq} = useFollowRequestStore();
-    const {getIncomingNotifs, notifications, currentPage, isLoading, setNotifications, 
-    setCurrentPage, markAsRead, notifIds, isNotifLoading, markAsArchived, deleteArchivedNotifs}
+    const {sendFollowReq} = useFollowRequestStore();
+    const {getIncomingNotifs, notifications, currentPage, isLoading,
+    setCurrentPage, markAsRead, isNotifLoading, markAsArchived}
     = useNotificationStore()
     const navigate = useNavigate()
-    const location = useLocation()
     const observer = useRef<IntersectionObserver | null>(null)
     const [visibleNotifs, setVisibleNotifs] = useState<string[]>([]);
     const idsRef = useRef(new Set())  
@@ -59,9 +52,9 @@ import { m } from 'framer-motion'
     }
     }
     window.addEventListener("scroll", onScroll)
-    console.log('notifs', notifications)
     return () => window.removeEventListener("scroll", onScroll)
-  } , [currentPage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  } , [currentPage, isLoading,isNotifLoading ])
 
 
   useEffect(() => {
@@ -103,7 +96,7 @@ useEffect(() => {
    markAsRead(visibleNotifs)
   }
  
-}, [visibleNotifs])
+}, [visibleNotifs, markAsRead])
 
   useEffect(() => {
   const timer = setTimeout(() => {
@@ -121,6 +114,7 @@ useEffect(() => {
   }, 1000)
 
   return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notifications])
   
 

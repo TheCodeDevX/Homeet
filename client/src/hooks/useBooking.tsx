@@ -1,4 +1,4 @@
-import { BookingContext } from "../context/BookingProvider"
+import { BookingContext } from "../context/createdContexts/BookingContext";
 import { useCustomContext } from "../utils/useCustomContext"
 
 

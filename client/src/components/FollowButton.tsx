@@ -2,9 +2,7 @@
 
  import { Loader2, SendHorizonalIcon, UserMinus, UserPlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useListingStore } from '../store/listingStore';
 import clsx from 'clsx';
-import { useAuthStore } from '../store/authStore';
 
  interface FollowButtonProps  {
   isFollowing :boolean

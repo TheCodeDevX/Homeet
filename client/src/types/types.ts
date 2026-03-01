@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import * as types from "../../../backend/src/shared/types/types"
 import type { NavigateFunction } from "react-router-dom";
 import type { Socket } from "socket.io-client";
+import type { AxiosResponse } from "axios";
 
  export interface AuthData {
 
@@ -34,10 +35,14 @@ import type { Socket } from "socket.io-client";
     warmUp : () => void, 
     connectSocket : () => void,
     disconnectSocket : () => void;
-    tryToRefreshAccessToken : (code:string) => Promise<any>;
-    
-
+    tryToRefreshAccessToken : (code:string) => Promise<AxiosResponse<{success : boolean, message : string}>>
  }
+
+ export interface SidebarContextProps {
+     isOpen : boolean
+     handleSidebarOpen : () => void
+     setIsOpen : React.Dispatch<SetStateAction<boolean>>
+  }
 
 
 export interface SliceTextParameters {
@@ -49,6 +54,17 @@ export interface SliceTextParameters {
   end:number | undefined,
   extra:string
 }
+
+export interface NotificationStates {
+notificationsLength : number
+setNotificationsLength : (length:number) => void;
+}
+
+ export interface DirStates {
+    langDir : string,
+    setLangDir : React.Dispatch<SetStateAction<string>>
+ }
+
 
 export interface NavigationProps {
   listingUser:types.UserData | undefined,

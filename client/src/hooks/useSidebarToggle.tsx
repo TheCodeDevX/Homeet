@@ -1,4 +1,4 @@
-import { SidebarContext } from "../context/SidebarProvider"
+import { SidebarContext } from "../context/createdContexts/SidebarContext"
 import { useCustomContext } from "../utils/useCustomContext"
 
 

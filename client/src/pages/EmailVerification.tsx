@@ -11,7 +11,7 @@ import clsx from "clsx";
   
   const EmailVerification = () => {
     const {t} = useTranslation()
-    const {isLoading, verifyEmail, user} = useAuthStore()
+    const {isLoading, verifyEmail} = useAuthStore()
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -64,7 +64,7 @@ import clsx from "clsx";
         case "ArrowRight" : 
         if(i < code.length - 1 ) {
           inputRefs.current[i + 1]?.focus()
-        } else if(i = code.length - 1){
+        } else if(i === code.length - 1){
           inputRefs.current[0]?.focus()
         }
         break;

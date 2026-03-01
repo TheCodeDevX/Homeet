@@ -1,4 +1,4 @@
-import { DirContext } from "../context/DirectionProvider"
+import { DirContext } from "../context/createdContexts/DirContext";
 import { useCustomContext } from "../utils/useCustomContext"
 
  

@@ -1,6 +1,6 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useEffect, type Dispatch, type RefObject, type SetStateAction } from "react";
+import { useEffect, type RefObject } from "react";
 
  interface GsapAnimationProps {
     
@@ -48,7 +48,7 @@ import { useEffect, type Dispatch, type RefObject, type SetStateAction } from "r
 
     useEffect(() => {
     isOpenRef.current = state;
-    }, [state]);
+    }, [state, isOpenRef]);
 
     
 

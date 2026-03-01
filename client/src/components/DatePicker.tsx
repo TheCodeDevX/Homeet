@@ -1,25 +1,20 @@
 
 
- import React, { memo, useCallback, useEffect, useMemo, useRef, useState, type Attributes, type ChangeEvent, type Dispatch, type FormEvent, type HTMLAttributes, type RefObject, type SetStateAction } from 'react'
+ import { useCallback, useEffect, useRef, useState, type ChangeEvent, type Dispatch, type FormEvent, type HTMLAttributes, type RefObject, type SetStateAction } from 'react'
 import Button from './Button';
 import Price from './Price';
 import FlatPickr from 'react-flatpickr'
 import type { ApiData } from '../store/listingStore';
-import { useAuthStore } from '../store/authStore';
 import { lightThemes, THEMES } from '../constants';
 import { useThemeStore } from '../store/themeStore';
-import { Check, ChevronDown, Loader, X } from 'lucide-react';
+import { ChevronDown, Loader } from 'lucide-react';
 import CloseButton from './CloseButton';
 import CounterBtn from './CounterBtn';
 import i18n from '../config/reacti18next';
 import { t } from 'i18next';
-import {motion, number} from 'framer-motion'
-import flatpickr from 'flatpickr';
-import {DateTime} from "luxon"
+import {motion} from 'framer-motion'
 import {format} from 'date-fns'
-import useBooking from '../hooks/useBooking';
 import { useBookingStore } from '../store/bookingStore';
-import toast from 'react-hot-toast';
 
 interface DatePickerProps extends HTMLAttributes<HTMLDivElement> {
     listing : ApiData | null
@@ -41,7 +36,7 @@ interface DatePickerProps extends HTMLAttributes<HTMLDivElement> {
 
 }
 
- const DatePicker = ({listing, className, selectedDateRef, handleClick, selectedDate, setSelectedDate } : DatePickerProps) => {
+ const DatePicker = ({listing, selectedDateRef, handleClick } : DatePickerProps) => {
     const {theme} = useThemeStore()
     const [formState, setFormState] = useState({
       adults : 0,
@@ -53,8 +48,8 @@ interface DatePickerProps extends HTMLAttributes<HTMLDivElement> {
     const [duration, setDuration] = useState<{months?:number, nights?: number}>({ months : 0, nights : 0 })
 
     const [isOpen, setIsOpen] = useState(false)
-    const [refreshKey, setRefreshkey] = useState(0);
-     const {createBooking, isBookingLoading, message} = useBookingStore()
+    const [_refreshKey, setRefreshkey] = useState(0);
+     const {createBooking, isBookingLoading} = useBookingStore()
 
     const ref = useRef<HTMLDivElement>(null)
 
@@ -79,7 +74,7 @@ interface DatePickerProps extends HTMLAttributes<HTMLDivElement> {
   }, [])
 
  
-const months = [
+const months = useCallback(() => [
   { days:0 },
   { days: 31 },   // January
   { days: 28 },   // February
@@ -93,13 +88,14 @@ const months = [
   { days: 31 },   // October
   { days: 30 },   // November
   { days: 31 }    // December
-];
+], []);
+
    useEffect(() => {
     if(selectedDateRef.current.checkIn) {
-     let days : number[] = [];
+     const days : number[] = [];
 
     for(let m = 0; m <= numberOfMonths; m++){
-     days.push(months[m]?.days)
+     days.push(months()[m]?.days)
     };
       const allDays = days.reduce((acc, days) => acc + days  , 0)
       console.log(allDays, 'allDays') 
@@ -113,7 +109,7 @@ const months = [
     }
 
     console.log("checkOutDate", selectedDateRef.current.checkOut)
-   }, [numberOfMonths])
+   }, [numberOfMonths, months, listing?.pricingType, selectedDateRef])
 
       const checkIn = selectedDateRef.current.checkIn || sessionStorage.getItem('checkIn')
       const checkOut = selectedDateRef.current.checkOut || sessionStorage.getItem('checkOut')
@@ -162,14 +158,15 @@ const months = [
        return diff * price;
       
 
-       case "nightly" :
+       case "nightly" : {
        diff = diff / ( 1000 * 60 * 60 * 24);
        setDuration((prev) => ({...prev, nights : +diff.toFixed(0) }))
-       if(diff <= 0 || !checkOut || !checkIn) return "0"
+       if(diff <= 0 || !checkOut || !checkIn) return "0";
        const result = diff * price
-       return result ;
+       return result;
+       } // wrap it in curly braces since it has const
       
-      default : return undefined;
+      default : break;
     };
     };
     const finalPrice = handlePrice();
@@ -178,7 +175,7 @@ const months = [
    }
 
 
-  }, [checkOut, checkIn, numberOfMonths])
+  }, [checkOut, checkIn, numberOfMonths, listing?.pricingType, listing?.price])
 
 
 

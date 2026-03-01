@@ -53,10 +53,10 @@ import { errorHandler } from "./helpers/errorHelper";
     const response = await NotifsApi.get(`/?page=${page}&limit=${5}`)
     set(state => ({isLoading:false,
     notifications : state.currentPage > 1 ? [
-        ...state.notifications, 
-      ...response.data?.incomingNotifs, 
+        ...(state.notifications || []), 
+      ...(response.data?.incomingNotifs || []), 
     
-    ] : response.data?.incomingNotifs}))
+    ] : response.data?.incomingNotifs || []}))
 
   } catch (error) {
     const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_INCOMING_NOTIFICATIONS'})

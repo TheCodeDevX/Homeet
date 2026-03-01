@@ -1,22 +1,22 @@
 import {motion} from 'framer-motion'
 import Input from '../components/Input'
-import {Eye, EyeClosed, Loader, Lock, Mail, Shield} from 'lucide-react'
+import {Eye, EyeClosed, Loader, Lock, Mail} from 'lucide-react'
 import {useState, type ChangeEvent, type FormEvent } from 'react'
 import Button from '../components/Button'
 import AuthButton from '../components/AuthButton'
 import {FaFacebookF, FaGoogle} from 'react-icons/fa'
-import { useAuthStore, type UserData } from '../store/authStore'
-import { Link, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../store/authStore'
+import { Link } from 'react-router-dom'
 import Light from '../components/Light'
 import { useTranslation , Trans} from 'react-i18next'
 import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
+import type { UserData } from '../../../backend/src/shared/types/types'
 
 const LoginPage = () => {
   const {t} = useTranslation()
-  const navigate = useNavigate();
-  const {login, isLoading, error, user} = useAuthStore();
+  const {login, isLoading} = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
  
 

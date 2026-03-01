@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next"
     const {user} = useAuthStore()
 
     const {startRecording, formatRecorderDate, recordUrl,
-       isRecording, stopRecording,  isPlaying, setIsPlaying, mediaStream, mediaRecorder, blb, chunks, showAudio,
+        stopRecording,  isPlaying, setIsPlaying, mediaStream, mediaRecorder, blb, chunks, showAudio,
         setShowAudio, milisec, setMiliSec} = useRecoder()
 
 
@@ -81,7 +81,7 @@ import { useTranslation } from "react-i18next"
        audio.removeEventListener("pause", onPause)
        }
     
-    }, [recordUrl, isPlaying])
+    }, [recordUrl, isPlaying, milisec, setIsPlaying])
 
     
     
@@ -95,16 +95,14 @@ import { useTranslation } from "react-i18next"
 
     const handleSubmit = async(e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
+   
       if(selectedUser?._id && (text.trim() !== "" || image.trim() !== "")) {
        await sendMessages(selectedUser?._id.toString(),  {text, image})
     }
     setText("");
     setImage("");
     setImagePreview("");
-    } catch (error) {
-      console.error("an error occured!")
-    }
+    
     }
 
     const handleUploadImage = (e:ChangeEvent<HTMLInputElement>) => {

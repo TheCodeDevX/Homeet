@@ -2,7 +2,7 @@ import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import {motion} from 'framer-motion'
 import { useLocation } from "react-router-dom";
-const ToastMessage = ({msg, msgType}: {msg:string, msgType : "success" | "error" | "" }) => {
+const ToastMessage = ({msg}: {msg:string, msgType : "success" | "error" | "" }) => {
   const location = useLocation()
   const [showMsg, setShowMsg] = useState<string | null>(null)
 

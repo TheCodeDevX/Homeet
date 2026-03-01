@@ -19,7 +19,7 @@ const ResetPasswordPage = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
      const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const {error, isLoading, resetPassword, message} = useAuthStore()
+    const {isLoading, resetPassword} = useAuthStore()
 
 
     useEffect(()=> {

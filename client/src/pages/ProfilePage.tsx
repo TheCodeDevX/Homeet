@@ -3,14 +3,11 @@ import {Controller, useForm, type SubmitHandler} from 'react-hook-form'
 import { useAuthStore} from "../store/authStore"
 import * as types from ".././../../backend/src/shared/types/types"
 import DotAnimation from "../components/DotAnimation"
-import {useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import {useEffect, useState, type ChangeEvent } from "react"
 import {motion} from 'framer-motion'
-import avatar from '../assets/avatar.png'
 import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
-import {parsePhoneNumber, isValidPhoneNumber, getCountries} from 'react-phone-number-input'
-import clsx from "clsx"
-import i18n from "../config/reacti18next"
+import {parsePhoneNumber, isValidPhoneNumber} from 'react-phone-number-input'
 import ToasterCompo from "../components/Toaster"
 import PhoneInputComponent from "../components/PhoneInput"
 
@@ -19,9 +16,8 @@ import PhoneInputComponent from "../components/PhoneInput"
  
  const ProfilePage = () => {
   const {t} = useTranslation();
-  const lng = i18n.language;
   const [progress, setProgress] = useState(0)
-  const {updateProfile, isLoading, message, error, user, setIsOnBoarding} = useAuthStore();
+  const {updateProfile, user, setIsOnBoarding} = useAuthStore();
   // const [countryCode, setCountryCode] = useState<string | undefined>('');
 
   // const countriesArray = getCountries();
@@ -94,7 +90,7 @@ import PhoneInputComponent from "../components/PhoneInput"
 
  
   
-   const OnSubmit : SubmitHandler<any>  = async(data:types.ProfileData) => {
+   const OnSubmit : SubmitHandler<types.ProfileData>  = async(data) => {
     setIsOnBoarding(false)
     try {
        await updateProfile(data)

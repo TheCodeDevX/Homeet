@@ -15,10 +15,10 @@ import { errorHandler } from "./helpers/errorHelper";
     setIsUserLoading : (bool : boolean) => void
     error : string | null,
     messages : MessageData[]
-    getUsers : ({shouldLoad} : {shouldLoad : boolean}) => Promise<any>
-    getMessages : (id:string ) => Promise<any>
+    getUsers : ({shouldLoad} : {shouldLoad : boolean}) => void
+    getMessages : (id:string ) => void
     uploadAudio : (blob: Blob, receiverId:string | undefined, senderId : string) => void
-    sendMessages : (id : string , data : MessageData) => Promise<any>
+    sendMessages : (id : string , data : MessageData) => void
     subToMessages : () => void
     unsubFromMessages : () => void
     registerMessage : (msg: MessageData) => void
@@ -45,7 +45,7 @@ import { errorHandler } from "./helpers/errorHelper";
             return res.data;
 
         } catch (error) {
-            let err = errorHandler({error, defaultErr : "USERS_FETCHING_FAILED"})
+            const err = errorHandler({error, defaultErr : "USERS_FETCHING_FAILED"})
             set({error:err})
             throw error
         } finally{
@@ -59,7 +59,7 @@ import { errorHandler } from "./helpers/errorHelper";
             const res = await MessageApi.get(`/messages/${id}`)
             set({messages:res?.data?.messages})
         } catch (error) {
-            let err = errorHandler({error, defaultErr: "MESSAGES_FETCHING_FAILED"})
+            const err = errorHandler({error, defaultErr: "MESSAGES_FETCHING_FAILED"})
             set({error:err})
             throw error;
         } finally{

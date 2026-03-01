@@ -3,7 +3,6 @@
 import { SendHorizontalIcon, Star, StarIcon, X } from 'lucide-react'
 import { useEffect, useRef, useState, type Dispatch, type FormEvent, type SetStateAction } from 'react'
 import { useListingStore } from '../store/listingStore';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 
@@ -13,7 +12,7 @@ import { useTranslation } from 'react-i18next';
  
     const [stars, setStars] = useState<number |undefined>(0);
     const [feedback, setFeedack] = useState<string | undefined>("")
-    const {rateListing, rating, getRating} = useListingStore()
+    const {rateListing} = useListingStore()
     const ref = useRef<HTMLDivElement>(null)
     
 
@@ -32,7 +31,8 @@ import { useTranslation } from 'react-i18next';
 
       document.addEventListener("keydown", closeModal);
       return () => document.removeEventListener("keydown", closeModal)
-    }, [])
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []) // setShowModal is stable
 
 
 

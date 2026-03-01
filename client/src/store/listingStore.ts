@@ -67,7 +67,7 @@ export interface FormData {
     ratings : Rating[]
     setCurrentPage : (page:number) => void
     createListing : (data : FormData) => void
-    getListings : () => Promise<any>
+    getListings : () => void
     getListing : (listingId?:string) => void
     getUserListings : () => void
     deleteListing : (id:string) => void
@@ -75,7 +75,7 @@ export interface FormData {
     rateListing : (id:string, data: {stars?:number, feedback?:string}) => void
     getRating : (id:string) => void
     getRatings : (id:string) => void
-    likeRating : (id:string) => void
+    likeRating : (id:string, likers?:string[]) => void
 
  }
 

@@ -1,28 +1,24 @@
 
 
- import React, { useEffect, useRef, useState } from 'react'
+ import { useRef } from 'react'
  import {motion} from "framer-motion"
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
-import { Check, X, type LucideIcon } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import type { Toast } from 'react-hot-toast'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/all'
-import i18n from '../config/reacti18next'
 
  
  const ToasterCompo = ({color, msg, t} : {color : "green" | "red", msg : string, t:Toast}) => {
     const {theme} = useThemeStore()
-   const [toastId, setToastId] = useState("")
 
     const isSuccess = color === 'green';
     const container = useRef<HTMLDivElement>(null)
     const paraRef = useRef<HTMLParagraphElement>(null)
     const iconRef = useRef<SVGSVGElement | null>(null)
-    const langugae = i18n.language;
    gsap.registerPlugin(SplitText)
-   const isArabic = langugae === "ar"
 
     useGSAP(() => {  
       const tl = gsap.timeline();

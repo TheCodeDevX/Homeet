@@ -1,6 +1,5 @@
 
 import { useState } from 'react'
-import * as types from '../../../backend/src/shared/types/types'
 import { CopyCheckIcon, CopyIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ToasterCompo from './Toaster';

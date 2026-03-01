@@ -1,14 +1,7 @@
-import React, { createContext, useState, type PropsWithChildren, type SetStateAction } from "react"
-
- interface SidebarContextProps {
-    isOpen : boolean
-    handleSidebarOpen : () => void
-    setIsOpen : React.Dispatch<SetStateAction<boolean>>
- }
-
- export const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
+import { useState, type PropsWithChildren } from "react"
+import { SidebarContext } from "./createdContexts/SidebarContext";
  
- const SidebarProvider = ({children} : PropsWithChildren) => {
+ export const SidebarProvider = ({children} : PropsWithChildren) => {
    const [isOpen , setIsOpen] = useState(false)
    const handleSidebarOpen = () => setIsOpen(prev => !prev);
    return (
@@ -18,5 +11,4 @@ import React, { createContext, useState, type PropsWithChildren, type SetStateAc
    )
  }
  
- export default SidebarProvider
  
