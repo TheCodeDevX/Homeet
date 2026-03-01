@@ -48,7 +48,8 @@
         "searchUser" : "Buscar Usuario",
         "feedback" : "Tu Opinión Nos Importa",
         "address" : "Ciudad, Región, País, Código Postal",
-        "bio" : "Tu Biografía"
+        "bio" : "Tu Biografía",
+        "months": "Meses"   
         
      },
       "labels" : {

@@ -47,7 +47,8 @@
         "searchUser" : "Rechercher un Utilisateur",
         "feedback" : "Votre Avis Nous Importe",
         "address" : "Ville, Région, Pays, Code Postal",
-        "bio" : "Votre Biographie"
+        "bio" : "Votre Biographie",
+        "months": "Mois"  
         
      },
       "labels" : {

@@ -61,7 +61,7 @@ interface CommentSectionProps {
  <motion.div 
   initial={{translateX:"-100%"}}
   animate={{translateX: isSidebarOpen ? "0%" : "-100%", transition: {duration:.5}}}
-  className={clsx("fixed top-28 left-0 w-[400px] z-[40] h-full rounded bg-base-content text-base-300 p-4",
+  className={clsx("fixed top-28 left-0 w-[400px] z-[1] h-full rounded bg-base-content text-base-300 p-4",
   "overflow-y-auto max-h-[calc(100%-7rem)]")}>
     <div className="flex items-center justify-between mb-2">
     <h1 className="flex items-center gap-2 text-lg">

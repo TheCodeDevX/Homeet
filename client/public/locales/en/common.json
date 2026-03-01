@@ -47,7 +47,8 @@
         "searchUser" : "Search User",
         "feedback" : "Your Feedback Matters to Us",
         "address" : "City, State, Country, ZIP",
-        "bio" : "Your Biography"
+        "bio" : "Your Biography",
+        "months" : "Months"
         
      },
       "labels" : {

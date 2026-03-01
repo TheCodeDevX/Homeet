@@ -29,7 +29,6 @@ import DatePicker from "../components/DatePicker"
 import clsx from "clsx"
 import CommentSection from "../components/CommentSection"
 import * as helpers from "../utils/helpers"
-// import useGsapAnimation from "../hooks/useGsapAnimation"
 
 
 
@@ -190,7 +189,7 @@ import * as helpers from "../utils/helpers"
 { isAllowedUser && !isLargeScreen &&
    
   <div ref={containerTwo} 
-     className={clsx("fixed top-28 w-[400px] z-[99999] bg-base-300 p-4 rounded opacity-0 invisible",
+     className={clsx("fixed top-28 w-[400px] z-[2] bg-base-300 p-4 rounded opacity-0 invisible",
        "left-1/2 -translate-x-1/2"
      )}
     >
@@ -217,7 +216,7 @@ import * as helpers from "../utils/helpers"
        {/* Date Picker */}
    { isAllowedUser && isLargeScreen &&
      <div ref={containerTwo} 
-     className={clsx("fixed top-28 w-[400px] z-[99999] bg-base-300 p-4 rounded opacity-0 invisible",
+     className={clsx("fixed top-28 w-[400px] z-[2] bg-base-300 p-4 rounded opacity-0 invisible",
        "right-4"
      )}
     >

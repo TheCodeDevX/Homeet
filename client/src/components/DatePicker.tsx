@@ -91,13 +91,13 @@ const months = useCallback(() => [
 ], []);
 
    useEffect(() => {
-    if(selectedDateRef.current.checkIn) {
+    if(selectedDateRef.current.checkIn && numberOfMonths) {
      const days : number[] = [];
 
     for(let m = 0; m <= numberOfMonths; m++){
      days.push(months()[m]?.days)
     };
-      const allDays = days.reduce((acc, days) => acc + days  , 0)
+      const allDays = days.reduce((acc, days) => acc + days, 0)
       console.log(allDays, 'allDays') 
      selectedDateRef.current.checkOut = undefined;
 
@@ -166,7 +166,7 @@ const months = useCallback(() => [
        return result;
        } // wrap it in curly braces since it has const
       
-      default : break;
+      default : return undefined;
     };
     };
     const finalPrice = handlePrice();
@@ -243,7 +243,7 @@ const months = useCallback(() => [
     ? 
    
      <div>
-      <span className="mb-2 md:text-md text-sm">Months</span>
+      <span className="mb-2 md:text-md text-sm">{t("placeholders.months", {ns : 'common'})}</span>
       <label className="flex flex-col relative">
         <input name='months' type="number" value={numberOfMonths} 
         onChange={handleChange} min={0}  
