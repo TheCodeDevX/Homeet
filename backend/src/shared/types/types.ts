@@ -1,14 +1,13 @@
-import {Types, Document} from "mongoose";
+import type {Types, Document} from "mongoose";
 
  export type CurrencyUnion = "usd" | "eur" | "gbp" | "jpy" | "cad" | "aud" | "chf" | "cny" | "sar" | "aed" | 
  "egp" | "mad" | "brl" | "inr" | "try" | "zar" | "sgd" | "hkd";
 
  export type SubscriptionUnion = "unsubscibed" | "subscribed" | "pending"
 
- export type ID = string | Types.ObjectId
  
   export interface UserDocument extends Document {
-   _id : ID,
+   _id : Types.ObjectId,
    createdAt : string,
    googleId : string,
    facebookId : string,
@@ -54,9 +53,8 @@ export type OptionalFields =  Pick<{[k in keyof UserDocument]?: UserDocument[k]}
 | "onBoarded" | "_id" | "bio" | "address" | "profilePic" | "currency" | "createdAt" | "googleId" | "followers" >
 
 
-export type UserData = RequiredFields & OptionalFields
+export type UserData =  RequiredFields & OptionalFields
 
-export type UserRole = Pick<UserData, "role">["role"];
 
 export type ProfileData =  Pick<UserData, "firstName" | "lastName" | "bio" | "email" | "role" | "phoneNumber" 
 | "currency" | "profilePic" | "address" | "gender" >
@@ -70,7 +68,7 @@ export interface MessageData {
   audio?: string
   senderId?:string | Types.ObjectId
   receiverId?:string | Types.ObjectId
-  _id?:string,
+  _id?:Types.ObjectId,
   audioDuration?: number,
   createdAt?: string,
   updatedAt?: string,
@@ -82,7 +80,7 @@ export interface MessageData {
   audio?: string
   senderId:string | Types.ObjectId
   receiverId:string | Types.ObjectId
-  _id:string,
+  _id:Types.ObjectId,
   audioDuration?: number,
   createdAt: string,
   updatedAt: string,

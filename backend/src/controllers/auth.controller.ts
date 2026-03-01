@@ -11,7 +11,6 @@ import crypto from 'crypto'
 import bcrypt from 'bcryptjs';
 import fetch from 'node-fetch'
 import { genRefreshToken } from '../lib/generateRefreshToken.ts';
-import { connectDB } from '../config/db.ts';
 import type { AuthResponse, LogoutResponse, ProfileData, ProfileResponse, UserDocument, UserResponse, VerifyEmailResponse } from '../shared/types/types.ts';
 
 
@@ -33,7 +32,7 @@ export const login = async(req:Request, res:Response, next:NextFunction) => {
       return;
    }
    
-   genToken(res, user._id);
+   genToken(res, user._id.toString());
     if(!user.isVerified && ( new Date(user.refreshTokenExpiresAt) < new Date() ) ) {
       genRefreshToken(res, user);
    }
@@ -74,7 +73,7 @@ export const signup = async(req:Request, res:Response, next:NextFunction) => {
 
 
  if(!newUser) createError('INVALID_DATA', 400)
- genToken(res, newUser._id);
+ genToken(res, newUser._id.toString());
  genRefreshToken(res, newUser);
 await sendVerificationEmail(newUser.email, capitalizedName(newUser.firstName), newUser.verificationToken)
 
@@ -112,7 +111,7 @@ const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP
   if(!user) {
   return res.json({success : false, message : "EXPIRED_VERIFICATION_CODE"});
   }
-   const token = genToken(res, user._id);
+   const token = genToken(res, user._id.toString());
   await sendWelcomeMessage(capitalizedName(user.firstName), token , user.email)
 
   await User.updateOne({_id:user._id}, {
@@ -419,7 +418,7 @@ export const  handleAuthorized = asyncHandler(async(req, res) => {
 export const googleCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
     passport.authenticate("google", {session:false}, (err:Error, user:UserDocument) => {
     if(err || !user) return res.redirect("http://localhost:3000/login");
-    genToken(res, user._id);
+    genToken(res, user._id.toString());
     genRefreshToken(res, user)
     res.redirect(`http://localhost:3000?message=AUTH_USER`)
 })(req, res , next)

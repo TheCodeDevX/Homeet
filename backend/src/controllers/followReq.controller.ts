@@ -16,7 +16,7 @@ import Notification from "../models/notifications.models.ts";
         const {id:recipientId} = req.params;
         
        
-        if(recipientId === userId) {
+        if(recipientId?.toString() === userId?.toString()) {
           createError("ERR_SENDING_REQ_TO_YOURSELF", 403);
           return;
         }

@@ -1,9 +1,8 @@
 import jwt from 'jsonwebtoken'
 import {  Response } from 'express'
 import 'dotenv/config'
-import { ID } from '../shared/types/types'
 
-const genToken = (res:Response, userId:ID) => {
+const genToken = (res:Response, userId:string) => {
     const token = jwt.sign({userId}, (process.env.JWT_SECRET as string), {expiresIn: "7d"})
     res.cookie('jwt', token, {
         httpOnly : true,

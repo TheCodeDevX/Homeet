@@ -1,10 +1,4 @@
- import { ValidationError } from "express-validator";
-import mongoose from "mongoose";
-//  declare global {
-//   interface Error {
-//    statusCode?: number
-//   }
-//  }
+import type mongoose from "mongoose";
 
  export class AppError extends Error {
   statusCode: number;

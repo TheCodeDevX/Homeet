@@ -3,7 +3,7 @@ import 'dotenv/config'
 import User from "../models/user.models.ts";
 import asyncHandler from "express-async-handler";
 import { createError } from "../utils/createError.ts";
-import type { ID, UserData, UserDocument } from "../shared/types/types.ts";
+import type { UserDocument } from "../shared/types/types.ts";
 import { NextFunction, Response, Request } from "express";
 // import {createProxyMiddleware} from "http-proxy-middleware"
 

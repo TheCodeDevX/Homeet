@@ -1,9 +1,7 @@
  import {createServer} from "http"
  import express from 'express';
 import { Server } from "socket.io";
-import { ID } from "./shared/types/types";
 
-// TODO: ENSURE THAT EVERYTHING YOU'VE CODED WAS CORRECT
 
    const app = express();
    const server = createServer(app);
