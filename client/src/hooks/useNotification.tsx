@@ -1,4 +1,4 @@
-import { NotificationContext } from "../context/NotificationProvider"
+import { NotificationContext } from "../context/createdContexts/NotificationContext"
 import { useCustomContext } from "../utils/useCustomContext"
 
  
