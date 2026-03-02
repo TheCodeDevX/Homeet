@@ -85,7 +85,7 @@ export const WELCOME_EMAIL_TEMPLATE = (userName:string, token:string) => `
           <!-- CTA Button -->
           <tr>
             <td align="center" style="padding: 30px;">
-              <a href="http://localhost:8000/api/subscription/subscribe?token=${token}" target="_blank"
+              <a href="{baseURL}/api/subscription/subscribe?token=${token}" target="_blank"
                  style="display: inline-block; padding: 15px 30px; background: linear-gradient(to left, #7037AD, #5904B4); color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 10px;">
                 Subscribe
               </a>
@@ -106,7 +106,7 @@ export const WELCOME_EMAIL_TEMPLATE = (userName:string, token:string) => `
           <tr>
             <td align="center" style="font-size: 13px; color: #555; font-style: italic; padding-bottom: 30px;">
               <span>If you'd rather not receive emails from us, you can </span>
-              <a href="http://localhost:8000/api/subscription/unsubscribe?token=${token}" target="_blank"
+              <a href={baseURL}/api/subscription/unsubscribe?token=${token}" target="_blank"
                  style="color: #0077ff; text-decoration: underline;">unsubscribe here</a>.
             </td>
           </tr>

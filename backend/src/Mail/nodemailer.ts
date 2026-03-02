@@ -40,7 +40,7 @@ from './templates/email.templates';
       from :sender,
       to:recipient,
       subject: 'Welcome Email',
-      html: WELCOME_EMAIL_TEMPLATE(userName, token)
+      html: WELCOME_EMAIL_TEMPLATE(userName, token).replaceAll("{baseURL}", `${process.env.SERVER_URL}`)
     })
   }
 
