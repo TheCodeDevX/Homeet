@@ -45,8 +45,8 @@ const SignupPage = () => {
     }
   }
 
-  const google = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/google`, "_self")
-  const facebook = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/facebook`, "_self")
+  const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
+  const facebook = () => window.open(`${"https://homeet.onrender.com"}/api/auth/facebook`, "_self")
   const {theme} = useThemeStore()
   return (
     <motion.div
