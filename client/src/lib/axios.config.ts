@@ -1,12 +1,13 @@
 import axios from 'axios'
 
+
  export const authApi = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}/api/auth`,
     withCredentials: true
  })
 
   export const listingApi = axios.create({
-    baseURL: `${import.meta.env.VITE_BASE_URL}/api`,
+    baseURL: `${import.meta.env.VITE_API_URL}/api`,
     withCredentials: true
  })
 
