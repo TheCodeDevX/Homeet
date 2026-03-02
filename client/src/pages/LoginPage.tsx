@@ -8,7 +8,7 @@ import {FaFacebookF, FaGoogle} from 'react-icons/fa'
 import { useAuthStore } from '../store/authStore'
 import { Link } from 'react-router-dom'
 import Light from '../components/Light'
-import { useTranslation , Trans} from 'react-i18next'
+import { useTranslation} from 'react-i18next'
 import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
@@ -89,9 +89,12 @@ const LoginPage = () => {
             </h1>
 
             <p className='text-base-content/60 '>
-            <Trans i18nKey="login.q" ns='auth'
-            components={{ link : <Link to="/signup" className='text-primary font-semibold hover:underline'></Link>}}
-            />
+          <p>
+          {t("login.q", {ns : 'auth'})}{" "}
+          <Link to="/signup" className="text-primary font-semibold hover:underline">
+            {t("login.link", {ns : "auth"})}
+          </Link>
+          </p>
             </p>
 
          </div>

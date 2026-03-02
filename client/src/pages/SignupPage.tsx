@@ -91,12 +91,12 @@ const SignupPage = () => {
             </h1>
 
             <p className='text-base-content/60 '>
-            <Trans
-            i18nKey="signup.q"
-            ns='auth'
-            components={{ link : <Link to='/login' className='text-primary font-semibold 
-            hover:underline'></Link> }}
-            />
+              <p>
+              {t("signup.q", {ns : 'auth'})}{" "}
+              <Link to="/login" className="text-primary font-semibold hover:underline">
+              {t("signup.link", {ns : "auth"})}
+              </Link>
+              </p>
             </p>
          </div>
          <form onSubmit={handleSubmit}>
