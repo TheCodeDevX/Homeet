@@ -6,7 +6,7 @@ import { UserDocument } from '../shared/types/types';
   const token = crypto.randomBytes(64).toString("hex");
       res.cookie("refreshToken",token, {
        httpOnly : true,
-       sameSite : "lax",
+       sameSite : process.env.NODE_ENV === "development" ? "lax" : "none",
        secure : process.env.NODE_ENV !== "development",
        maxAge : 1000 * 60 * 60 * 24 * 7
       });

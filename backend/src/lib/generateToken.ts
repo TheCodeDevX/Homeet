@@ -10,7 +10,7 @@ const genToken = (res:Response, userId:string) => {
         // JavaScript in the browser this often done through form inputs or script injections
         // by setting the cookie to be inaccessible to Javascript (using httpOnly : true)
         // we ensure that only the server can access the cookie, not client-side scripts
-        sameSite : "lax",
+        sameSite : process.env.NODE_ENV === "development" ? "lax" : "none",
         secure : process.env.NODE_ENV !== 'development', // true : sent the cookie only over HTTPS
         maxAge : 1000 * 60 * 60 * 24 * 7
     })
