@@ -1,16 +1,16 @@
 import asyncHandler from 'express-async-handler'
 import {Request, Response, NextFunction} from "express"
-import User from '../models/user.models.ts';
-import genToken from '../lib/generateToken.ts'
-import cloudinary from '../lib/cloudinary.ts';
+import User from '../models/user.models';
+import genToken from '../lib/generateToken'
+import cloudinary from '../lib/cloudinary';
 import passport from 'passport';
-import { createError } from '../utils/createError.ts';
-import { sendResetPasswordRequest, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeMessage } from '../Mail/nodemailer.ts';
-import { capitalizedName } from '../utils/capitalizedName.ts';
+import { createError } from '../utils/createError';
+import { sendResetPasswordRequest, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeMessage } from '../Mail/nodemailer';
+import { capitalizedName } from '../utils/capitalizedName';
 import crypto from 'crypto'
 import bcrypt from 'bcryptjs';
 import fetch from 'node-fetch'
-import { genRefreshToken } from '../lib/generateRefreshToken.ts';
+import { genRefreshToken } from '../lib/generateRefreshToken';
 import type { AuthResponse, LogoutResponse, ProfileData, ProfileResponse, UserDocument, UserResponse, VerifyEmailResponse } from '../shared/types/types.ts';
 
 

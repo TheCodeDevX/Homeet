@@ -1,9 +1,9 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import 'dotenv/config'
-import User from "../models/user.models.ts";
+import User from "../models/user.models";
 import asyncHandler from "express-async-handler";
-import { createError } from "../utils/createError.ts";
-import type { UserDocument } from "../shared/types/types.ts";
+import { createError } from "../utils/createError";
+import type { UserDocument } from "../shared/types/types";
 import { NextFunction, Response, Request } from "express";
 // import {createProxyMiddleware} from "http-proxy-middleware"
 

@@ -1,7 +1,7 @@
  import { Strategy as GoogleStrategy,  VerifyCallback as GoogleVerifyCB , Profile as GoogleProfile } from "passport-google-oauth20";
  import {VerifyCallback as FacebookVerifyCB } from 'passport-google-oauth20'
  import {Strategy as FacebookStrategy, Profile as FacebookProfile } from 'passport-facebook'
- import User from '../models/user.models.ts'
+ import User from '../models/user.models'
  import passport from "passport";
  import 'dotenv/config'
 

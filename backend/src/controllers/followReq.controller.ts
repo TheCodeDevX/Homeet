@@ -1,10 +1,10 @@
 
 import mongoose from "mongoose";
-import FollowRequest from "../models/followRequest.models.ts";
-import User from "../models/user.models.ts";
-import { createError } from "../utils/createError.ts";
+import FollowRequest from "../models/followRequest.models";
+import User from "../models/user.models";
+import { createError } from "../utils/createError";
 import {Request, Response, NextFunction} from "express"
-import Notification from "../models/notifications.models.ts";
+import Notification from "../models/notifications.models";
 
 // @desc   Follow a Landlord
 // @route  POST /api/requests/follow-request/:id

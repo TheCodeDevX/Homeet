@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import cloudinary from "../lib/cloudinary.ts";
-import Listing from "../models/listing.models.ts";
-import { createError } from "../utils/createError.ts";
+import cloudinary from "../lib/cloudinary";
+import Listing from "../models/listing.models";
+import { createError } from "../utils/createError";
 import {Request, Response, NextFunction} from "express"
 
 

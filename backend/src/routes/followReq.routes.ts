@@ -1,7 +1,7 @@
 
  import express from 'express'
-import { getIncomingRequest, sendFollowRequest } from '../controllers/followReq.controller.ts';
-import { protect } from '../middlewares/auth.middlewares.ts';
+import { getIncomingRequest, sendFollowRequest } from '../controllers/followReq.controller';
+import { protect } from '../middlewares/auth.middlewares';
 
  const router = express.Router();
 

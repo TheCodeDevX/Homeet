@@ -1,11 +1,10 @@
  import {Readable} from 'stream'
-import cloudinary from '../lib/cloudinary.ts'
-import Listing from '../models/messages.models.ts'
-import { getReceiverSocketId, io } from '../socket.ts'
-import { createError } from '../utils/createError.ts'
+import cloudinary from '../lib/cloudinary'
+import Listing from '../models/messages.models'
+import { getReceiverSocketId, io } from '../socket'
+import { createError } from '../utils/createError'
 import {Request, Response, NextFunction} from 'express'
 import { UploadApiResponse } from 'cloudinary'
-import { ReadableByteStreamController } from 'stream/web'
 import { isValidObjectId } from 'mongoose'
 
 

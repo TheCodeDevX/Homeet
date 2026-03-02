@@ -1,5 +1,5 @@
- import { getMessages, getUsers, sendMessages } from '../controllers/messages.controller.ts';
-import {protect} from '../middlewares/auth.middlewares.ts'
+ import { getMessages, getUsers, sendMessages } from '../controllers/messages.controller';
+import {protect} from '../middlewares/auth.middlewares'
  import express from "express";
  
  const router = express.Router();

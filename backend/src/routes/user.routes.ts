@@ -1,6 +1,6 @@
 import express from "express"
 const router = express.Router();
-import { getUser } from "../controllers/user.controller.ts";
+import { getUser } from "../controllers/user.controller";
 
 router.get("/user/:id", getUser);
 

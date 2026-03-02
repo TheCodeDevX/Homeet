@@ -1,11 +1,11 @@
 
 import { isValidObjectId } from "mongoose";
-import cloudinary from "../lib/cloudinary.ts";
-import Message from "../models/messages.models.ts";
-import User from "../models/user.models.ts";
-import { MessageData, MessageResponse, NewMessageResponse } from "../shared/types/types.ts";
-import { getReceiverSocketId, io } from "../socket.ts";
-import { createError } from "../utils/createError.ts";
+import cloudinary from "../lib/cloudinary";
+import Message from "../models/messages.models";
+import User from "../models/user.models";
+import { MessageData, MessageResponse, NewMessageResponse } from "../shared/types/types";
+import { getReceiverSocketId, io } from "../socket";
+import { createError } from "../utils/createError";
 import {Request, Response, NextFunction} from "express"
 
 

@@ -1,5 +1,5 @@
  import express from "express"
-import { uploadAudioFiles } from "../controllers/audio.controller.ts";
+import { uploadAudioFiles } from "../controllers/audio.controller";
  import multer from "multer"
   const router = express.Router();
 

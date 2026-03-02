@@ -1,5 +1,5 @@
-import User from "../models/user.models.ts";
-import { createError } from "../utils/createError.ts";
+import User from "../models/user.models";
+import { createError } from "../utils/createError";
 import { Response, Request, NextFunction } from "express";
 
 

@@ -1,6 +1,6 @@
 import express from 'express'
-import {  getRating, getRatings, likeRating, rateListing } from "../controllers/rating.controller.ts";
-import { protect } from '../middlewares/auth.middlewares.ts';
+import {  getRating, getRatings, likeRating, rateListing } from "../controllers/rating.controller";
+import { protect } from '../middlewares/auth.middlewares';
 
 
  const router = express.Router();

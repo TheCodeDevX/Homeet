@@ -1,23 +1,23 @@
 import express, { json, urlencoded } from 'express';
-import authRoutes from './routes/auth.routes.ts' 
-import subRoutes from './routes/subscription.routes.ts'
-import listingRoutes from './routes/listings.routes.ts'
-import ratingRoutes from "./routes/rating.routes.ts"
-import messageRoutes from "./routes/messages.routes.ts"
-import audioRoutes from "./routes/audio.routes.ts"
-import followReqRoutes from "./routes/followReq.routes.ts"
-import userRoutes from "./routes/user.routes.ts"
-import notifRoutes from "./routes/notifs.routes.ts"
-import bookingRoutes from "./routes/booking.routes.ts"
-import { connectDB } from './config/db.ts';
-import { errorHandler } from './middlewares/errorHandler.middlewares.ts';
-import { notFound } from './middlewares/notFound.middlewares.ts';
+import authRoutes from './routes/auth.routes' 
+import subRoutes from './routes/subscription.routes'
+import listingRoutes from './routes/listings.routes'
+import ratingRoutes from "./routes/rating.routes"
+import messageRoutes from "./routes/messages.routes"
+import audioRoutes from "./routes/audio.routes"
+import followReqRoutes from "./routes/followReq.routes"
+import userRoutes from "./routes/user.routes"
+import notifRoutes from "./routes/notifs.routes"
+import bookingRoutes from "./routes/booking.routes"
+import { connectDB } from './config/db';
+import { errorHandler } from './middlewares/errorHandler.middlewares';
+import { notFound } from './middlewares/notFound.middlewares';
 import cookieParser from 'cookie-parser';
-import './lib/passportSetup.ts'
+import './lib/passportSetup'
 import cors from 'cors'
 import passport from "passport";
-import { app, server } from "./socket.ts";
-import { deleteArchivedNotifications } from './controllers/notfication.controller.ts';
+import { app, server } from "./socket";
+import { deleteArchivedNotifications } from './controllers/notfication.controller';
 
 const port = process.env.PORT || 5000;
 app.use(cors({

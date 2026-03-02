@@ -1,8 +1,8 @@
 import express from 'express'
 import path from 'path';
 import url from 'url';
-import { verifyEmailToken } from '../middlewares/auth.middlewares.ts';
-import { subscribe, unsubscribe } from '../controllers/subscription.controller.ts';
+import { verifyEmailToken } from '../middlewares/auth.middlewares';
+import { subscribe, unsubscribe } from '../controllers/subscription.controller';
 
 // const __filename = url.fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename)

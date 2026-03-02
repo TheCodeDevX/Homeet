@@ -1,12 +1,12 @@
 
 
 import mongoose from "mongoose"
-import Listing from "../models/listing.models.ts"
-import Rating from "../models/rating.models.ts"
-import { createError } from "../utils/createError.ts"
+import Listing from "../models/listing.models"
+import Rating from "../models/rating.models"
+import { createError } from "../utils/createError"
 import chalk from "chalk"
 import {Request, Response, NextFunction} from "express"
-import Likes from "../models/likes.models.ts"
+import Likes from "../models/likes.models"
  
 
 // @desc   Rate a listing

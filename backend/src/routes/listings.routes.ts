@@ -1,9 +1,9 @@
 import express from 'express'
 import { createListing, deleteListing, getListing, getListings, getUserListings, updateListing }
- from '../controllers/listing.controller.ts';
-import { ListingValidationSchema } from '../utils/validationSchema.ts';
-import { handleValidation } from '../middlewares/validation.middlewares.ts';
-import { protect } from '../middlewares/auth.middlewares.ts';
+ from '../controllers/listing.controller';
+import { ListingValidationSchema } from '../utils/validationSchema';
+import { handleValidation } from '../middlewares/validation.middlewares';
+import { protect } from '../middlewares/auth.middlewares';
 
 
  const router = express.Router();

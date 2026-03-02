@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import 'dotenv/config'
 import { PASSWORD_RESET_SUCCESS_TEMPLATE,
    RESET_PASSWORD_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE } 
-from './templates/email.templates.ts';
+from './templates/email.templates';
  const sender = process.env.SENDER as string;
 //  const transporter = nodemailer.createTransport({
 //     host: 'smtp-relay.brevo.com',

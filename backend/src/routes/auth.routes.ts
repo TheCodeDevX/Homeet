@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { checkAuth, forgotPassword, googleCallback, handleAuthorized, handleUnauthorized, login, resetPassword, signup, updateProfile, verifyEmail, logout, profilePic, refreshToken, warmUp }
- from "../controllers/auth.controller.ts";
-import { protect} from "../middlewares/auth.middlewares.ts";
+ from "../controllers/auth.controller";
+import { protect} from "../middlewares/auth.middlewares";
 import passport from "passport";
-import { loginValidationSchema, ProfileSchema, resetPasswordSchema, signupValidationSchema } from "../utils/validationSchema.ts";
-import { handleValidation } from "../middlewares/validation.middlewares.ts";
+import { loginValidationSchema, ProfileSchema, resetPasswordSchema, signupValidationSchema } from "../utils/validationSchema";
+import { handleValidation } from "../middlewares/validation.middlewares";
 
 const router = Router();
 router.post("/signup", signupValidationSchema, handleValidation, signup)
