@@ -1,48 +1,48 @@
 import axios from 'axios'
 
  export const authApi = axios.create({
-    baseURL: "http://localhost:8000/api/auth",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/auth`,
     withCredentials: true
  })
 
   export const listingApi = axios.create({
-    baseURL: "http://localhost:8000/api",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api`,
     withCredentials: true
  })
 
    export const ratingApi = axios.create({
-    baseURL: "http://localhost:8000/api/ratings",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/ratings`,
     withCredentials: true
  })
 
    export const MessageApi = axios.create({
-    baseURL: "http://localhost:8000/api/message",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/message`,
     withCredentials: true
  })
 
     export const FollowReqApi = axios.create({
-    baseURL: "http://localhost:8000/api/requests",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/requests`,
     withCredentials: true
  })
 
     export const NotifsApi = axios.create({
-    baseURL: "http://localhost:8000/api/notifications",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/notifications`,
     withCredentials: true
  })
 
     export const UserApi = axios.create({
-    baseURL: "http://localhost:8000/api/users",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/users`,
     withCredentials: true
  })
 
    export const BookingApi = axios.create({
-    baseURL: "http://localhost:8000/api/bookings",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/bookings`,
     withCredentials: true
  })
 
  
    export const AudioApi = axios.create({
-    baseURL: "http://localhost:8000/api/uploading",
+    baseURL: `${import.meta.env.VITE_BASE_URL}/api/uploading`,
     withCredentials: true
  })
 
