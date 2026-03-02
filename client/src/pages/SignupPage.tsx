@@ -44,9 +44,8 @@ const SignupPage = () => {
       console.log(error)
     }
   }
-
-  const google = () => window.open("http://localhost:8000/api/auth/google", "_self")
-  const facebook = () => window.open("http://localhost:8000/api/auth/facebook", "_self")
+ const google = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/google`, "_self")
+  const facebook = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/facebook", "_self`)
   const {theme} = useThemeStore()
   return (
     <motion.div
@@ -95,7 +94,7 @@ const SignupPage = () => {
             i18nKey="signup.q"
             ns='auth'
             components={{ a : <a href='/login' className='text-primary font-semibold 
-            hover:underline'/> }}
+            hover:underline'></a> }}
             />
             </p>
          </div>

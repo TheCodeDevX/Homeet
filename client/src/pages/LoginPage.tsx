@@ -40,8 +40,8 @@ const LoginPage = () => {
     }
   }
 
-  const google = () => window.open("http://localhost:8000/api/auth/google", "_self")
-  const facebook = () => window.open("http://localhost:8000/api/auth/facebook", "_self")
+  const google = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/google`, "_self")
+  const facebook = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/facebook", "_self`)
 
   const {theme} = useThemeStore()
 
@@ -90,7 +90,7 @@ const LoginPage = () => {
 
             <p className='text-base-content/60 '>
             <Trans i18nKey="login.q" ns='auth'
-            components={{ a : <a href="/signup" className='text-primary font-semibold hover:underline'/>}}
+            components={{ a : <a href="/signup" className='text-primary font-semibold hover:underline'></a>}}
             />
             </p>
 
