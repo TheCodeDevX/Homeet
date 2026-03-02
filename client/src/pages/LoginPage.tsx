@@ -90,7 +90,7 @@ const LoginPage = () => {
 
             <p className='text-base-content/60 '>
             <Trans i18nKey="login.q" ns='auth'
-            components={{ a : <a href="/signup" className='text-primary font-semibold hover:underline'></a>}}
+            components={[<a key="0" href="/signup" className='text-primary font-semibold hover:underline'></a>]}
             />
             </p>
 
