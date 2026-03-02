@@ -417,10 +417,10 @@ export const  handleAuthorized = asyncHandler(async(req, res) => {
 // @access Public
 export const googleCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
     passport.authenticate("google", {session:false}, (err:Error, user:UserDocument) => {
-    if(err || !user) return res.redirect("http://localhost:3000/login");
+    if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
     genToken(res, user._id.toString());
     genRefreshToken(res, user)
-    res.redirect(`http://localhost:3000?message=AUTH_USER`)
+    res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
 })(req, res , next)
 })
 
