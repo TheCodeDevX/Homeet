@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')!).render(
       <BookingProvider>
         <DirectionProvider>
           <NotificationProvider>
-              <Router>
+              <Router basename='/'>
                 <Suspense fallback={<LoadingSpinner/>}>
                  <App/>
                 </Suspense> 

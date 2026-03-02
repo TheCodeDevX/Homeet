@@ -8,7 +8,7 @@ import AuthButton from '../components/AuthButton'
 import {FaFacebookF, FaGoogle} from 'react-icons/fa'
 import { useAuthStore } from '../store/authStore'
 import Light from '../components/Light'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
@@ -44,7 +44,8 @@ const SignupPage = () => {
       console.log(error)
     }
   }
- const google = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/google`, "_self")
+
+  const google = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/google`, "_self")
   const facebook = () => window.open(`${import.meta.env.SERVER_URL}/api/auth/facebook", "_self`)
   const {theme} = useThemeStore()
   return (
@@ -93,8 +94,8 @@ const SignupPage = () => {
             <Trans
             i18nKey="signup.q"
             ns='auth'
-            components={{ a : <a href='/login' className='text-primary font-semibold 
-            hover:underline'></a> }}
+            components={{ link : <Link to='/login' className='text-primary font-semibold 
+            hover:underline'></Link> }}
             />
             </p>
          </div>
