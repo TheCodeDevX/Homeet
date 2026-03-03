@@ -42,7 +42,7 @@ app.use("/api/requests", followReqRoutes )
 app.use("/api/users", userRoutes )
 app.use("/api/notifications", notifRoutes )
 app.use("/api/bookings", bookingRoutes )
-app.get("/warm-up", warmUp)
+app.get("/api/warm-up", warmUp)
 app.use(notFound)
 app.use(errorHandler)
 
