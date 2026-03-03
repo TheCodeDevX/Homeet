@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkAuth, forgotPassword, googleCallback, handleAuthorized, handleUnauthorized, login, resetPassword, signup, updateProfile, verifyEmail, logout, profilePic, refreshToken, warmUp }
+import { checkAuth, forgotPassword, googleCallback, handleAuthUser, handleUnauthorized, login, resetPassword, signup, updateProfile, verifyEmail, logout, profilePic, refreshToken, warmUp, facebookCallback }
  from "../controllers/auth.controller";
 import { protect} from "../middlewares/auth.middlewares";
 import passport from "passport";
@@ -19,21 +19,22 @@ router.get("/profilePic", protect, profilePic)
 router.post("/refresh-token", protect, refreshToken);
 router.get("/warm-up", protect, warmUp)
 
-router.get("/google", passport.authenticate("google", {scope : ["profile", "email"],
- session:false}))
+router.get("/google", passport.authenticate("google", {scope : ["profile", "email"], session:false}))
 
-router.get("/facebook", passport.authenticate("facebook", {scope : ["email","public_profile"]}))
+router.get("/facebook", passport.authenticate("facebook", {
+     scope : ["email","public_profile"],
+     session:false,
+}))
 
 router.get("/google/callback", googleCallback)
 
-router.get("/facebook/callback", passport.authenticate("facebook",
-     {session:false,  successRedirect: "/facebook/success", failureRedirect:"/facebook/failed"}))
+router.get("/facebook/callback", facebookCallback)
 
 router.use(protect)
 router.get("/google/failed", handleUnauthorized)
-router.get("/google/success", handleAuthorized)
+router.get("/google/success", handleAuthUser)
 router.get("/facebook/failed", handleUnauthorized)
-router.get("/facebook/success",handleAuthorized)
+router.get("/facebook/success",handleAuthUser)
 
 
 

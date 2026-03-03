@@ -402,7 +402,7 @@ export const  handleUnauthorized = asyncHandler(async(req, res) => {
 // @desc   Handle authorized user
 // @route  GET /api/auth/google/success  - OR - /api/auth/facebook/success
 // @access Public
-export const  handleAuthorized = asyncHandler(async(req, res) => {
+export const  handleAuthUser = asyncHandler(async(req, res) => {
    res.status(200).json({
         success : true,
         message : "AUTH_USER",
@@ -417,6 +417,18 @@ export const  handleAuthorized = asyncHandler(async(req, res) => {
 // @access Public
 export const googleCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
     passport.authenticate("google", {session:false}, (err:Error, user:UserDocument) => {
+    if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
+    genToken(res, user._id.toString());
+    genRefreshToken(res, user)
+    res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
+})(req, res , next)
+})
+
+// @desc   handle facebook callback 
+// @route  GET /api/auth/facebook/callback
+// @access Public
+export const facebookCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
+   passport.authenticate("facebook", {session:false}, (err:Error, user:UserDocument) => {
     if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
     genToken(res, user._id.toString());
     genRefreshToken(res, user)
