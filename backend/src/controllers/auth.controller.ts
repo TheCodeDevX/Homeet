@@ -374,8 +374,8 @@ export const profilePic = async(req:Request, res:Response, next:NextFunction) =>
 }
 
 // @desc   Warming up the server for an auth user
-// @route  GET /api/auth/ping
-// @access Private
+// @route  GET /api/auth/warm-up
+// @access Public
 
 export const warmUp = async(req:Request, res:Response, next:NextFunction) => {
  try {

@@ -17,7 +17,7 @@ router.put("/reset-password/:token", resetPasswordSchema, handleValidation, rese
 router.get("/checkAuth", protect, checkAuth)
 router.get("/profilePic", protect, profilePic)
 router.post("/refresh-token", protect, refreshToken);
-router.get("/warm-up", protect, warmUp)
+router.get("/warm-up", warmUp)
 
 router.get("/google", passport.authenticate("google", {scope : ["profile", "email"], session:false}))
 
