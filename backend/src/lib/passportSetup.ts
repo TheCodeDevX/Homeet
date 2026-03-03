@@ -14,18 +14,18 @@ passport.use(new GoogleStrategy({
   async function(accessToken:string, refreshToken:string, profile:GoogleProfile, cb:GoogleVerifyCB) {
    try {
     console.log(profile)
-   let user = await User.findOne({googleId : profile.id});
+   let user = await User.findOne({googleId : profile?.id});
    console.log("Found user:", user);
   
    if(!user) {
-    user = await User.create({googleId : profile.id,
-     firstName:profile.name?.givenName,
-     lastName:profile.name?.familyName,
+    user = await User.create({
+     googleId : profile?.id,
+     firstName:profile?.name?.givenName,
+     lastName:profile?.name?.familyName,
      email: profile?.emails?.[0]?.value,
      profilePic: profile?.photos?.[0]?.value ,
      verificationToken : "",
      refreshToken : "",
-     oAuth : true,
      });
 
    
@@ -51,13 +51,15 @@ passport.use(new FacebookStrategy({
   async function(accessToken:string, refreshToken:string, profile:FacebookProfile, cb: FacebookVerifyCB ) {
     console.log(profile)
    try {
-    let user = await User.findOne({facebookId : profile.id});
+    let user = await User.findOne({facebookId : profile?.id});
    if(!user) {
-     user = await User.create({facebookId : profile.id,
-     firstName:profile.name?.givenName,
-     lastName:profile.name?.familyName,
-     email: profile.emails?.[0]?.value,
-     profilePic: profile?.photos?.[0]?.value || null 
+     user = await User.create({facebookId : profile?.id,
+     firstName:profile?.name?.givenName,
+     lastName:profile?.name?.familyName,
+     email: profile?.emails?.[0]?.value,
+     profilePic: profile?.photos?.[0]?.value,
+     verificationToken : "",
+     refreshToken : "", 
      });
 
   

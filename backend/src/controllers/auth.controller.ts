@@ -103,6 +103,7 @@ const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP
     }
 
   user = await User.findOne({
+   _id : req.authUser._id,
    verificationToken: code,
    verificationTokenExpiresAt :{ $gt: new Date() },
   })
@@ -114,7 +115,7 @@ const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP
    const token = genToken(res, user._id.toString());
   await sendWelcomeMessage(capitalizedName(user.firstName), token , user.email)
 
-  await User.updateOne({_id:user._id}, {
+  await User.updateOne({_id:user?._id}, {
    $set : {
    isVerified: true,
    },
@@ -406,7 +407,7 @@ export const  handleAuthUser = asyncHandler(async(req, res) => {
    res.status(200).json({
         success : true,
         message : "AUTH_USER",
-        user : req.user
+        user : req.authUser
 })
 
 
