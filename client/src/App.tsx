@@ -36,7 +36,7 @@ import { useBookingStore } from "./store/bookingStore"
 
 
 const App = () => {
-  const {checkAuth, isAuthenticated, connectSocket,error:authErr, message:authMsg, isCheckingAuth, warmUp} = useAuthStore()
+  const {checkAuth, isAuthenticated, connectSocket,error:authErr, message:authMsg, isCheckingAuth} = useAuthStore()
  
   const authMessageL = useRef<string>("");
   const {message:followReqMsg, error:followReqErr} = useFollowRequestStore()
@@ -51,17 +51,6 @@ const App = () => {
   }, []) // connectSocket is stable.
   const location = useLocation()
  
-
-  useEffect(() => {
-  
-    const warpUpTheServer = async() => {
-     await warmUp()
-    }
-    warpUpTheServer();
-    const interval = setInterval(() => warpUpTheServer(), 300000)
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
    const lang = i18n.language
   const {t} = useTranslation()

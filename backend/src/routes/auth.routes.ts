@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { checkAuth, forgotPassword, googleCallback, handleAuthUser, handleUnauthorized, login, resetPassword, signup, updateProfile, verifyEmail, logout, profilePic, refreshToken, warmUp, facebookCallback }
+import { checkAuth, forgotPassword, googleCallback, handleAuthUser, handleUnauthorized, login,
+      resetPassword, signup, updateProfile, verifyEmail, logout, profilePic, refreshToken, facebookCallback }
  from "../controllers/auth.controller";
 import { protect} from "../middlewares/auth.middlewares";
 import passport from "passport";
@@ -17,7 +18,7 @@ router.put("/reset-password/:token", resetPasswordSchema, handleValidation, rese
 router.get("/checkAuth", protect, checkAuth)
 router.get("/profilePic", protect, profilePic)
 router.post("/refresh-token", protect, refreshToken);
-router.get("/warm-up", warmUp)
+
 
 router.get("/google", passport.authenticate("google", {scope : ["profile", "email"], session:false}))
 

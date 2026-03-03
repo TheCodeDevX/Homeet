@@ -373,13 +373,13 @@ export const profilePic = async(req:Request, res:Response, next:NextFunction) =>
    }
 }
 
-// @desc   Warming up the server for an auth user
+// @desc   Warming up the server
 // @route  GET /api/auth/warm-up
 // @access Public
 
 export const warmUp = async(req:Request, res:Response, next:NextFunction) => {
  try {
-   const conn = await User.exists({email : "user@example.com"})
+   await User.exists({email : "user@example.com"})
    res.status(200).json('The server is warmed up now!')
  } catch (error) {
    res.status(503).json("The server is unavailable now, please try again later after being warmed up!")

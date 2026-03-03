@@ -18,12 +18,15 @@ import cors from 'cors'
 import passport from "passport";
 import { app, server } from "./socket";
 import { deleteArchivedNotifications } from './controllers/notfication.controller';
+import { warmUp } from './controllers/auth.controller';
 
 const port = process.env.PORT || 5000;
 app.use(cors({
     origin : `${process.env.CLIENT_URL}`,
     credentials:true
 }))
+
+
 
 app.use(json({limit:"10mb"}));
 app.use(urlencoded({extended: true}));
@@ -39,13 +42,14 @@ app.use("/api/requests", followReqRoutes )
 app.use("/api/users", userRoutes )
 app.use("/api/notifications", notifRoutes )
 app.use("/api/bookings", bookingRoutes )
-
+app.get("/warm-up", warmUp)
 app.use(notFound)
 app.use(errorHandler)
 
 server.listen(port, async() => { 
  try {
 await connectDB();
+
 await deleteArchivedNotifications();
 console.log(`server running on http://localhost:${port}/`)
  } catch (error) {
