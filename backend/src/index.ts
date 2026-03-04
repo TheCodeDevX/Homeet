@@ -51,7 +51,7 @@ server.listen(port, async() => {
 await connectDB();
 
 await deleteArchivedNotifications();
-console.log(`server running on http://localhost:${port}/`)
+console.log(`server running on ${port}`)
  } catch (error) {
     console.log("failed to connect to db")
  }

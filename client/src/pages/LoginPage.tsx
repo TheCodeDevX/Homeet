@@ -42,6 +42,8 @@ const LoginPage = () => {
 
   const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
   const facebook = () => window.open(`${"https://homeet.onrender.com"}/api/auth/facebook`, "_self")
+  // const google = () => window.open(`${"http://localhost:8000"}/api/auth/google`, "_self")
+  // const facebook = () => window.open(`${"http://localhost:8000"}/api/auth/facebook`, "_self")
 
   const {theme} = useThemeStore()
 
@@ -88,14 +90,14 @@ const LoginPage = () => {
                 {t("login.title", {ns:"auth"})}
             </h1>
 
-            <p className='text-base-content/60 '>
+            <div className='text-base-content/60 '>
           <p>
           {t("login.q", {ns : 'auth'})}{" "}
           <Link to="/signup" className="text-primary font-semibold hover:underline">
             {t("login.link", {ns : "auth"})}
           </Link>
           </p>
-            </p>
+            </div>
 
          </div>
          <form onSubmit={handleSubmit} className="w-full">

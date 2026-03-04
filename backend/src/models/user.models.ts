@@ -149,7 +149,7 @@ import { UserDocument } from "../shared/types/types";
 
     resetPasswordToken : String,
     resetPasswordExpiresAt : Date,
-    verificationToken : Number,
+    verificationToken : String,
     verificationTokenExpiresAt : Date,
     refreshToken : {
       type : String,
