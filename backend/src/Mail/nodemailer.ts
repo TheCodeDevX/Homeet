@@ -7,12 +7,13 @@ from './templates/email.templates';
 
  const transporter = nodemailer.createTransport({
   host : "smtp-relay.brevo.com",
-  port : 587,
-  secure : false,
+  port : 465,
+  secure : true,
   auth : {
     user : process.env.SENDER as string,
     pass: process.env.SMTP_API_KEY as string,
-  }
+  },
+  connectionTimeout : 10000,
  })
 
 
