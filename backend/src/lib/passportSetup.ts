@@ -18,7 +18,7 @@ passport.use(new GoogleStrategy({
    console.log("Found user:", user);
   
    if(!user) {
-    user = await User.create({
+     user = await User.create({
      googleId : profile?.id,
      firstName:profile?.name?.givenName,
      lastName:profile?.name?.familyName,
@@ -26,7 +26,7 @@ passport.use(new GoogleStrategy({
      profilePic: profile?.photos?.[0]?.value ,
      verificationToken : "",
      refreshToken : "",
-     });
+    });
 
    
      } 

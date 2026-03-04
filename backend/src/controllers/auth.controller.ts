@@ -165,7 +165,7 @@ export const refreshToken = async(req:Request, res:Response, next:NextFunction) 
             verificationTokenExpiresAt : new Date( Date.now() + 1000 * 60 * 15 ),
             verificationToken : Math.floor(100000 + Math.random() * 900000),
            
-          }});
+      }});
           
 
       if(!user) {
@@ -421,7 +421,9 @@ export const googleCallback = asyncHandler(async(req:Request, res:Response, next
     passport.authenticate("google", {session:false}, (err:Error, user:UserDocument) => {
     if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
     genToken(res, user._id.toString());
-    genRefreshToken(res, user)
+   if(!user?.isVerified && ( new Date(user?.refreshTokenExpiresAt) < new Date() )) {
+   genRefreshToken(res, user);
+   }
     res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
 })(req, res , next)
 })
@@ -431,10 +433,14 @@ export const googleCallback = asyncHandler(async(req:Request, res:Response, next
 // @access Public
 export const facebookCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
    passport.authenticate("facebook", {session:false}, (err:Error, user:UserDocument) => {
-    if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
-    genToken(res, user._id.toString());
-    genRefreshToken(res, user)
-    res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
+   if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
+   genToken(res, user._id.toString());
+
+   if(!user?.isVerified && ( new Date(user?.refreshTokenExpiresAt) < new Date() )) {
+   genRefreshToken(res, user);
+   }
+   
+   res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
 })(req, res , next)
 })
 
