@@ -4,15 +4,6 @@ import { PASSWORD_RESET_SUCCESS_TEMPLATE,
    RESET_PASSWORD_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE } 
 from './templates/email.templates';
  const sender = process.env.SENDER as string;
-//  const transporter = nodemailer.createTransport({
-//     host: 'smtp-relay.brevo.com',
-//     port : 587,
-//     secure:false,
-//     auth:{
-//         user : sender,
-//         pass : process.env.SMTP_API_KEY
-//     }
-//  })
 
  const transporter = nodemailer.createTransport({
   service:"gmail",

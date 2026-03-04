@@ -75,7 +75,7 @@ export const signup = async(req:Request, res:Response, next:NextFunction) => {
  if(!newUser) createError('INVALID_DATA', 400)
  genToken(res, newUser._id.toString());
  genRefreshToken(res, newUser);
-await sendVerificationEmail(newUser.email, capitalizedName(newUser.firstName), newUser.verificationToken)
+// await sendVerificationEmail(newUser.email, capitalizedName(newUser.firstName), newUser.verificationToken)
 
 const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP", success: true} 
 
