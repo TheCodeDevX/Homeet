@@ -96,23 +96,25 @@ const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP
  export const verifyEmail = async(req:Request, res:Response, next:NextFunction) => {
  try {
     const {code} : {code : number} = req.body;
-    let user = await User.findOne({ verificationToken: code });
+    const user = await User.findOne({ verificationToken: code });
     if(!user) {
       createError("INVALID_VERIFICATION_CODE", 401);
       return;
     }
 
-  user = await User.findOne({
-   _id : req.authUser._id,
+
+   const authUser = await User.findOne({ 
    verificationToken: code,
-   verificationTokenExpiresAt :{ $gt: new Date() },
+   verificationTokenExpiresAt : { $gt: new Date() },
   })
 
+  console.log(authUser, 'auth user')
+
   
-  if(!user) {
+  if(!authUser) {
   return res.json({success : false, message : "EXPIRED_VERIFICATION_CODE"});
   }
-   const token = genToken(res, user._id.toString());
+  const token = genToken(res, user._id.toString());
   await sendWelcomeMessage(capitalizedName(user.firstName), token , user.email)
 
   await User.updateOne({_id:user?._id}, {
@@ -142,7 +144,7 @@ const signupResponse : AuthResponse = { user:newUser, message:"SUCCESSFUL_SIGNUP
 
  }
 
-  // @desc   Generating refresh-token  
+// @desc   Generating refresh-token  
 // @route  POST /api/auth/profilePic
 // @access Private
 
@@ -151,7 +153,6 @@ export const refreshToken = async(req:Request, res:Response, next:NextFunction) 
       console.log("hit refreshToken", req.query.code)
       const {code} = req.query;
       const {refreshToken} = req.cookies
-
       const storedVerificationToken = crypto.createHash("sha256").update(refreshToken).digest("hex")
 
       const user = await User.findOneAndUpdate({
