@@ -3,13 +3,15 @@ import 'dotenv/config'
 import { PASSWORD_RESET_SUCCESS_TEMPLATE,
    RESET_PASSWORD_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE } 
 from './templates/email.templates';
- const sender = process.env.SENDER as string;
+ const sender = process.env.USER as string;
 
  const transporter = nodemailer.createTransport({
-  service:"gmail",
+  host : "smtp-relay.brevo.com",
+  port : 587,
+  secure : false,
   auth : {
-    user : process.env.USER as string,
-    pass: process.env.EMAIL_PASSWORD as string,
+    user : process.env.SENDER as string,
+    pass: process.env.SMTP_API_KEY as string,
   }
  })
 
