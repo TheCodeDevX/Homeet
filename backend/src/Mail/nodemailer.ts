@@ -7,13 +7,13 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
  const sender = process.env.USER as string;
 
  let transporter : nodemailer.Transporter<SMTPTransport.SentMessageInfo, SMTPTransport.Options> | null = null;
- 
+
  const getTransporter = () => {
   if(!transporter) {
   transporter = nodemailer.createTransport({
   host : "smtp-relay.brevo.com",
-  port : 465,
-  secure : true,
+  port : 587,
+  secure : false,
   auth : {
   user : process.env.SENDER as string,
   pass: process.env.SMTP_API_KEY as string,
