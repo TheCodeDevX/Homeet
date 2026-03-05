@@ -3,22 +3,31 @@ import 'dotenv/config'
 import { PASSWORD_RESET_SUCCESS_TEMPLATE,
    RESET_PASSWORD_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE } 
 from './templates/email.templates';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
  const sender = process.env.USER as string;
 
- const transporter = nodemailer.createTransport({
+ let transporter : nodemailer.Transporter<SMTPTransport.SentMessageInfo, SMTPTransport.Options> | null = null;
+ 
+ const getTransporter = () => {
+  if(!transporter) {
+  transporter = nodemailer.createTransport({
   host : "smtp-relay.brevo.com",
   port : 465,
   secure : true,
   auth : {
-    user : process.env.SENDER as string,
-    pass: process.env.SMTP_API_KEY as string,
+  user : process.env.SENDER as string,
+  pass: process.env.SMTP_API_KEY as string,
   },
   connectionTimeout : 10000,
- })
+  socketTimeout : 10000
+  })
+  }
+  return transporter;
+ }
 
 
   export const sendVerificationEmail = async (recipient:string, userName:string, verificationCode:number) => {
-   const info = await transporter.sendMail({
+   const info = await getTransporter().sendMail({
         from : sender,
         to: recipient,
         subject: "Verify Your Email",
@@ -30,7 +39,7 @@ from './templates/email.templates';
   }
 
   export const sendWelcomeMessage = async(userName:string, token:string, recipient:string) => {
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from :sender,
       to:recipient,
       subject: 'Welcome Email',
@@ -39,7 +48,7 @@ from './templates/email.templates';
   }
 
     export const sendResetPasswordRequest = async(userName:string, recipient:string, token:string) => {
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from :sender,
       to:recipient,
       subject: 'Reset Password',
@@ -49,7 +58,7 @@ from './templates/email.templates';
   }
 
     export const sendResetSuccessEmail = async(userName:string, recipient:string) => {
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from :sender,
       to:recipient,
       subject: 'Password Reset Successful',
