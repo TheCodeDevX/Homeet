@@ -41,8 +41,8 @@ const LoginPage = () => {
     }
   }
 
-  // const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
-  const google = () => window.open(`${"http://localhost:8000"}/api/auth/google`, "_self")
+  const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
+  // const google = () => window.open(`${"http://localhost:8000"}/api/auth/google`, "_self")
 
   const {theme} = useThemeStore()
 
