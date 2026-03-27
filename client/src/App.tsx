@@ -38,7 +38,7 @@ import Analytics from "./components/Analytics"
 
 
 const App = () => {
-  const {checkAuth, isAuthenticated, connectSocket,error:authErr, message:authMsg, isCheckingAuth} = useAuthStore()
+  const {checkAuth, isAuthenticated, connectSocket,error:authErr, message:authMsg, isCheckingAuth, user} = useAuthStore()
  
   const authMessageL = useRef<string>("");
   const {message:followReqMsg, error:followReqErr} = useFollowRequestStore()
@@ -50,7 +50,7 @@ const App = () => {
   useEffect(() => { 
     connectSocket()
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // connectSocket is stable.
+  }, [user]) // connectSocket is stable.
   const location = useLocation()
  
 

@@ -178,6 +178,8 @@ import type { AuthData } from '../types/types'
       if(!authUser || get()?.socket?.connected) return;
       const socket = io("https://homeet.onrender.com", {
          withCredentials:true,
+         transports : ["websocket"],
+         reconnection:true,
          query : {
             userId : authUser._id
          }
