@@ -1,12 +1,20 @@
 import {motion} from 'framer-motion'
-import { Pen, Search, Trash } from 'lucide-react'
+import {  Calendar, CatIcon, ChevronDown, Clock, LayoutGridIcon, PenBoxIcon, PinIcon, Search, TicketCheck, Tickets, Trash, Users} from 'lucide-react'
 import { useListingStore } from '../store/listingStore'
 import { useEffect, useState } from 'react'
 import {useNavigate } from 'react-router-dom'
-import fallbackImage from "../assets/image.png"
 import FallbackCard from '../components/FallbackCard'
 import { useTranslation } from 'react-i18next'
 import i18n from '../config/reacti18next'
+import ToasterCompo from '../components/Toaster'
+import toast from 'react-hot-toast'
+import Modal from '../components/Modal'
+import { sliceText } from '../utils/sliceText'
+import avatar from '../assets/avatar.png'
+import type { StatusEnum } from '../types/types'
+import StatCard from '../components/StartCard'
+import * as helpers from '../utils/helpers'
+import { useMessageStore } from '../store/messageStore'
 
 interface ListingType {
   title : string,
@@ -17,10 +25,15 @@ interface ListingType {
 
  const DashboardPage = () => {
   const {t} = useTranslation()
-  const {getUserListings,userListings, deleteListing, isDashboardLoading, isDeleting} = useListingStore()
+  const {getUserListings,userListings, deleteListing, isDashboardLoading,
+     isDeleting, updateStatus } = useListingStore()
+
+     const {setSelectedUser} = useMessageStore()
 
    const [query , setQuery] = useState("")
    const [isSliced, setIsSliced] = useState<{[id:string] : boolean}>({})
+   const [isOpen, setIsOpen] = useState(false);
+   const [isExpanded, setIsExpanded] = useState<{[key:string] : boolean}>({})
   useEffect(() => {
     getUserListings()
   }, [isDeleting, getUserListings])
@@ -32,260 +45,391 @@ interface ListingType {
 
   const lang = i18n.language
 
-   return (
-     <motion.div
-    initial={{opacity:0, y:20}}
-    animate={{y:0, opacity:1}}
-    transition={{duration:0.5}} className="relative min-h-screen mt-24 p-2 sm:p-4 ">
-    <div className="relative">
-      <input value={query} onChange={(e) => setQuery(e.target.value) } type="text"
-     className={`input input-bordered w-full placeholder-base-content/80 ${lang === 'ar' ? 'pr-10' : 'pl-10'}`}
-    placeholder={t("placeholders.search", {ns:"common"})} />
-    <Search className={`absolute top-1/2 -translate-y-1/2 
-      ${lang === 'ar' ? "right-2" : "left-2"} mx-2 size-5 text-base-content/80`}/>
-     </div>
-    {  filteredListings.length === 0 && !isDashboardLoading ?
-               <FallbackCard icon={query ? "search" : "info"} className='!mt-4'
-               
-              header={query  ? t("fallbackMessages.nothingFound", {ns:"messages"}) :
-               t("fallbackMessages.noListingYet", {ns:"messages"})}
-              subtext={query ? t("fallbackMessages.noListingMatchSearch", {ns:"messages"}) :
-               t("fallbackMessages.plzPostListing", {ns:"messages"})}/>
+  const onEdit = (listingId : string | undefined) => {
+  if(!listingId) {
+  return;
+  }
+    navigate(`/dashboard/edit/${listingId}`)
+  };
+  const onDelete = (listingId : string | undefined) => {
+  if(!listingId) {
+  toast.custom((toast) => (
+  <ToasterCompo color="red" msg={t("clientMessages.", {ns:"messages"})} t={toast}/>
+  ))
+  return;
+  }
+ setIsOpen(false)
+ deleteListing(listingId)
+}
 
-               :
-
-               (
-                <div className="overflow-x-auto bg-base-300 rounded-xl shadow-sm
-                 border border-base-content/20 mt-4">
-      <table className='min-h-full text-left table max-sm:hidden  '>
-        <thead className='bg-base-200 text-base-content lg:text-xl text-lg'>
-          <tr>
-            <th>{t("dashboard.image", {ns:"dashboard"})}</th>
-              <th>{t("dashboard.title", {ns:"dashboard"})}</th>
-               <th>{t("dashboard.description", {ns:"dashboard"})}</th>
-              <th>{t("dashboard.location", {ns:"dashboard"})}</th>
-              <th>{t("dashboard.createdAt", {ns:"dashboard"})}</th>
-               <th>{t("dashboard.actions.title", {ns:"dashboard"})}</th>
-          </tr>
-        </thead>
-       <tbody className='text-sm'>
-        { (filteredListings.length !== 0) ?  filteredListings.map((listing, index) => {
-          const currentImage = listing?.images[0] ?? fallbackImage;
-          return (
-        
-           <tr key={index}>
-          <td>
-             <img className="size-10 rounded-full" src={ currentImage} alt="image" />
-          </td>
-          <td>{listing.title}</td>
-          <td className='w-[250px]'>
-           { !isSliced[listing._id as string] ? <div>
-            {listing.description.split(" ").slice(0,5).join(" ")} 
-            {listing.description.split(" ").length >= 5 && "..."} 
-           { listing.description.split(" ").length >= 5  && <span className='text-indigo-500 cursor-pointer' onClick={() => setIsSliced(prev => 
-           ({...prev, [listing._id as string] : !prev[listing._id as string] })) }>
-            {t("buttons.readMore", {ns:"common"})}</span>}
-            </div> :
-             <div>{listing.description}
-              { listing.description.split(" ").length >= 5 && <span className='text-indigo-500 cursor-pointer' onClick={() => setIsSliced(prev => 
-           ({...prev, [listing._id as string] : !prev[listing._id as string] })) }> {t("buttons.less", {ns:"common"})}</span>}
-             </div>
-            }
-            </td>
-          <td>{listing.location}</td>
-          <td>{listing.createdAt?.split("T")[0]}</td>
-          <td className='md:space-x-2 space-y-2'>
-            <button className='btn btn-xs' onClick={() => navigate(`/dashboard/${listing._id}`)}>
-               <span className="flex items-center gap-2">
-                {t("dashboard.actions.edit", {ns:"dashboard"})}
-                 <Pen size={15}/></span>
-            </button>
-             <button onClick={async () => await deleteListing(listing._id ?? "") } className='btn btn-xs btn-error'>
-             <span className="flex items-center gap-2">
-              {t("dashboard.actions.delete", {ns:"dashboard"})}
-               <Trash size={15}/></span>
-            </button>
-          </td>
-        </tr>
-         
-        )
-        }) : Array(2).fill("").map((_,i) => (
-          <tr key={i} className='h-[63px]'>
-            <td> 
-             <span className='size-10 object-cover skeleton avatar bg-base-100/50 rounded-full'/>
-            </td>
-
-             <td> 
-             <span className='h-3 w-1/2 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-            </td>
-
-            <td> 
-             <span className='h-3 w-full object-cover skeleton flex bg-base-100/50 rounded-full'/>
-            </td>
-
-             <td> 
-             <span className='h-3 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-            </td>
-
-             <td> 
-             <span className='h-3 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-            </td>
-
-              <td> 
-              <div className="flex max-lg:flex-col items-center gap-2">
-                <div className='h-6 w-[65px] flex skeleton bg-base-100/50'></div>
-                <div className='h-6 w-[65px] flex skeleton bg-base-100/50'></div>
-              </div>
-            </td>
-          </tr>
-        ))}
-       </tbody>
-      </table>
-
-
-  {(filteredListings.length !== 0 && !isDashboardLoading) ?  filteredListings.map((listing) => {
-          const currentImage = listing?.images[0] ?? fallbackImage;
-          return ( 
-       <table key={listing._id} className={` min-h-full ${lang === "ar" ? "text-right" : "text-left"} table border-b sm:hidden `}>
-      
-          <tr>
-            <th>{t("dashboard.image", {ns:"dashboard"})}</th>
-            
-            <td className='flex justify-end items-center'>
-             <img className="size-10 rounded-full" src={ currentImage} alt="image" />
-          </td> 
-          </tr>
-
-            <tr>
-           <th>{t("dashboard.title", {ns:"dashboard"})}</th>
-          <td className={`w-1/3 ${lang === "ar" ? "text-left" : "text-right"}`}>{listing.title}</td>
-          </tr>
-
-            <tr>
-            <th className=''>{t("dashboard.description", {ns:"dashboard"})}</th>
-            <td className={`w-1/2 ${lang === "ar" ? "text-left" : "text-right"}`}>
-         
-           { !isSliced[listing._id as string] ? <div>
-            {listing.description.split(" ").slice(0,5).join(" ")} 
-            {listing.description.split(" ").length >= 5 && "..."} 
-           { listing.description.split(" ").length >= 5  && <span className='text-indigo-500 cursor-pointer' onClick={() => setIsSliced(prev => 
-           ({...prev, [listing._id as string] : !prev[listing._id as string] })) }>{t("buttons.readMore", {ns:"common"})}</span>}
-            </div> :
-             <div>{listing.description}
-              { listing.description.split(" ").length >= 5 && <span className='text-indigo-500 cursor-pointer' onClick={() => setIsSliced(prev => 
-           ({...prev, [listing._id as string] : !prev[listing._id as string] })) }> {t("buttons.less", {ns:"common"})}</span>}
-             </div>
-            }
-            </td>
-           
-          </tr>
-
-            <tr>
-             <th>{t("dashboard.location", {ns:"dashboard"})}</th>
-             <td className={`w-1/3 ${lang === "ar" ? "text-left" : "text-right"}`}>{listing.location}</td> 
-           </tr>
-
-            <tr>
-            <th>{t("dashboard.createdAt", {ns:"dashboard"})}</th>
-             <td className={`w-1/3 ${lang === "ar" ? "text-left" : "text-right"}`}>{listing.createdAt?.split("T")[0]}</td>
-           </tr>
-
-            <tr>
-           <th>{t("dashboard.actions.title", {ns:"dashboard"})}</th>
-          <td className={`w-1/3 md:space-x-2 space-y-2 ${lang === "ar" ? "text-left" : "text-right"}`}>
-            <button className='btn btn-xs' onClick={() => navigate(`/dashboard/${listing._id}`)}>
-               <span className="flex items-center gap-2">
-                {t("dashboard.actions.edit", {ns:"dashboard"})}
-                 <Pen size={15}/></span>
-            </button>
-             <button onClick={() => deleteListing(listing._id ?? "") } className='btn btn-xs btn-error'>
-             <span className="flex items-center gap-2">
-              {t("dashboard.actions.delete", {ns:"dashboard"})}
-               <Trash size={15}/></span>
-            </button>
-          </td>
-          </tr>
-       
-       
-      </table>
- )}) :  Array(3).fill("").map((_,i) => (
-  <table key={i} className={` min-h-full table border-b sm:hidden `}>
-      
-          <tr>
-            <th>
-          <span className='h-3 w-[60px] object-cover skeleton flex bg-base-100/50 rounded-full'/>
-            </th>
-            
-            <td className='flex justify-end items-center'>
-               <span className='size-10 object-cover skeleton avatar bg-base-100/50 rounded-full'/>
-          </td> 
-          </tr>
-
-            <tr>
-
-            <th>
-          <span className='h-3 w-[60px] object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </th>
-            <td className='flex justify-end items-center'>
-             <span className='h-3 w-1/3 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </td> 
-          </tr>
-
-             <tr>
-
-            <th>
-          <span className='h-3 w-[60px] object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </th>
-            <td className='flex justify-end items-center'>
-             <span className='h-3 w-1/3 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </td> 
-          </tr>
-
-            <tr>
-
-            <th>
-          <span className='h-3 w-[60px] object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </th>
-            <td className='flex justify-end items-center'>
-             <span className='h-3 w-1/3 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </td> 
-          </tr>
-
-           <tr>
-
-            <th>
-          <span className='h-3 w-[60px] object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </th>
-            <td className='flex justify-end items-center'>
-             <span className='h-3 w-1/3 object-cover skeleton flex bg-base-100/50 rounded-full'/>
-          </td> 
-          </tr>
-
-            <tr>
-         <th>
-          <span className='h-3 w-[60px] object-cover skeleton flex bg-base-100/50 rounded-full'/>
-            </th>
-          <td className='flex justify-end gap-2 items-center gap-2"'> 
-                <div className='h-6 w-[65px] flex skeleton bg-base-100/50'></div>
-                <div className='h-6 w-[65px] flex skeleton bg-base-100/50'></div>
-            </td>
-          </tr>
-       
-       
-      </table>
- ))
- 
+ const handleChangeStatus = async(listingId:string|undefined, status : StatusEnum) => {
+  if(!listingId) return;
+  await updateStatus(listingId, status)
  }
-      
-    </div>
-               )
 
-               
-    }
+   return (
+    <>
+     {isOpen && <Modal  onConfirm={onDelete} onShowModal={setIsOpen} titleKey='Modal.deleteListingTitle'
+    subtitleKey="Modal.deleteListingMsg"
+    />}
+  <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{ duration: 0.5 }}
+  className="relative min-h-screen mt-24 max-sm:pt-2 ml-72 xl:p-4 lg:p-4 p-2 max-2xl:ml-0 overflow-x-hidden"
+>
+  {/* Search Bar */}
+  <div className="relative mb-8">
+    <input
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      type="text"
+     className={`input input-bordered rounded-xl w-full text-sm
+      ${lang === "ar" ? "pr-11" : "pl-11"}
+      focus:outline-none focus:border-base-content/40
+      placeholder:text-base-content/30`}
+      
+      placeholder={t("placeholders.search", { ns: "common" })}
+    />
+    <Search
+      className={`absolute top-1/2 -translate-y-1/2 
+        ${lang === 'ar' ? "right-2" : "left-2"} mx-2 size-[16px] text-base-content/40`}
+    />
+  </div>
+
+  {/* Overview Header */}
+  <div className='mb-6 sm:mb-8'>
+    <h1 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-base-content'>
+     {t("dashboard.title", { ns: "dashboard" })}
+    </h1>
+    <p className='text-base-content/60 text-xs sm:text-sm mt-1'>
+     {t("dashboard.description", { ns: "dashboard" })}
+    </p>
+  </div>
+
+  {/* Stats Grid */}
+  <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-8'>
+    {/* Total Listings Card */}
+    <StatCard
+      icon={<LayoutGridIcon size={18} />}
+      label={t("dashboard.stats.shortLabel.TOTAL_LISTINGS", {ns : "dashboard"})} 
+      labelFull={t("dashboard.stats.fullLabel.TOTAL_LISTINGS", {ns : "dashboard"})} 
+      value={userListings.length}
+      color='primary'
+    />
+
+    {/* Booked Listings Card */}
+    <StatCard
+      icon={<TicketCheck size={18} />}
+      label={t("dashboard.stats.shortLabel.BOOKED_LISTINGS", {ns : "dashboard"})} 
+      labelFull={t("dashboard.stats.fullLabel.BOOKED_LISTINGS", {ns : "dashboard"})} 
+      value={userListings.filter(l => (l.bookings?.length ?? 0) > 0).length}
+      color='success'
+    />
+
+    {/* Total Bookings Card */}
+    <StatCard
+      icon={<Tickets size={18} />}
+      label={t("dashboard.stats.shortLabel.TOTAL_BOOKINGS", {ns : "dashboard"})} 
+      labelFull={t("dashboard.stats.fullLabel.TOTAL_BOOKINGS", {ns : "dashboard"})} 
+      value={userListings.reduce((sum, l) => sum + (l.bookings?.length ?? 0), 0)}
+      color='info'
+    />
+
+    {/* Recently Added Card */}
+    <StatCard
+      icon={<Clock size={18} />}
+      label={t("dashboard.stats.shortLabel.ADDED_THIS_WEEK", {ns : "dashboard"})} 
+      labelFull={t("dashboard.stats.fullLabel.ADDED_THIS_WEEK", {ns : "dashboard"})} 
+      value={userListings.filter(l =>
+        new Date(l.createdAt ?? "").getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
+      ).length}
+      color='warning'
+    />
+  </div>
+
+  {/* Listings Section */}
+  {filteredListings.length === 0 && !isDashboardLoading ? (
+    <FallbackCard
+      icon={query ? "search" : "info"}
+      className='!mt-4'
+      header={
+        query
+          ? t("fallbackMessages.nothingFound", { ns: "messages" })
+          : t("fallbackMessages.noListingYet", { ns: "messages" })
+      }
+      subtext={
+        query
+          ? t("fallbackMessages.noListingMatchSearch", { ns: "messages" })
+          : t("fallbackMessages.plzPostListing", { ns: "messages" })
+      }
+    />
+  ) : (
+    <div className='space-y-4'>
+      {userListings.map((listing) => (
+        <div
+          key={listing._id}
+          className='bg-base-100 rounded-lg shadow-md hover:shadow-lg border border-base-200 
+          hover:border-primary/30 transition-all duration-200 group overflow-hidden'
+        >
+          {/* Main Card Content */}
+          <div className='flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4 lg:p-5'>
+
+            {/* Image Section */}
+            <figure className='w-full sm:w-32 lg:w-1/4 flex-shrink-0'>
+              <div className='aspect-square sm:aspect-auto sm:h-32 lg:h-[200px] overflow-hidden rounded-lg'>
+                <img
+                  src={listing.images[0]}
+                  alt={listing.title}
+                  className='h-full w-full object-cover group-hover:scale-105 transition-transform duration-300'
+                />
+              </div>
+            </figure>
+
+            {/* Content Section */}
+            <div className='flex-1 flex flex-col justify-between min-w-0'>
+              {/* Title and Price */}
+              <div className='space-y-2 sm:space-y-3'>
+                <h3 className='text-base sm:text-lg lg:text-xl font-semibold text-base-content line-clamp-2'>
+                  {listing.title}
+                </h3>
+
+                {/* Description */}
+                <p className='text-xs sm:text-sm text-base-content/70 line-clamp-2 sm:line-clamp-3'>
+                  {sliceText({
+                    text: listing.description,
+                    threshold: 100,
+                    start: 0,
+                    end: isSliced[listing._id as string] ? undefined : 50,
+                    splitAt: " ",
+                    joinAt: " ",
+                    extra: isSliced[listing._id as string] ? " " : "..."
+                  })}
+                </p>
+
+                {listing.description.split(" ").length > 100 && (
+                  <button
+                    onClick={() =>
+                      setIsSliced((prev) => ({
+                        ...prev,
+                        [listing._id as string]: !prev[listing._id as string]
+                      }))
+                    }
+                    className="text-primary/80 text-xs sm:text-sm font-semibold
+                    hover:text-primary transition-colors duration-200"
+                  >
+                    {isSliced[listing._id as string]
+                      ? t("buttons.less", { ns: "common" })
+                      : t("buttons.readMore", { ns: "common" })}
+                  </button>
+                )}
+
+                <p className='text-xl sm:text-2xl lg:text-3xl font-bold text-primary'>
+                  ${listing.price?.amount_local?.toLocaleString()}
+                </p>
+              </div>
+
+              {/* More Info Button */}
+              <button
+                onClick={() =>
+                  setIsExpanded((prev) => ({
+                    ...prev,
+                    [listing._id ?? ""]: !prev[listing._id ?? ""]
+                  }))
+                }
+                className='flex items-center gap-2 text-xs sm:text-sm text-base-content/70 hover:text-base-content 
+                transition-colors duration-150 w-fit mt-2'
+              >
+                <div className='bg-primary rounded-full p-1 text-primary-content group-hover:scale-110 
+                transition-transform duration-150'>
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${
+                      isExpanded[listing._id ?? ""] ? 'rotate-180' : 'rotate-0'
+                    }`}
+                  />
+                </div>
+                <span className='font-medium'>
+                {t(`dashboard.bookings${listing.bookings?.length === 1 ? "_one" : "_other"}`, 
+                  {ns : "dashboard", count : listing.bookings?.length})} 
+                </span>
+              </button>
+            </div>
+
+            {/* Actions Section */}
+            <div className='flex sm:flex-col justify-between gap-2 sm:gap-3 sm:items-end'>
+
+              {/* Status Toggle */}
+              <div className='flex items-center gap-1.5 sm:gap-2'>
+                <span className='text-xs font-medium text-base-content/60 hidden sm:inline'>
+                  {t("dashboard.active", {ns : "dashboard"})}
+                </span>
+                <input
+                  type='checkbox'
+                  checked={listing.status === "active" ? true : false}
+                  onChange={() => handleChangeStatus(listing?._id, listing.status)}
+                  className='toggle toggle-xs sm:toggle-sm toggle-primary'
+                  defaultChecked
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-1.5 sm:gap-2">
+                <button
+                  onClick={() => onEdit(listing?._id)}
+                  className='p-2 sm:p-2.5 bg-base-content/5 rounded-full hover:bg-primary/10 
+                  border border-transparent hover:border-primary/30 text-base-content/70 hover:text-primary 
+                  transition-all duration-200 tooltip'
+                  data-tip={t("dashboard.actions.edit", {ns : "dashboard"})} 
+                >
+                  <PenBoxIcon size={16} className='sm:size-[18px]' />
+                </button>
+
+                <button
+                  onClick={() => setIsOpen(prev => !prev)}
+                  className='p-2 sm:p-2.5 bg-base-content/5 hover:bg-error/10 
+                  border border-transparent hover:border-error/30 text-base-content/70 hover:text-error 
+                  transition-all duration-200 tooltip rounded-full'
+                  data-tip={t("dashboard.actions.delete", {ns : "dashboard"})}
+                >
+                  <Trash size={16} className='sm:size-[18px]' />
+                </button>
+              </div>
+
+              {/* Metadata - Visible on sm+ */}
+              <div className='hidden sm:flex sm:flex-col gap-1.5 sm:gap-2 sm:text-right text-xs sm:text-sm text-base-content/60 sm:w-full'>
+                <div className='flex items-center gap-1.5 sm:justify-end'>
+                  <PinIcon className='text-error flex-shrink-0' size={14} />
+                  <span className='line-clamp-1'>{listing.location}</span>
+                </div>
+                <div className='flex items-center gap-1.5 sm:justify-end'>
+                  <Calendar className='text-primary flex-shrink-0' size={14} />
+                  <span>{new Date(listing.createdAt ?? '').toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Metadata - Visible only on mobile */}
+          <div className='sm:hidden border-t border-base-200 px-3 py-2 flex gap-3 text-xs text-base-content/60'>
+            <div className='flex items-center gap-1.5'>
+              <PinIcon className='text-error flex-shrink-0' size={14} />
+              <span className='line-clamp-1'>{listing.location}</span>
+            </div>
+            <div className='flex items-center gap-1.5'>
+              <Calendar className='text-primary flex-shrink-0' size={14} />
+              <span>{new Date(listing.createdAt ?? '').toLocaleDateString()}</span>
+            </div>
+          </div>
+
+          {/* Expanded Bookings Section */}
+          {isExpanded[listing._id ?? ""] && (
+            <div className='border-t border-base-200 bg-base-200/40 p-3 sm:p-4 lg:p-6 space-y-4'>
+              {/* Bookings Header */}
+              <h3 className='text-xs sm:text-sm font-semibold text-base-content/80 uppercase tracking-wide'>
+               {t(`dashboard.analyticsTab.bookings`,
+                 { ns: "dashboard", count: listing.bookings?.length })} ({listing.bookings?.length ?? 0})
+              </h3>
+
+              {/* Bookings List */}
+              {listing.bookings && listing.bookings.length > 0 ? (
+                <div className='space-y-2 sm:space-y-3'>
+                  {listing.bookings.map((booking) => (
+                    <div
+                      key={booking?._id}
+                      className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 bg-base-100 rounded-lg border border-base-200 
+                      hover:border-primary/20 hover:bg-base-100/80 transition-all duration-150 group'
+                    >
+                      {/* Avatar */}
+                      <div
+                        onClick={() => {
+                          navigate(`/profile/${booking?.userId}`)
+                        }}
+                        className='cursor-pointer flex-shrink-0 size-12 sm:size-14 rounded-full overflow-hidden 
+                        shadow-md ring-2 ring-transparent group-hover:ring-primary/30 transition-all duration-200'
+                      >
+                        <img
+                          src={booking?.profilePicture || avatar}
+                          onError={(e) => e.currentTarget.src = avatar}
+                          alt={booking?.firstName}
+                          className='h-full w-full object-cover'
+                        />
+                      </div>
+
+                      {/* Guest Info */}
+                      <div className='flex-1 min-w-0'>
+                        <h2 className='font-semibold text-base-content text-xs sm:text-sm lg:text-base truncate'>
+                          {(booking)?.firstName}
+                        </h2>
+                        <p className='text-xs text-base-content/60'>
+                          {booking?.role}
+                        </p>
+                      </div>
+
+                      {/* Guest Count - Visible on all */}
+                     { !booking.offerPrice &&
+                      <div className='flex items-center gap-1.5 text-xs sm:text-sm text-base-content/70'>
+                        <Users size={16} />
+                        <span className='font-medium'>
+                          {(booking?.adultsCount ?? 0) + (booking?.childrenCount ?? 0)}
+                        </span>
+                        {(booking?.petsCount ?? 0) > 0 && (
+                          <>
+                            <span className='text-base-content/40'>•</span>
+                            <CatIcon size={14} />
+                            <span>{booking?.petsCount}</span>
+                          </>
+                        )}
+                      </div>
+                      }
+
+                      {/* Dates - Hidden on mobile */}
+                      <div className='hidden sm:flex flex-col items-center text-xs lg:text-sm text-base-content/70'>
+                        <span className='font-medium'>
+                          {new Date(booking?.createdAt as string).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+
+                      {/* Contact Button */}
+                      <button
+                        onClick={() =>
+                          helpers.handleNavigation({
+                            listingUser: {
+                              firstName: booking?.firstName ?? "Anonymous",
+                              lastName: booking?.lastName ?? "Anonymous",
+                              _id: booking?.userId,
+                              profilePic: booking?.profilePicture
+                            },
+                            navigate,
+                            setSelectedUser
+                          })
+                        }
+                        className='flex-shrink-0 btn btn-sm lg:btn-md btn-outline rounded 
+                        border-info text-info hover:bg-info hover:border-info hover:text-info-content 
+                        transition-all duration-200 active:scale-95'
+                      >
+                        {t("dashboard.contact", {ns : "dashboard"})}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className='py-4 sm:py-8 text-center text-base-content/60'>
+                  <p className='text-xs sm:text-sm'>{t("dashboard.noBookings", { ns: "dashboard" })}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</motion.div>
+    </>
     
-   
-    
-    </motion.div>
    )
  }
  

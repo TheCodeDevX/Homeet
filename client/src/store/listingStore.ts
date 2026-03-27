@@ -2,9 +2,16 @@ import { create } from "zustand";
 import { listingApi, ratingApi } from "../lib/axios.config";
 import { useAuthStore } from "./authStore";
 import { errorHandler } from "./helpers/errorHelper";
-import type { UserData } from "../types/types";
+import type { CurrencyCode, StatusEnum, UserData } from "../types/types";
+import type { SortStates } from "../context/FilterProvider";
 
 export type PricingType = "nightly" | "monthly" | "one_time" | "placeholder";
+export type SearchData = Pick<ApiData, "amenities" | "location">
+& { minPrice?: number, maxPrice?: number,
+    query?:string, pricingType?:PricingType, shouldFilter?:boolean, shouldSort?:boolean, limit?:number, page?:number 
+   sort?: SortStates
+   }
+
 export interface FormData {
     title : string,
     description : string,
@@ -12,7 +19,11 @@ export interface FormData {
     images: string[];
     pricingType : PricingType
     amenities?: (string)[],
-    price: number,
+    price: {
+      amount_usd : number,
+      amount_local : number | string,
+      currency: CurrencyCode | undefined
+    },
     beds?: number,
     bathrooms?:number,
     bedrooms?:number, 
@@ -25,11 +36,27 @@ export interface FormData {
     count?:number
     createdAt?: string
  }
+ export type Booking = {
+   costPrice?: {amount_usd: number, amount_local: number, currency:CurrencyCode},
+   offerPrice?: {amount_usd: number, amount_local: number, currency:CurrencyCode},
+   userId?: string,
+   checkIn?: string,
+   checkOut?: string,
+   petsCount?: number,
+   childrenCount?: number,
+   adultsCount?: number,
+   profilePicture?: string | undefined,
+   createdAt?: string,
+   updatedAt?: string,
+   _id?:string
+ } & Pick<UserData, "firstName" | "lastName" | "email" | "phoneNumber" | "role">
 
  export type ApiData = {   
      _id?: string,
      updatedAt?: string ,
-     user?:UserData
+     user?:UserData,
+     bookings?: Booking[],
+     status: StatusEnum
  } & FormData
 
  export type Rating = {
@@ -64,7 +91,8 @@ export interface FormData {
     isDeleting : boolean
     setIsAlreadyLiked : (bool:boolean) => void,
     userHasLikedRating:boolean,
-    ratings : Rating[]
+    ratings : Rating[],
+    status : StatusEnum
     setCurrentPage : (page:number) => void
     createListing : (data : FormData) => void
     getListings : () => void
@@ -75,9 +103,11 @@ export interface FormData {
     rateListing : (id:string, data: {stars?:number, feedback?:string}) => void
     getRating : (id:string) => void
     getRatings : (id:string) => void
-    likeRating : (id:string, likers?:string[]) => void
-
+    likeRating : (id:string, likers?:string[]) => void,
+    updateStatus : (id:string, status:StatusEnum) => void
+    searchListings : (data: SearchData | null) => void
  }
+
 
  
  
@@ -91,6 +121,7 @@ export interface FormData {
     isDashboardLoading:false,
     likes:0,
     likers : [],
+    status:"active",
     userHasLikedRating:false,
     isLoading:false,
     isListingsLoading : false,
@@ -123,11 +154,13 @@ export interface FormData {
     },
     getListings : async () => {
     set({isLoading:true, error:null})
-
     const currentPage = get().currentPage;
         try {
-             const res = await listingApi.get(`/listings?limit=${12}&page=${currentPage}`);
-             set({ isLoading:false, listings:res?.data?.listings, listingsLength:res?.data?.listingsLength})     
+         const params = new URLSearchParams()
+         params.append("limit", "12")
+         params.append("page", currentPage.toString())
+         const res = await listingApi.get(`/listings?${params.toString()}`);
+         set({ listings:res?.data?.listings, listingsLength:res?.data?.listingsLength})     
         } catch (error) {
          const err = errorHandler({error, defaultErr: 'FAILED_TO_FETCH_LISTINGS'})
         set({listings:[], error: err})
@@ -268,4 +301,60 @@ export interface FormData {
          throw error
       }
     },
+
+    updateStatus : async(listingId, status) => {
+      try {
+         const response = await listingApi.post(`/dashboard/status/${listingId}`, {status})
+         set((state) => ({userListings : state.userListings.map((listing) => listing._id === listingId 
+            ? {...listing, status: status === "active" ? "inactive" : "active"} 
+            : listing)}))
+         set({status:response.data?.status})
+      } catch (error) {
+          const err = errorHandler({error, defaultErr: 'FAILED_TO_UPDATE_LISTING_STATUS'})
+         set({error:err, isLoading:false})
+         throw error
+      }
+    },
+
+     searchListings : async(data) => {
+      set({error:null})
+      try {
+         const params = new URLSearchParams();
+         if(data?.query) {
+         params.append("query", data.query)
+         if(data?.shouldFilter) {
+         params.append("minPrice", (data?.minPrice ?? 0).toString())
+         params.append("maxPrice", (data?.maxPrice ?? 0).toString() )
+         data.amenities?.forEach((amenity) => {
+         params.append("amenities", amenity)
+         })
+         params.append("pricingType", data.pricingType ?? "")
+         params.append("location", data.location)
+         }  
+         }
+         else if(data?.shouldSort) {
+         params.append("shouldSort", String(data?.shouldSort))
+         if(data?.sort?.date && data?.sort?.date !== "none") {
+            params.append("date", data.sort?.date)
+         }
+         if(data.sort?.price && data?.sort?.price !== "none") {
+         params.append("price", data.sort.price)
+         }
+           
+         if(data.sort?.rating && data?.sort?.rating !== "none") {
+         params.append("rating", data.sort.rating)
+         }
+         }
+         params.append("limit", "20" )
+         params.append("page", "1" )
+    
+         const res = await listingApi.get(`/search?${params.toString()}`)
+         if(res?.data?.length < 1 || !(res?.data)) return;
+         set((state) => ({...state, listings : res?.data}))
+      } catch (error) {
+         const err = errorHandler({error, defaultErr: 'FAILED_TO_SEARCH_LISTINGS'})
+         set({error:err})
+         throw error
+      } 
+    }
   }))

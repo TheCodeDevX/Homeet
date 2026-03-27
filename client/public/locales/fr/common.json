@@ -34,7 +34,9 @@
         "followBack": "Suivre en retour",
         "mutualFollow": "Suivi mutuel",
         "checkAvailability": "Vérifier la disponibilité",
-        "reserve" : "Réservation"
+        "book": "Réserver maintenant",
+        "reserve" : "Réservation",
+        "submitOffer": "Soumettre l'offre"
     },
 
       "placeholders" : {
@@ -48,7 +50,9 @@
         "feedback" : "Votre Avis Nous Importe",
         "address" : "Ville, Région, Pays, Code Postal",
         "bio" : "Votre Biographie",
-        "months": "Mois"  
+        "months": "Mois",
+        "offerPrice": "Entrez votre prix d'offre",
+        "message": "Entrez votre message d'offre"  
         
      },
       "labels" : {
@@ -82,7 +86,7 @@
         "years_one": "Il y a {{count}} an",
         "years_other": "Il y a {{count}} ans",
         "newFollowers": "Nouveaux abonnés",
-        "totalPrice" : "( Prix total )",
+        "totalPrice" : "(Prix total)",
         "gender" : {
             "label" : "Genre",
             "placeholder" : "Choisissez Votre Genre",
@@ -156,7 +160,9 @@
         "guestContent": "{{adults}} adultes, {{children}} enfants, {{pets}} anim",
         "checkIn": "Arrivée",
         "checkOut": "Départ",
-        "guests": "Invités"     
+        "guests": "Invités",
+        "offerPrice": "Prix de l'offre",
+        "message": "Message"     
 
      }
 }

@@ -111,3 +111,7 @@ export type VerifyEmailResponse = MinimalResponse
 //* Message Responses
 export type MessageResponse = {messages : MessageData[], success : boolean}
 export type NewMessageResponse = {success : boolean, message : MessageData}
+
+
+export type CurrencyCode = "USD" | "EUR" | "GBP" | "JPY" | "CAD" | "AUD" | "CHF" |
+ "CNY" | "SAR" | "AED" | "EGP" | "MAD" | "BRL" | "INR" | "TRY" | "ZAR" | "SGD" | "HKD"

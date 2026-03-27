@@ -34,7 +34,9 @@
         "followBack": "Seguir de vuelta",
         "mutualFollow": "Seguimiento mutuo",
         "checkAvailability": "Verificar disponibilidad",
-        "reserve" : "Reserva"
+        "book": "Reservar ahora",
+        "reserve" : "Reserva",
+        "submitOffer": "Enviar oferta"
 
     },
 
@@ -49,7 +51,9 @@
         "feedback" : "Tu Opinión Nos Importa",
         "address" : "Ciudad, Región, País, Código Postal",
         "bio" : "Tu Biografía",
-        "months": "Meses"   
+        "months": "Meses",
+        "offerPrice": "Ingresa tu precio de oferta",
+        "message": "Ingresa tu mensaje de oferta"   
         
      },
       "labels" : {
@@ -83,7 +87,7 @@
         "years_one": "Comentado hace un año",
         "years_other": "Comentado hace {{count}} años",
         "newFollowers": "Nuevos seguidores",
-        "totalPrice" : "( Precio total )",
+        "totalPrice" : "(Precio total)",
         "gender" : {
             "label" : "Género",
             "placeholder" : "Elige Tu Género",
@@ -157,7 +161,9 @@
         "guestContent": "{{adults}} adultos, {{children}} niños, {{pets}} mascotas",
         "checkIn": "Registrarse",
         "checkOut": "Salida",
-        "guests": "Huéspedes"
+        "guests": "Huéspedes",
+       "offerPrice": "Precio de la oferta",
+        "message": "Mensaje"
 
      }
 }

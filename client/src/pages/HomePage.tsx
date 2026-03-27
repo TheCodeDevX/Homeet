@@ -3,142 +3,71 @@ import { useEffect, useState } from "react"
 import Card from "../components/Card"
 import Searchbar from "../components/Searchbar"
 import { useListingStore, type ApiData } from "../store/listingStore"
-import type { FilterStates } from "../context/FilterProvider"
 import { useFiltration } from "../hooks/useFiltration"
 import usePagination from "../hooks/usePagination"
 import FallbackCard from "../components/FallbackCard"
 import {useTranslation} from 'react-i18next'
 import CardSkeleton from "../components/skeletons/CardSkeleton"
-import { getTimeInMilliseconds } from "../utils/getTimeInMilliseconds"
+import useDebounce from "../hooks/useDebounce"
 
  const HomePage = () => {
 
   
   const {filters, sort} = useFiltration()
-   const {getListings, listings, isLoading} = useListingStore()
+   const {getListings, listings, isLoading, searchListings} = useListingStore()
 
 
 
-  const filteredListings = (data:ApiData[], filters:FilterStates) => {
-    let filteredData = data;
-    const q = filters.query.toLowerCase().trim()
-    // if(!filters.query) return filteredData.map((listing : ApiData) => (<Card listing={listing}/>))
+ 
 
-   if(filters.query){
-      filteredData = filteredData.filter((listing) => (
-       listing["title"].toLowerCase().includes(q) ||
-        listing?.["description"].toLowerCase().includes(q) || 
-        listing?.["location"].toLowerCase().includes(q) || 
-        listing?.["pricingType"].toLowerCase().includes(q) || 
-        listing?.["price"].toString().includes(filters.query) ||
-        listing?.["amenities"]?.some(a => a.toLowerCase().includes(q))
-      )
-       )
-   }
 
-   if(filters.shouldSort) {
-    // if(sort.price === "cheap") {
-    //  filteredData = filteredData.sort((a,b) => a.price - b.price)
-    // }else if(sort.price === "expensive") {
-    //  filteredData = filteredData.sort((a,b) => b.price - a.price)
-    // } else {
-    //  filteredData
-    // }
 
-    // Price
-    switch(sort.price) {
-      case "cheap" :  filteredData = filteredData.sort((a,b) => a.price - b.price)
-      break;
-
-      case "expensive" : filteredData = filteredData.sort((a,b) => b.price - a.price)
-      break;
-
-      default : break;
-    }
-
-    // Rating
-    switch(sort.rating) {
-    case "low" : filteredData = filteredData.sort((a,b) => (a.avgRating ?? 0) -  (b.avgRating ?? 0) )
-    break; 
-
-     case "high" : filteredData = filteredData.sort((a,b) => (b.avgRating ?? 0) -  (a.avgRating ?? 0) )
-     break;
-
-     default : break;
-    }
+     const debounced = useDebounce({...{filters}, sort}, 300)
+    const {currentPage, setCurrentPage, pages, totalPages} = usePagination();
+    const isNotFiltering = !(debounced?.filters.shouldFilter && debounced.filters.query)
+    const isNotQuerying = !debounced?.filters.query
+    useEffect(() => {
+      if(!isNotFiltering) return;
+      getListings()
+    }, [currentPage, getListings, isNotQuerying, isNotFiltering])
 
    
-    // Date
-    switch(sort.date) {
-    case "old" : filteredData = filteredData.sort((a,b) => 
-       getTimeInMilliseconds(a.createdAt) - getTimeInMilliseconds(b.createdAt))
-    break; 
+    const isQuerying = debounced.filters.query.trim().length > 0
+    const isSorting = debounced.filters.shouldSort
 
-     case "new" : filteredData = filteredData.sort((a,b) => 
-       getTimeInMilliseconds(b.createdAt) - getTimeInMilliseconds(a.createdAt))
-     break;
+    useEffect(() => {
+      if(!(debounced.filters.query || debounced.filters.shouldSort)) return;
+        searchListings({
+        ...(isSorting ? {} : {query:debounced.filters.query}),
+        location : debounced.filters.location,
+        shouldFilter:debounced.filters.shouldFilter, 
+        maxPrice:debounced.filters.maxPrice,
+        minPrice:debounced.filters.minPrice,
+        amenities:debounced.filters.amenities,
+        pricingType:debounced.filters.category,
+        ...(isQuerying ? {} : {shouldSort:debounced.filters.shouldSort}),
+        ...(isQuerying ? {} : {sort: debounced.sort})
+      })
+    }, [debounced.filters.shouldFilter, debounced.filters, isQuerying, isSorting, debounced.sort])
 
-     default : break;
-    }
-   }
-
-  
-  if(filters.shouldFilter){
-    
-    if(filters.category) {
-       filteredData = filteredData.filter((listing) => (
-        listing.pricingType.toLowerCase() === filters.category.toLowerCase()
-       ))
-    }
-
-     if(filters.location){
-      filteredData = filteredData.filter((listing) => (
-        listing.location.toLowerCase().includes(filters.location)
-      ))
-   }
-
-   if(filters.amenities) {
-    filteredData = filteredData.filter((listing) => (
-      filters.amenities?.every((a) => listing.amenities?.includes(a))
-    ))
-   }
-
-   if(filters.maxPrice || filters.minPrice) {
-    filteredData = filteredData.filter((listing) => (
-      listing.price <= filters.maxPrice && listing.price >= filters.minPrice
-    ))
-   }
-  }
-
-  
-    return filteredData.map((listing : ApiData) => (
+    const mappedListings = listings.map((listing : ApiData) => (
      <Card key={listing._id} listing={listing}/>
     ))
-  }
-
-
-
-    
-    const {currentPage, setCurrentPage, pages, totalPages} = usePagination();
-
-    useEffect(() => {getListings()}, [currentPage, getListings])
-    
-    const filteredData = filteredListings(listings, filters)
 
      // translations
      const {t} = useTranslation()
 
 
- const [isAlreadyClicked, setisAlreadyClicked] = useState(false)
-     const handleClick = () => {
-      if(isAlreadyClicked) return;
-      setisAlreadyClicked(true);
-        setCurrentPage(currentPage + 1)
-        setTimeout(() => {setisAlreadyClicked(false)}, 2000)
-      
-     }
+    const [isAlreadyClicked, setisAlreadyClicked] = useState(false)
+    const handleClick = () => {
+    if(isAlreadyClicked) return;
+    setisAlreadyClicked(true);
+    setCurrentPage(currentPage + 1)
+    setTimeout(() => {setisAlreadyClicked(false)}, 2000)
 
-   console.log(filteredData.length, listings.length)
+    }
+
+   console.log(mappedListings?.length, listings?.length)
 
    return (
      <div className="mt-24 max-sm:pt-2 ml-72 xl:p-4 lg:p-4 p-2 max-2xl:ml-0 select-none">
@@ -158,7 +87,7 @@ import { getTimeInMilliseconds } from "../utils/getTimeInMilliseconds"
       { 
       
       
-        listings.length === 0 && !isLoading 
+        listings?.length === 0 && !isLoading 
          ? <> <FallbackCard
           icon={"info"}
            header={t("fallbackMessages.noListingYet", {ns : "messages"})}
@@ -167,19 +96,19 @@ import { getTimeInMilliseconds } from "../utils/getTimeInMilliseconds"
         
         :
         
-        (filteredData.length === 0 && !isLoading)  ? <FallbackCard icon={"search"}
+        (mappedListings?.length === 0 && !isLoading)  ? <FallbackCard icon={"search"}
        header={`${filters &&
         t("fallbackMessages.nothingFound", {ns : "messages"})}`}
          subtext={`${filters &&
           t("fallbackMessages.noListingMatchSearch", {ns : "messages"})
         }`}/> : (
          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 ">
-        { isLoading ? ( <>{Array(3).fill("").map((_, i) => (
+        { isLoading ? ( <>{Array.from({length : 6}).map((_, i) => (
         <CardSkeleton key={i}/>
-      ))}</> ) : filteredData}
+      ))}</> ) : mappedListings}
      </div>
       )}
-    { totalPages >= 2 && filteredData.length > 0 && listings.length > 0 && <div className="flex justify-between items-center mt-4">
+    { totalPages >= 2 && mappedListings?.length > 0 && listings?.length > 0 && <div className="flex justify-between items-center mt-4">
         <button disabled={currentPage === 1} className="btn btn-active hover:btn-primary"
          onClick={() => setCurrentPage(currentPage -1)}>{t("buttons.previous", {ns: "common"})}</button>
 

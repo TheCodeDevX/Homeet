@@ -1,16 +1,93 @@
 
  {
     "dashboard" : {
-        "image" : "Image",
-        "title" : "Title",
-        "description" : "Description",
-        "location" : "Location",
-        "createdAt" : "Created At",
         "actions" : {
             "title" : "Actions",
             "delete" : "Delete",
             "edit" : "Edit"
 
-        } 
+        },
+        
+    "title": "Your Listings Dashboard",
+    "description": "Manage your properties and track bookings",
+ 
+    "bookings_one" : "{{count}} booking",
+    "bookings_other" : "{{count}} bookings",
+    "noBookings" : "No bookings yet",
+    "metrics" : {
+      "N/A" : "N/A",
+      "TREND_PERCENTAGE" : "{{percentage}}% this month"
+    },
+    "stats": {
+      "fullLabel": {
+        "TOTAL_LISTINGS": "Total Listings",
+        "TOTAL_REVENUE" : "Total Revenue",
+        "TOTAL_GUESTS" : "Total Guests",
+        "BOOKED_LISTINGS": "Booked Listings",
+        "TOTAL_BOOKINGS": "Total Bookings",
+        "OCCUPANCY_RATE" : "Occupancy Rate",
+        "ADDED_THIS_WEEK": "Added This Week"
+      },
+      "shortLabel": {
+        "TOTAL_LISTINGS": "Listings",
+        "BOOKED_LISTINGS": "Booked",
+        "TOTAL_BOOKINGS": "Bookings",
+        "ADDED_THIS_WEEK": "This Week"
+      }
+    },
+    "contact" : "Contact",
+    "active" : "Active",
+    "analyticsTab" : {
+      "title" : "Analytics & Performance",
+      "description" : "Track your revenue, bookings, and guest insights",
+      "revenueTrend_one" : "Revenue Trend (Last Month)",
+      "revenueTrend_other" : "Revenue Trend",
+      "guestDistribution" : "Guest Distribution",
+      "top" : "Top Performing Listings",
+      "peak": "Peak Season",
+      "peakMonth_other" : "{{month}} is your strongest month with {{count}} bookings",
+      "peakMonth_one" : "{{month}} is your strongest month with one booking",
+      "bestGuests" : "{{guestType}} are your most common guests at {{percentage}} of all bookings",
+      "revenue" : "revenue",
+      "Recommendations" : "Recommendations",
+      "BestGuests" : "Best guests",
+      "noBookingsReceivedToAnalyze" : "No bookings received to analyze",
+      "bookings" : "bookings",
+    "recommendations": {
+    "booking_no_activity": "You have no bookings yet. Consider improving listing visibility or offering a promotion.",
+    "booking_low_volume": "Bookings are still low. Try lowering prices or improving your listing photos.",
+    "booking_growing": "Bookings are growing. Consider encouraging reviews to increase trust.",
+    "booking_excellent": "Great booking activity! Make sure operations and guest experience stay consistent.",
+    "revenue_no_income": "No revenue generated yet. Check pricing and booking availability.",
+    "revenue_declining": "Revenue is declining compared to last period. Review pricing and demand trends.",
+    "revenue_increasing": "Revenue is increasing. Consider optimizing pricing to maximize profit.",
+    "revenue_strong_growth": "Revenue growth is strong this month. Consider increasing prices slightly.",
+    "guests_low_volume": "Guest volume is low. Improve marketing and listing quality.",
+    "guests_declining": "Guest numbers are declining. Check your cancellation rate or listing competitiveness.",
+    "guests_increasing": "Guest numbers are increasing. Ensure your service quality remains high.",
+    "rating_no_reviews": "You don't have reviews yet. Encourage guests to leave feedback.",
+    "rating_below_average": "Your rating is below 4. Focus on improving guest experience.",
+    "rating_good": "Good rating. Small improvements in service could push you to excellent status.",
+    "rating_excellent": "Excellent rating! Highlight reviews in your listing.",
+    "occupancy_very_low": "Occupancy rate is low. Consider promotions or adjusting prices.",
+    "occupancy_moderate": "Moderate occupancy. Optimize pricing and marketing to increase bookings.",
+    "occupancy_healthy": "Healthy occupancy rate. Maintain service quality.",
+    "occupancy_very_high": "Very high occupancy. You may be able to increase your prices.",
+    "trend_revenue_negative": "Revenue trend is declining. Investigate pricing and seasonal demand.",
+    "trend_revenue_positive": "Revenue trend is positive. Keep your current strategy.",
+    "trend_booking_negative": "Booking trend is decreasing. Improve visibility or adjust pricing.",
+    "trend_booking_positive": "Bookings are trending upward. Prepare for higher guest flow.",
+    "trend_occupancy_negative": "Occupancy is falling. Consider discounts or promotions.",
+    "trend_occupancy_positive": "Occupancy is increasing. Demand may support higher prices.",
+    "trend_guest_negative": "Guest trend is declining. Check listing performance and guest feedback.",
+    "trend_guest_positive": "Guest numbers are trending upward. Maintain service quality."
+  }, 
+  "guestClassification" : {
+    "solo" : "Solo",
+    "couples" : "Couples",
+    "families" : "Families",
+    "groups" : "Groups"
+  }
+    }
     } 
  }

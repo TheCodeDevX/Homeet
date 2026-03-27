@@ -77,7 +77,7 @@
       "SUCCESSFUL_CREATED_LISTING": "Votre annonce est maintenant en ligne !",
       "SUCCESSFUL_UPDATED_LISTING": "Annonce mise à jour avec succès.",
       "INVALID_ID_FORMAT": "Quelque chose s'est mal passé. Veuillez réessayer.",
-      "LIS_UNFOUND": "Cette annonce n'existe plus.",
+      "LISTING_NOT_FOUND": "Cette annonce n'existe plus.",
       "LISTING_DELETED_SUCCESSFULLY": "Annonce supprimée.",
 
       "INVALID_RATING": "Veuillez sélectionner une note valide.",
@@ -132,7 +132,15 @@
       "FAILED_TO_FETCH_INCOMING_NOTIFICATIONS": "Impossible de récupérer les notifications entrantes. Veuillez réessayer ultérieurement.",
       "FAILED_TO_READ_NOTIFICATION": "Impossible de marquer la notification comme lue. Veuillez réessayer ultérieurement.",
       "FAILED_TO_ARCHIVE_NOTIFICATION": "Impossible d'archiver la notification. Veuillez réessayer ultérieurement.",
-      "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "Impossible de supprimer les notifications archivées. Veuillez réessayer ultérieurement."
+      "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "Impossible de supprimer les notifications archivées. Veuillez réessayer ultérieurement.",
+      "CANNOT_SIGNIN_THROUGH_EMAIL_PASSWORD": "Votre compte a été enregistré avec Google. Veuillez vous connecter avec Google au lieu de votre email et mot de passe",
+      "INVALID_CURRENCY_CODE": "Code de devise invalide.",
+      "CURRENCY_CODE_IS_REQUIRED": "Le code de devise est requis.",
+      "COST_PRICE_IS_REQUIRED": "Le prix de revient est requis.",
+      "NO_CURRENCY_RECEIVED": "Aucune devise reçue.",
+      "INVALID_CURRENCY": "Devise invalide.",
+      "CONFIRMED_OFFER": "Votre offre a été confirmée.",
+      "DUPLICATED_OFFER": "Vous avez déjà soumis une offre pour cette annonce."
     },
 
     "clientMessages": {

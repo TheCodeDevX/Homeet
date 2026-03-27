@@ -30,6 +30,8 @@ import { SplitText } from "gsap/all"
 import UserProfilePage from "./pages/UserProfilePage"
 import {useDirectionContext} from "./hooks/useDirectionContext"
 import { useBookingStore } from "./store/bookingStore"
+import Analytics from "./components/Analytics"
+
 
 
 
@@ -135,7 +137,7 @@ const App = () => {
 
 
   return (
-   <div className={`sm:p-4 p-2 flex ${isHomePage ? "items-start" : "items-center"} justify-center min-h-screen `}
+   <div className={`sm:p-4 p-2 flex ${isHomePage ? "items-start" : "items-center"} justify-center min-h-screen`}
     >
     <Routes>
       <Route path="/" element={<ProtectRoute><Layout showSidebar={true}><HomePage/></Layout></ProtectRoute>} />
@@ -151,12 +153,13 @@ const App = () => {
       <Route path="/onboarding" element={<RedirectAuthenticatedUser><OnboardingPage/></RedirectAuthenticatedUser>} />
       <Route path="/profile" element={<ProtectRoute><Layout showSidebar={false}><ProfilePage/></Layout></ProtectRoute>} />
       <Route path="/listings/:id" element={<ProtectRoute><Layout showSidebar={false}><CardPage/></Layout></ProtectRoute>} />
-      <Route path="/dashboard" element={<ProtectRoute><Layout showSidebar={false}><DashboardPage/></Layout></ProtectRoute>} />
+      <Route path="/dashboard" element={<ProtectRoute><Layout showSidebar={true}><DashboardPage/></Layout></ProtectRoute>} />
+      <Route path="/dashboard/analytics" element={<ProtectRoute><Layout showSidebar={true}><Analytics /></Layout></ProtectRoute>} />
       
       <Route path="/profile/:id" element={<ProtectRoute><Layout showSidebar={false}>
         <UserProfilePage/></Layout></ProtectRoute>} />
 
-      <Route path="/dashboard/:id" element={<ProtectRoute><Layout showSidebar={false}><UpdateListingPage/></Layout></ProtectRoute>} />
+      <Route path="/dashboard/edit/:id" element={<ProtectRoute><Layout showSidebar={false}><UpdateListingPage/></Layout></ProtectRoute>} />
       <Route path="/chat" element={<ProtectRoute><Layout showSidebar={false}>
         <ChatPage/></Layout></ProtectRoute>} />
 

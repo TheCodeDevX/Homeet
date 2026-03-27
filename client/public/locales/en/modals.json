@@ -1,13 +1,15 @@
 
 
  {
-    "logoutModal" : {
+    "Modal" : {
         "logout" : "Logout",
         "msg" : "Are you sure you want to logout?",
         "actions" : {
             "confirm" : "Confirm",
             "cancel" : "Cancel"
-        }
+        },
+        "deleteListingTitle" : "Confirm Listing Deletion",
+        "deleteListingMsg" : "This action cannot be undone. Once you confirm, your listing will be deleted permanently!"
     },
 
     "ratingModal" : {

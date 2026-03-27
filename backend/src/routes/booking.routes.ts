@@ -5,6 +5,6 @@ import { bookingSchema } from "../utils/validationSchema";
 import { handleValidation } from "../middlewares/validation.middlewares";
  const router = Router();
 
-router.post("/book-property/:listingId", protect, bookingSchema, handleValidation, bookProperty)
+router.post("/book-property/:listingId", protect, bookProperty)
 
 export default router;

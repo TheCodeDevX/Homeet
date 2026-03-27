@@ -63,13 +63,17 @@ import { body, check, param } from "express-validator";
  ]
 
  export const bookingSchema = [
-     body('checkIn').trim().notEmpty().withMessage('CHECK_IN_REQUIRED'),
-     body('checkOut').optional(),
-     body('adults').isLength({min : 0}).withMessage('ADULTS_REQUIRED'),
-     body('children').isLength({min : 0}).withMessage('CHILDREN_REQUIRED'),
-     body('pets').isLength({min : 0}).withMessage('PETS_REQUIRED'),
-     body('duration').isObject().optional(),
-     body('totalPrice').isLength({min : 0}).optional(),
+    //  body('checkIn').custom((value) => {
+    //  }).trim().notEmpty().withMessage('CHECK_IN_REQUIRED'),
+    //  body('checkOut').optional(),
+    //  body('adults').isLength({min : 0}).withMessage('ADULTS_REQUIRED'),
+    //  body('children').isLength({min : 0}).withMessage('CHILDREN_REQUIRED'),
+    //  body('pets').isLength({min : 0}).withMessage('PETS_REQUIRED'),
+    //  body('duration').isNumeric().notEmpty().withMessage("duration required"),
+    //  body('costPrice.currency').notEmpty().withMessage("CURRENCY_CODE_IS_REQUIRED")
+    // .isIn(["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY", "SAR",
+    // "AED", "EGP", "MAD", "BRL", "INR", "TRY", "ZAR", "SGD", "HKD"]).withMessage("INVALID_CURRENCY_CODE"),
+    // body('costPrice.amount').isLength({min : 1}).withMessage("COST_PRICE_IS_REQUIRED"),
     param("listingId").trim().notEmpty()
  ]
 
@@ -101,13 +105,23 @@ import { body, check, param } from "express-validator";
     check("bedrooms").trim().optional().isNumeric(),
     check("size").trim().optional().isNumeric(),
     check("floor").trim().optional().isNumeric(),
-    check("price")
+    check("price.amount_usd")
     .custom(val => {
         if(val === 0) {
             throw new Error("RENTAL_PRICE_REQUIRED")
         } 
         return true;
     }).trim().notEmpty().withMessage("RENTAL_PRICE_REQUIRED"),
+    check("price.amount_local")
+    .custom(val => {
+        if(val === 0) {
+            throw new Error("RENTAL_PRICE_REQUIRED")
+        } 
+        return true;
+    }).trim().notEmpty().withMessage("RENTAL_PRICE_REQUIRED"),
+     check("price.currency").trim().isIn(["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY", "SAR",
+    "AED", "EGP", "MAD", "BRL", "INR", "TRY", "ZAR", "SGD", "HKD"]).withMessage("INVALID_CURRENCY")
+    .trim().notEmpty().withMessage("NO_CURRENCY_RECEIVED"),
     check("adults").trim().isLength({min:1}).withMessage("ADULTS_REQUIRED"),
     check("children").trim().isNumeric().withMessage("CHILDREN_REQUIRED"),
     check("pets").trim().isNumeric().withMessage("PETS_REQUIRED"),

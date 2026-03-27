@@ -7,7 +7,7 @@ import {motion} from 'framer-motion'
 import {  useState } from 'react'
 import { RiStarFill } from 'react-icons/ri'
 import { useListingStore, type ApiData } from '../store/listingStore'
-import { amenities, currencies, prefixCurrencySymbols, type Facilities } from '../constants'
+import { amenities, lightThemes, type Facilities } from '../constants'
 import { Link } from 'react-router-dom'
 import useCarouselControls from '../hooks/useCarouselControls'
 import { FaExclamation } from 'react-icons/fa'
@@ -16,6 +16,9 @@ import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
 import i18n from '../config/reacti18next'
 import type { UserRole } from '../types/types'
+import Price from './Price'
+import clsx from 'clsx'
+import { useThemeStore } from '../store/themeStore'
 
 
  const Card = ({listing}: {listing : ApiData}) => {
@@ -29,6 +32,7 @@ import type { UserRole } from '../types/types'
 
    
     const {state, dispatch} = useCarouselControls()
+    const {theme} = useThemeStore()
 
    
 
@@ -36,7 +40,7 @@ import type { UserRole } from '../types/types'
     // if(btnRef.current?.contains(e.target as Node) &&  btnRef?.current.closest("._btn")) return;
     //   setIsOpen((prev) => !prev)
     // }
-     const currentImage = listing?.images[state.currentIndex];
+     const currentImage = listing?.images?.[state?.currentIndex];
 
      const {t} = useTranslation()
      const facilities = t("card.facilities", {ns:"card", returnObjects:true}) as Record<string, Facilities>
@@ -44,26 +48,24 @@ import type { UserRole } from '../types/types'
      const lang = i18n.language
      const avgRating = listing?.avgRating
 
-     const isPrefixCurrencySymbol = prefixCurrencySymbols.includes(listing?.user?.currency?.toUpperCase() as string)
-    
+
    return (
      <>
     
-     <RatingModal id={listing._id} showModal={showModal} setShowModal={setShowModal}/>
-     <div onMouseEnter={() => setIsHover(true)} 
+     <RatingModal id={listing?._id} showModal={showModal} setShowModal={setShowModal}/>
+   <div onMouseEnter={() => setIsHover(true)} 
      onMouseLeave={() => setIsHover(false)}
      className="card !flex-row gap-2 card-bordered border
-      border-base-content/10 bg-base-300/50 shadow-lg overflow-hidden
+      border-base-content/10 bg-base-200/60 shadow-lg overflow-hidden
      ">
         <div className="sm:p-2.5 p-4 w-full h-full overflow-hidden">
-          
             <div className="relative">
                <figure className=' pointer-events-none select-none max-card-fix:h-[400px]
                 max-[500px]:h-full sm:h-full max-xs:h-full
               md:max-w-sm md:mx-auto max-w-none min-w-full bg-base-100
               md:aspect-auto rounded-2xl overflow-hidden backdrop-blur-3xl'>
             
-
+ 
                  {isLoading ? 
                  (<div className='sm:h-[380px] skeleton max-xs:h-[300px] h-[400px]
                     w-full  object-cover max-md:object-fill'
@@ -74,32 +76,33 @@ import type { UserRole } from '../types/types'
               
               />)}
          </figure>
-
-{ (user?._id?.toString() !== listing.user?._id?.toString()) &&
-         <button onClick={() =>setShowModal(prev => !prev)} className={`cursor-pointer
-           absolute z-40 top-1 
+ 
+{ (user?._id?.toString() !== listing?.user?._id?.toString()) &&
+         <button onClick={() => setShowModal(prev => !prev)} className={`cursor-pointer
+           absolute z-40 top-2
            ${!isopen ? "opacity-100" : "opacity-0 hidden"}
-           ${lang == "ar" ? "right-1" : "left-1"}
+           ${lang == "ar" ? "right-2" : "left-2"}
            `}>
-           <div className={`bg-base-300 
+           <div className={`bg-base-200
             p-2 group hover:bg-error hover:text-error-content transition duration-400
           rounded-full `}>
           <Heart className={`group-hover:fill-white group-hover:stroke-white
-             stroke-base-content/80 transition-colors duration-300`}/>
+             stroke-base-content/80 transition-colors duration-300 size-[22px] max-xsss:size-[16px]`}/>
            </div>
          </button>
      }
-
+ 
       <button onClick={() => {setIsOpen(p => !p)}}
-       className={`${lang == "ar" ? "left-1" : "right-1"}
-          absolute z-40 top-1 btn !h-[42px] !min-h-[42px]
-           rounded-full border border-base-content/20 hover:btn-primary btn-md transition-colors duration-200`}>
-          {isopen ? (<>  <Image/> {t("buttons.images", {ns:"common"})} </>) :
-           (<> <Info/> {t("buttons.details", {ns:"common"})} </>)}
+       className={`${lang == "ar" ? "left-2" : "right-2"}
+          absolute z-40 top-2 btn !h-[39px] !min-h-[39px] bg-base-300 !text-[14px] font-normal
+           rounded-full border border-base-content/5 hover:btn-active
+           btn-md max-xsss:!btn-sm max-xs:!text-[11px] transition-colors duration-200`}>
+          {isopen ? (<><Image className='size-[15px] max-xs:size-[14px] max-xsss:size-[13px]'/> {t("buttons.images", {ns:"common"})}</>) :
+           (<> <Info className='size-[15px] max-xs:size-[14px] max-xsss:size-[13px]'/> {t("buttons.details", {ns:"common"})} </>)}
       </button>
     
      
-       <motion.div initial={{opacity:0, visibility:"hidden"}}
+         <motion.div initial={{opacity:0, visibility:"hidden"}}
        animate={{opacity: !isopen && isHover ? 1 : 0,
         visibility:isHover && listing.images.length -1 > 0 ? "visible" : "hidden"}}>
           <button onClick={(() => dispatch({type: "prev",length:listing.images.length}))}
@@ -128,100 +131,109 @@ import type { UserRole } from '../types/types'
        }
       </div>
        </motion.div>
-
+ 
        <Link to={`/listings/${listing._id}`}>
-           <motion.div initial={{x:"108%"}} animate={{ x:isopen ? "0%" : "108%"}}
-          transition={{duration:0.5, type:"spring", damping:40, stiffness:150}}
-        //  onClick={handleClickInside}
-          className="cursor-pointer absolute inset-0 flex flex-col justify-center shadow-xl p-4
-           sm:gap-y-2 md:gap-y-4 gap-y-4 max-xs:gap-y-1
-           bg-neutral-content text-neutral rounded-xl overflow-hidden">
-             <div className={`absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-               `}>
-         </div>
-             <section className="flex items-center gap-2 ">
-                <div className='avatar '>
-                  <div className="size-14 rounded-full border border-base-content/10 shadow-sm shadow-base-300/50">
-                      <img src={listing.user?.profilePic ||  avatar} alt="" />
+           <motion.div initial={{x:"100%"}} animate={{ x:isopen ? "0%" : "105%"}}
+          transition={{duration:0.5, type:"spring", damping:30, stiffness:180}}
+          className={clsx(
+          "cursor-pointer absolute inset-0 flex flex-col justify-center shadow-xl p-3",
+           "gap-y-4 max-xs:gap-y-2 max-card-fix:gap-y-[23px]",
+          "rounded-xl overflow-hidden",
+          lightThemes.includes(theme) 
+          ? "bg-base-100 text-base-content" 
+          : "bg-gradient-to-b from-base-300 to-base-200 border border-base-content/5 text-base-content"
+          )}>
+        
+             <section className="flex items-center gap-2">
+                <div className='avatar'>
+                  <div className={
+                    clsx("size-12 max-xs:size-11 max-xsss:size-10 rounded-full border-[2px] border-base-content shadow-sm shadow-base-300/50")
+                  }>
+                      <img src={listing?.user?.profilePic ||  avatar} alt="avatar" />
                   </div>
               
               </div>
-             <header className="flex items-center w-full justify-between">
-               <div >
-              <figure className='flex items-center gap-1'>
-                  <h2 className='xs:text-lg text-md font-bold truncate line-clamp-1'>
-                    {listing?.user?.firstName ?? "Anonymous"}</h2>
-                   {listing.user?.firstName && <img className='pointer-events-none select-none' src={verificationIcon} alt="" />}
-              </figure>
-                <p className='text-xs'>{roles[listing.user?.role ?? "default"]}</p>
-              </div>
-
-              {/* <Link ref={btnRef} className='max-sm:hidden _btn' to="/"><Button classes='flex items-center gap-2'>
-                View Images <Image/> </Button></Link> */}
-            
-
-             </header>
+                 <div className='flex flex-col'>
+                    <div className='flex items-center gap-1'>
+                      <span className="font-dmSerif text-[18px] max-xs:text-[16px] max-xsss:text-[15px] font-semibold truncate"
+               >
+                        {listing?.user?.firstName ?? "Anonymous"}
+                      </span>
+                      {listing.user?.firstName &&
+                        <img src={verificationIcon} alt="verification icon" className='size-[18px] max-xsss:size-[15px]' />
+                      }
+                    </div>
+                    <span className="badge max-xsss:!text-[9px] max-xs:badge-sm !text-[11.3px] !text-base-content
+                     !bg-base-content/20 border border-base-content/30">{roles[listing?.user?.role ?? "none"]}
+                     </span>
+                  </div>
              </section>
-             <div className='flex gap-1 text-xs items-center'><ImLocation/>{listing.location}</div>
-
-             <section className="flex justify-between">
-                <h3 className='xs:text-xl text-md font-bold'>{listing.title.split(" ").slice(0,2).join(" ")}
-                  { listing.title.split(" ").length > 2 && "..."}</h3>
-                 <div className=''>
-                <div className='text-lg font-bold flex items-center gap-1 '>
-                <RiStarFill className='text-yellow-500 flex' size={18}/> 
-                <p >
-                  {avgRating?.toString().includes(".") ? avgRating.toFixed(1) : avgRating} {" "}
-                   <span className='text-sm text-neutral/80'>({" "}
-                    {lang === "ar" && " "} 
-                    {t("labels.reviews", {ns: "common", count : listing.count })} {lang !== "ar" && " "} )</span>
-                </p>
-                  </div> 
+ 
+             <section className="flex flex-col gap-1.5 justify-between">
+               <div className='flex justify-between'>
+               
+                 <div className='flex gap-1 text-xs max-xs:text-[11px] max-xsss:text-[10px] items-center font-normal opacity-60'>
+                   <ImLocation/>{listing?.location}
+                 </div>
+                 <div className='text-lg font-bold flex items-baseline gap-1'>
+                   <RiStarFill className='text-yellow-500 relative top-[2px]' size={15}/> 
+                   <p className='text-sm  max-xsss:text-xs'>
+                     {avgRating?.toString().includes(".") ? avgRating.toFixed(1) : avgRating}
+                   </p>  
+                   <span className='text-xs max-xsss:text-[10px] font-normal opacity-50'>(
+                     {t("labels.reviews", {ns: "common", count : listing.count })})
+                   </span>
+                 </div> 
                </div>
+               <h3 className='xs:text-[21px] leading-[1.2] text-[16px] font-semibold font-dmSerif truncate'>
+                 {listing.title}
+               </h3>
              </section>
-             
-
-             <section className="flex flex-col ">
-                <span className="text-xs mb-2">{t("labels.description", {ns:"common"})}</span>
-                <div className="bg-black/20 sm:p-2 p-1.5 rounded-xl">
-                   <p className=' xs:text-sm text-xs line-clamp-1'>
-                {listing.description}</p>
+ 
+             <section className="flex flex-col">
+                <span className="text-[11px] max-xsss:text-[9px] max-xs:text-[10px] mb-[4px] 
+                uppercase opacity-50 tracking-[0.06rem]">
+                  {t("labels.description", {ns:"common"})}
+                </span>
+                <div className="bg-base-content/5 border border-base-content/10 sm:py-[10px] sm:px-[12px] py-2 px-[10px] rounded-lg">
+                   <p className='xs:text-sm text-xs line-clamp-1 opacity-75'>
+                     {listing.description}
+                   </p>
                 </div>
              </section>
-
-               <section className='flex flex-col'>
-                <span className='text-xs'>{t("labels.price", {ns:"common"})}</span>
-                <div className='mt-2 xs:text-lg tet-sm px-4 py-1 rounded-xl bg-black/10'>
-                
-                <p className={`line-clamp-1`}>
-                  <span className={`font-black`}>
-                  {isPrefixCurrencySymbol && currencies.find(c => c.code.toLowerCase()
-                   === listing.user?.currency)?.symbol}
-                  </span>
-                  <span className={`font-black`}>{listing.price}</span> 
-                 <span className={`font-black mx-1`}>
-                  {!isPrefixCurrencySymbol && currencies.find(c => c.code.toLowerCase()
-                   === listing.user?.currency)?.symbol}
-                  </span>
-                </p>
+ 
+             <section className='flex flex-col'>
+                <span className='text-[11px] max-xsss:text-[9px] max-xs:text-[10px] mb-[4px] uppercase opacity-50 tracking-[0.06rem]'>
+                  {t("labels.price", {ns:"common"})}
+                </span>
+                <div className='bg-base-content/5 border border-base-content/10
+                sm:py-[8px] sm:px-[10px] py-2 px-[10px] rounded-lg'>
+                  <p className='line-clamp-1 font-semibold'>
+                    <Price textSize="sm" isDynamic={false} listing={listing}/>
+                  </p>
                 </div> 
-               </section>
-
+             </section>
+ 
              <section className="flex flex-col">
-                <span className='text-xs mb-2'>{t("labels.amenities.text", {ns:"common"})}</span>
-                <div className="flex gap-x-2 text-indigo-700">
-                  {listing.amenities?.length === 0 ? (  <div className='p-2 bg-white/50 rounded-xl
-                   flex gap-1 items-center whitespace-nowrap text-sm'><FaExclamation/>No amenities listed</div>) : 
-                   (listing?.amenities?.slice(0,3).map((amenity, i) => (
-                      <div key={i} className='xs:p-2 p-1.5 bg-white/50 border border-secondary/25
-                      rounded-xl flex gap-1 items-center whitespace-nowrap
-                       xs:text-sm text-xs'>
+                <span className='text-[11px] max-xsss:text-[9px] max-xs:text-[10px] mb-[4px] uppercase opacity-50 tracking-[0.06rem]'>
+                  {t("labels.amenities.text", {ns:"common"})}
+                </span>
+                <div className="flex gap-x-2">
+                  {listing.amenities?.length === 0 
+                  ? <div className='p-2 bg-base-content/8 border border-base-content/10 rounded-xl
+                     flex gap-1 items-center whitespace-nowrap text-sm opacity-60'>
+                      <FaExclamation/> No amenities listed
+                    </div>
+                  : listing?.amenities?.slice(0,3).map((amenity, i) => (
+                      <div key={i} className='xs:px-3 xs:py-1.5 p-1.5 bg-base-content/10 border border-base-content/15
+                      rounded-lg flex gap-1 items-center whitespace-nowrap text-xs font-semibold
+                      '>
                         {amenities.map(({icon:Icon, label}) => 
-                        ( amenity === label ? <Icon key={label} className='max-xs:size-5'/> : null ))}
-                         {facilities[amenity]}
-                         
-                         </div>
-                  )))}
+                          amenity === label ? <Icon key={label} className='max-xs:size-4 size-6'/> : null
+                        )}
+                        {facilities[amenity]}
+                      </div>
+                  ))}
                 </div>
               </section>
          
@@ -234,5 +246,7 @@ import type { UserRole } from '../types/types'
    )
  }
  
- export default Card
+ export default Card;
  
+
+

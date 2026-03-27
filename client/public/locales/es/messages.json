@@ -74,7 +74,7 @@
       "SUCCESSFUL_CREATED_LISTING": "¡Tu anuncio está ahora en línea!",
       "SUCCESSFUL_UPDATED_LISTING": "Anuncio actualizado exitosamente.",
       "INVALID_ID_FORMAT": "Algo salió mal. Por favor intenta de nuevo.",
-      "LIS_UNFOUND": "Este anuncio ya no existe.",
+      "LISTING_NOT_FOUND": "Este anuncio ya no existe.",
       "LISTING_DELETED_SUCCESSFULLY": "Anuncio eliminado.",
 
       "INVALID_RATING": "Por favor selecciona una calificación válida.",
@@ -130,7 +130,15 @@
       "FAILED_TO_FETCH_INCOMING_NOTIFICATIONS": "No se pudieron obtener las notificaciones entrantes. Por favor, inténtelo de nuevo más tarde.",
       "FAILED_TO_READ_NOTIFICATION": "No se pudo marcar la notificación como leída. Por favor, inténtelo de nuevo más tarde.",
       "FAILED_TO_ARCHIVE_NOTIFICATION": "No se pudo archivar la notificación. Por favor, inténtelo de nuevo más tarde.",    
-      "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "No se pudieron eliminar las notificaciones archivadas. Por favor, inténtelo de nuevo más tarde."
+      "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "No se pudieron eliminar las notificaciones archivadas. Por favor, inténtelo de nuevo más tarde.",
+      "CANNOT_SIGNIN_THROUGH_EMAIL_PASSWORD": "Tu cuenta fue registrada usando Google. Por favor inicia sesión con Google en lugar de tu email y contraseña",
+      "INVALID_CURRENCY_CODE": "Código de moneda inválido.",
+      "CURRENCY_CODE_IS_REQUIRED": "El código de moneda es obligatorio.",
+      "COST_PRICE_IS_REQUIRED": "El precio de coste es obligatorio.",
+      "NO_CURRENCY_RECEIVED": "No se recibió ninguna moneda.",
+      "INVALID_CURRENCY": "Moneda inválida.",
+      "CONFIRMED_OFFER": "Tu oferta ha sido confirmada.",
+      "DUPLICATED_OFFER": "Ya has enviado una oferta para este anuncio."
     },
 
     "clientMessages": {

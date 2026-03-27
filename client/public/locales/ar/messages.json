@@ -74,7 +74,7 @@
     "SUCCESSFUL_CREATED_LISTING": "إعلانك الآن متاح!",
     "SUCCESSFUL_UPDATED_LISTING": "تم تحديث الإعلان بنجاح.",
     "INVALID_ID_FORMAT": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "LIS_UNFOUND": "هذا الإعلان لم يعد موجودًا.",
+    "LISTING_NOT_FOUND": "هذا الإعلان لم يعد موجودًا.",
     "LISTING_DELETED_SUCCESSFULLY": "تم حذف الإعلان.",
 
     "INVALID_RATING": "يرجى تحديد تقييم صالح.",
@@ -130,7 +130,15 @@
     "FAILED_TO_FETCH_INCOMING_NOTIFICATIONS": "فشل في جلب الإشعارات الواردة. يرجى المحاولة مرة أخرى لاحقاً.",
     "FAILED_TO_READ_NOTIFICATION": "فشل في تحديد الإشعار كمقروء. يرجى المحاولة مرة أخرى لاحقاً.",
     "FAILED_TO_ARCHIVE_NOTIFICATION": "فشل في أرشفة الإشعار. يرجى المحاولة مرة أخرى لاحقاً.",
-    "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "فشل في حذف الإشعارات المؤرشفة. يرجى المحاولة مرة أخرى لاحقاً."
+    "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "فشل في حذف الإشعارات المؤرشفة. يرجى المحاولة مرة أخرى لاحقاً.",
+    "CANNOT_SIGNIN_THROUGH_EMAIL_PASSWORD": "تم تسجيل حسابك باستخدام Google. يرجى تسجيل الدخول باستخدام Google بدلاً من بريدك الإلكتروني وكلمة المرور",
+    "INVALID_CURRENCY_CODE": "رمز العملة غير صالح.",
+    "CURRENCY_CODE_IS_REQUIRED": "رمز العملة مطلوب.",
+    "COST_PRICE_IS_REQUIRED": "سعر التكلفة مطلوب.",
+    "NO_CURRENCY_RECEIVED": "لم يتم استلام أي عملة.",
+    "INVALID_CURRENCY": "عملة غير صالحة.",
+    "CONFIRMED_OFFER": "تم تأكيد عرضك.",
+    "DUPLICATED_OFFER": "لقد قدّمت عرضاً بالفعل على هذا الإعلان."
   },
 
   "clientMessages": {

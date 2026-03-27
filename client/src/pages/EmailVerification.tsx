@@ -105,39 +105,45 @@ import clsx from "clsx";
      initial={{opacity:0, y:20}}
      animate={{opacity:1, y:0, transition:{duration:.5}}}
      className='w-full max-w-xl  bg-base-300 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-[40px] shadow-xl 
-     border border-base-content/20 overflow-hidden px-20'
+     border border-base-content/20 overflow-hidden'
      >
 
-     <div className="p-8 ">
-       <h1 className='text-3xl font-bold text-base-content text-center'>
+     <div className="px-6 sm:px-14 py-10">
+       <h1 className='text-2xl sm:text-3xl font-bold text-base-content text-center'>
         {t("verification.title", {ns:"auth"})}
        </h1>
-       <p className="text-base-content text-center my-6">
+       <p className="text-base-content/70 text-sm sm:text-base text-center mt-3 mb-8">
         {t("verification.subtitle", {ns:"auth"})}
        </p>
-       <form onSubmit={handleSubmit} ref={formRef}
+       <form className="mx-20" onSubmit={handleSubmit} ref={formRef}
          >
-        <div className={clsx(i18n.language === "ar" && "flex-row-reverse",
-         "flex flex-wrap justify-center gap-3")}
-       >
-          {code.map((value, index) => (
-            <input
-             type="text"
-             onFocus={() => moveCursorToStart(index)}
-             value={value}
-             key={index}
-             onChange={(e) => handleChange(index, e.target.value)}
-             ref={(el) => { inputRefs.current[index] = el} }
-             maxLength={6}
-             onKeyDown={(e) => handleKeyDown(index, e)}
-             
-             className="cursor-default caret-transparent w-12 h-12 text-center text-2xl font-bold bg-base-100
-            border-base-content/10 text-base-content border rounded-lg focus:outline-none
-             focus:ring-offset-1 focus:ring-offset-base-300
-              focus:ring-2 focus:ring-primary"
-             />
-          ))}
-        </div>
+        <div
+        className={clsx(
+          i18n.language === "ar" && "flex-row-reverse",
+          "flex justify-center gap-2 sm:gap-3"
+        )}
+      >
+        {code.map((value, index) => (
+          <input
+            key={index}
+            type="text"
+            onFocus={() => moveCursorToStart(index)}
+            value={value}
+            onChange={(e) => handleChange(index, e.target.value)}
+            ref={(el) => { inputRefs.current[index] = el }}
+            maxLength={6}
+            onKeyDown={(e) => handleKeyDown(index, e)}
+            className="cursor-default caret-transparent
+              w-10 h-10 xs:w-12 xs:h-12
+              text-center text-xl sm:text-2xl font-bold
+              bg-base-100 text-base-content
+              border border-base-content/10 rounded-lg
+              focus:outline-none focus:ring-2 focus:ring-primary
+              focus:ring-offset-1 focus:ring-offset-base-300
+              transition-all duration-150"
+          />
+        ))}
+      </div>
       
       <Button classes="!py-3 mt-6">
        {isLoading

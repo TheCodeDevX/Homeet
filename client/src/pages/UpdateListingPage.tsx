@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import CounterBtn from "../components/CounterBtn"
 import i18n from "../config/reacti18next"
+import { useAuthStore } from "../store/authStore"
 
 
 
@@ -18,6 +19,7 @@ const UpdateListingPage = () => {
 
   // const [unit, setUnit] = useState<Exclude<FormData["pricingType"], "">>("monthly")
     const {isLoading, updateListing, listing, getListing} = useListingStore()
+    const {user} = useAuthStore()
    
   
     useEffect(() => {
@@ -35,45 +37,48 @@ const UpdateListingPage = () => {
     const [imagesPreview, setImagesPreview] = useState<({url : string} | string)[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null)  
   const [formState, setFormState] = useState<FormData>({
-    title: "",
-    description:  "",
-    location: "",
+    title:"",
+    description: "",
+    location:"",
     images: [],
-    pricingType:  "placeholder",
+    pricingType: "placeholder",
     amenities : [],
-    price: 0,
+    price: {amount_usd: 0, amount_local:0, currency: undefined},
     bedrooms:0,
-    beds: 0,
-    size: 0,
-    floor: 0,
+    beds:0,
+    size:0,
+    floor:0,
+    adults:0,
+    children:0,
+    pets:0,
     bathrooms:0,
-    pets : 0,
-    adults : 0,
-    avgRating : 0,
-    children : 0
   });
 
-      useEffect(() => {
+    useEffect(() => {
       if(listing) {
-    setFormState({
-    title:listing?.title ?? "",
-    description: listing?.description ?? "",
-    location:listing?.location ?? "",
-    images: listing.images ?? [],
-    pricingType: listing?.pricingType ?? "placeholder",
-    amenities : listing?.amenities ?? [],
-    price: listing?.price ?? 0,
-    bedrooms:listing?.bedrooms ?? 0,
-    beds:listing?.beds ?? 0,
-    size:listing?.size ?? 0,
-    floor:listing?.floor ?? 0,
-    bathrooms:listing?.bathrooms ?? 0,
-    children : listing?.children ?? 0,
-    pets : listing?.pets ?? 0,
-    adults : listing?.adults ?? 0
+        setFormState({
+        title:listing?.title ?? "",
+        description: listing?.description ?? "",
+        location:listing?.location ?? "",
+        images: listing.images ?? [],
+        pricingType: listing?.pricingType ?? "placeholder",
+        amenities : listing?.amenities ?? [],
+        price: {
+        amount_local:listing.price.amount_local,
+        amount_usd:listing.price.amount_usd,
+        currency: listing.price.currency
+        }, // listing?.price ?? 0,
+        bedrooms:listing?.bedrooms ?? 0,
+        beds:listing?.beds ?? 0,
+        size:listing?.size ?? 0,
+        floor:listing?.floor ?? 0,
+        bathrooms:listing?.bathrooms ?? 0,
+        children : listing?.children ?? 0,
+        pets : listing?.pets ?? 0,
+        adults : listing?.adults ?? 0
         })
       }
-      setImagesPreview(listing?.images ?? [])
+    setImagesPreview(listing?.images ?? [])
     }, [listing])
 
 
@@ -107,9 +112,7 @@ const UpdateListingPage = () => {
     
 
   const handleSubmit = async(e:FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-
+   e.preventDefault()
     if(!formState.pricingType) console.log("please pick a renatl type!")
     
     try {
@@ -351,11 +354,11 @@ const UpdateListingPage = () => {
        onChange={handleChange} min={0} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
 
         <CounterBtn onClick={(e) => {e.preventDefault();
-          setFormState(prev => ({...prev, beds: prev.beds ? prev.beds + 1 : 1 }))}} btnType="increasement"/>
+          setFormState(prev => ({...prev, beds: prev.beds ? prev.beds + 1 : 1 }))}} btnType="increment"/>
 
        {!formState.beds || formState.beds < 1 ? (<></>) : (
         <>
-           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
+           <CounterBtn btnType="decrement"  onClick={(e) => {e.preventDefault();
              setFormState(prev => ({...prev, beds: prev.beds &&
           prev.beds <= 0 ? 0 : prev.beds && prev.beds - 1  }))}}/>
         </>
@@ -368,13 +371,13 @@ const UpdateListingPage = () => {
       <label className="flex flex-col relative">
         <input type="number"  name="bathrooms" value={formState.bathrooms} 
         onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
-       <CounterBtn btnType="increasement" onClick={(e) => {e.preventDefault();
+       <CounterBtn btnType="increment" onClick={(e) => {e.preventDefault();
          setFormState(prev => ({...prev, bathrooms: prev.bathrooms ? prev.bathrooms + 1 : 1 }))}}/>
         
 
           {!formState.bathrooms || formState.bathrooms < 1 ? (<></>) : (
         <>
-           <CounterBtn btnType="decreasement"  onClick={(e) => {e.preventDefault();
+           <CounterBtn btnType="decrement"  onClick={(e) => {e.preventDefault();
             setFormState(prev => ({...prev, bathrooms: prev.bathrooms &&
           prev.bathrooms <= 0 ? 0 : prev.bathrooms && prev.bathrooms - 1  }))}}/>
           </>
@@ -388,13 +391,13 @@ const UpdateListingPage = () => {
         <input type="number"  name="bedrooms" value={formState.bedrooms} 
          onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
        <CounterBtn  onClick={(e) => {e.preventDefault();
-         setFormState(prev => ({...prev, bedrooms: prev.bedrooms ? prev.bedrooms + 1 : 1 }))}} btnType="increasement"/>
+         setFormState(prev => ({...prev, bedrooms: prev.bedrooms ? prev.bedrooms + 1 : 1 }))}} btnType="increment"/>
 
            {!formState.bedrooms || formState.bedrooms < 1 ? (<></>) : (
         <>
           <CounterBtn onClick={(e) => {e.preventDefault();
             setFormState(prev => ({...prev, bedrooms: prev.bedrooms &&
-          prev.bedrooms <= 0 ? 0 : prev.bedrooms && prev.bedrooms - 1  }))}} btnType="decreasement"/>
+          prev.bedrooms <= 0 ? 0 : prev.bedrooms && prev.bedrooms - 1  }))}} btnType="decrement"/>
         </>
            )}
       </label>
@@ -406,12 +409,12 @@ const UpdateListingPage = () => {
         <input type="number"  name="size" value={formState.size} 
          onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
        <CounterBtn onClick={(e) => {e.preventDefault(); 
-        setFormState(prev => ({...prev, size: prev.size ? prev.size + 1 : 1 }))}} btnType="increasement"/>
+        setFormState(prev => ({...prev, size: prev.size ? prev.size + 1 : 1 }))}} btnType="increment"/>
 
             {!formState.size || formState.size < 1 ? (<></>) : (
         <>
            <CounterBtn  onClick={(e) => {e.preventDefault(); setFormState(prev => ({...prev, size: prev.size &&
-          prev.size <= 0 ? 0 : prev.size && prev.size - 1  }))}} btnType="decreasement"/>
+          prev.size <= 0 ? 0 : prev.size && prev.size - 1  }))}} btnType="decrement"/>
         </>
           )}
       </label>
@@ -423,33 +426,45 @@ const UpdateListingPage = () => {
         <input type="number"  name="floor" value={formState.floor}
          onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
        <CounterBtn onClick={(e) => {e.preventDefault();
-         setFormState(prev => ({...prev, floor: prev.floor ? prev.floor + 1 : 1 }))}} btnType="increasement" />
+         setFormState(prev => ({...prev, floor: prev.floor ? prev.floor + 1 : 1 }))}} btnType="increment" />
 
            {!formState.floor || formState.floor < 1 ? (<></>) : (
         <>
           <CounterBtn onClick={(e) => {e.preventDefault();
             setFormState(prev => ({...prev, floor: prev.floor &&
-          prev.floor <= 0 ? 0 : prev.floor && prev.floor - 1  }))}} btnType="decreasement" />
+          prev.floor <= 0 ? 0 : prev.floor && prev.floor - 1  }))}} btnType="decrement" />
         </>
         )}
       </label>
     </div>
 
     <div>
-      <span className="mb-2 md:text-md text-sm">{t("labels.specs.rentalPrice", {ns:"common"})}</span>
+      <span className="mb-2 md:text-md text-sm">
+        {t(`labels.${user?.role === "seller" ? "specs.salePrice"
+           : (user?.role === "none" || !user?.role) ? "price" 
+           : "specs.rentalPrice"}`, {ns:"common"})}
+      </span>
       <label className="flex flex-col relative">
-        <input type="number" name="price" value={formState.price}
-        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
-       <CounterBtn onClick={(e) => 
-        {e.preventDefault(); setFormState(prev => ({...prev, price: prev.price ? prev.price + 1 : 1 }))}} btnType="increasement"/>
+        <input type="number" name="amount_local" value={formState.price.amount_local}
+        onChange={({target : {value, type}}) => setFormState((prev) => ({...prev, price : {...prev.price, amount_local : 
+         type === "number"
+        ? /^0/.test(value)
+        ? value.replace(/^0/, "") 
+        : +value : value
+        } }))}
+        className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn type="button" onClick={() => 
+        {setFormState(prev => 
+        ({...prev, price: {...prev.price, amount_local : +prev.price.amount_local ? +prev.price.amount_local + 1 : 1} }))}}
+         btnType="increment"/>
 
-            {!formState.price || formState.price < 1 ? (<></>) : (
+            {!formState.price.amount_local || +formState.price.amount_local < 1 ? (<></>) : (
         <>
-           <CounterBtn onClick={(e) => { 
-            e.preventDefault()
-            setFormState(prev => ({...prev, price: prev.price &&
-          prev.price <= 0 ? 0 : prev.price && prev.price - 1 }))
-           }} btnType="decreasement" />
+           <CounterBtn type="button" onClick={() => { 
+            setFormState(prev => ({...prev, price: {...prev.price, amount_local : prev.price.amount_local &&
+            +prev.price.amount_local <= 0 ? 0 : prev.price.amount_local && +prev.price.amount_local - 1 }
+        }))
+           }} btnType="decrement" />
         </>
         )}
       </label>
@@ -457,6 +472,68 @@ const UpdateListingPage = () => {
 
   </div>
 </div>
+ <div>
+  <h1 className="lg:text-lg text-md font-bold mb-1">{t("labels.guestCapacity", {ns: "common"})}</h1>
+  <span className="lg:text-sm text-xs">{t("labels.guestLabel", {ns: "common"})}</span>
+  <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
+    <div>
+      <span className="mb-2 md:text-md text-sm">{t("labels.adults", {ns: "common"})}</span>
+      <label className="flex flex-col relative">
+        <input type="number"  name="adults" value={formState.adults} 
+        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn btnType="increment" onClick={(e) => {e.preventDefault();
+         setFormState(prev => ({...prev, adults: prev.adults ? prev.adults + 1 : 1 }))}}/>
+        
+
+          {!formState.adults || formState.adults < 1 ? (<></>) : (
+        <>
+           <CounterBtn btnType="decrement"  onClick={(e) => {e.preventDefault();
+            setFormState(prev => ({...prev, adults: prev.adults &&
+          prev.adults <= 0 ? 0 : prev.adults && prev.adults - 1  }))}}/>
+          </>
+       )}
+      </label>
+    </div>
+
+     <div>
+      <span className="mb-2 md:text-md text-sm">{t("labels.children", {ns: "common"})}</span>
+      <label className="flex flex-col relative">
+        <input type="number"  name="children" value={formState.children} 
+        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn btnType="increment" onClick={(e) => {e.preventDefault();
+         setFormState(prev => ({...prev, children: prev.children ? prev.children + 1 : 1 }))}}/>
+        
+
+          {!formState.children || formState.children < 1 ? (<></>) : (
+        <>
+           <CounterBtn btnType="decrement"  onClick={(e) => {e.preventDefault();
+            setFormState(prev => ({...prev, children: prev.children &&
+          prev.children <= 0 ? 0 : prev.children && prev.children - 1  }))}}/>
+          </>
+       )}
+      </label>
+    </div>
+
+     <div>
+      <span className="mb-2 md:text-md text-sm">{t("labels.pets", {ns: "common"})}</span>
+      <label className="flex flex-col relative">
+        <input type="number" name="pets" value={formState.pets} 
+        onChange={handleChange} min={0} max={1000} className={`input input-bordered ${lang === "ar" ? "pr-2" : "pr-28"}`} />
+       <CounterBtn btnType="increment" onClick={(e) => {e.preventDefault();
+         setFormState(prev => ({...prev, pets: prev.pets ? prev.pets + 1 : 1 }))}}/>
+        
+
+          {!formState.pets || formState.pets < 1 ? (<></>) : (
+        <>
+           <CounterBtn btnType="decrement"  onClick={(e) => {e.preventDefault();
+            setFormState(prev => ({...prev, pets: prev.pets &&
+          prev.pets <= 0 ? 0 : prev.pets && prev.pets - 1  }))}}/>
+          </>
+       )}
+      </label>
+    </div>
+    </div>
+    </div>
  <button type="submit" className="btn w-full btn-primary ">{!isLoading ?
                 (<>{t("buttons.updateListing", {ns:"common"})} <PenBox/></>) : (
                 <><Loader className="animate-spin text-center mx-auto size-5"/></>

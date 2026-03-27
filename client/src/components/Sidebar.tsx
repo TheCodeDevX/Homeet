@@ -1,10 +1,9 @@
 import { useSidebarToggle } from '../hooks/useSidebarToggle';
 import {motion,} from 'framer-motion'
-import SidebarContent from './SidebarContent';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type PropsWithChildren } from 'react';
 
 
- const Sidebar = () => {
+ const Sidebar = ({children} : PropsWithChildren) => {
 
    const {isOpen, setIsOpen} = useSidebarToggle();
    const ref = useRef<HTMLAnchorElement>(null)
@@ -27,11 +26,11 @@ import { useEffect, useRef } from 'react';
    <>
 
    
-      <aside
+   <aside
     className={`fixed z-[50] top-24 left-0 w-72 
     2xl:flex hidden flex-col border-r border-r-base-content/10
     h-[calc(100%-96px)] overflow-y-auto backdrop-filter backdrop-blur-3xl bg-base-content/5 `}>
-       <SidebarContent/>
+       {children}
    </aside>
 
 
@@ -42,8 +41,8 @@ import { useEffect, useRef } from 'react';
    className={`fixed z-[9999] top-24 left-0 w-72 border-r border-r-base-content/10
     2xl:hidden flex flex-col
     h-[calc(100%-96px)] overflow-y-auto backdrop-filter backdrop-blur-3xl bg-base-300 `}>
-    <SidebarContent/>
-      </motion.aside>
+    {children}
+  </motion.aside>
 
      </>
    )

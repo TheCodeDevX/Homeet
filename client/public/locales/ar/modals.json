@@ -1,11 +1,14 @@
 {
-    "logoutModal" : {
+    "Modal" : {
         "logout" : "تسجيل الخروج",
         "msg" : "هل أنت متأكد من أنك تريد تسجيل الخروج؟",
         "actions" : {
             "confirm" : "تأكيد",
             "cancel" : "إلغاء"
-        }
+        },
+        "deleteListingTitle": "تأكيد حذف القائمة",
+        "deleteListingMsg": "لا يمكن التراجع عن هذا الإجراء. بمجرد تأكيدك، سيتم حذف قائمتك بشكل دائم!"
+       
     },
 
     "ratingModal" : {

@@ -120,7 +120,7 @@ import type { AuthData } from '../types/types'
          const res = await authApi.get("/checkAuth")
          set({user:res?.data?.user, isAuthenticated:true})
         } finally {
-         set({isCheckingAuth:false})
+         set({isCheckingAuth:false, error:null})
        }
     },
 

@@ -22,12 +22,13 @@ import clsx from 'clsx';
     {
     !isFollowing ?
     (  <button onClick={handleFollowReq}
-    className={`btn  ${fontSize} max-sm:w-full btn-outline rounded-xl border border-base-content/20  ${isReqLoading ? "cursor-wait" : "cursor-pointer"}`}>
+    className={`btn  ${fontSize} max-sm:w-full btn-outline rounded-xl border border-base-content/20
+     ${isReqLoading ? "cursor-wait" : "cursor-pointer"}`}>
     { isReqLoading ? (<>{t("buttons.following", {ns:"common"})} <Loader2 className={clsx( size , "animate-spin")}/></>) : 
     (<>{t("buttons.follow", {ns:"common"})} <UserPlusIcon className={clsx(size)}/></>)}
     </button>) : (
     <button onClick={handleFollowReq}
-    className={`btn max-sm:w-full ${fontSize} btn-active bg-base-100 text-base-content
+    className={`btn max-sm:w-full ${fontSize} btn-active bg-base-100 text-base-content 
     border-base-content/10 shadow-sm shadow-base-content/50 hover:shadow-base-300
     hover:bg-base-content border hover:border-base-300 hover:text-base-300 rounded-xl
     ${isReqLoading ? "cursor-wait" : "cursor-pointer"}

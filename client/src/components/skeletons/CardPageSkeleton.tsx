@@ -1,6 +1,5 @@
 
  const CardPageSkeleton = () => {
-  document.body.style.overflow = "hidden";
    return (
       <div className="relative mt-24">
    

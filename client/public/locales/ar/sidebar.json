@@ -1,4 +1,19 @@
 {
+
+    "sidebar": {
+  "logout": "تسجيل الخروج",
+"dashboard": "لوحة التحكم",
+"overview": "نظرة عامة",
+"bookings": "الحجوزات",
+"analytics": "التحليلات",
+"settings": "الإعدادات",
+"manageListings": "أدر إعلانات عقاراتك بسهولة",
+"overviewDesc": "اعرض المقاييس الرئيسية والأداء",
+"bookingsDesc": "أدر جميع حجوزات ضيوفك",
+"analyticsDesc": "تابع الإيرادات وبيانات الضيوف",
+"settingsDesc": "اضبط حسابك وتفضيلاتك"
+  },
+
     "content" : {
         "title" : "التصفية",
         "filters" : {

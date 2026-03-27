@@ -140,8 +140,9 @@ useEffect(() => {
           <div className="flex flex-col gap-2 mt-2">
              { notifications.length === 0 && !isLoading ?
               <div>
-                <FallbackCard icon="notifs" header='No Notifications Yet' subtext='please wait until you receive new 
-                notifications to be able to see them appear here'/>
+                <FallbackCard icon="notifs" header='No Notifications Yet'
+                subtext='please wait until you receive new 
+                notifications to be able to see them appear here'/> 
               </div>
               
              : 
@@ -152,7 +153,6 @@ useEffect(() => {
            
           <div className="card border border-base-content/10 shadow-[0px_0px_30px_1px] shadow-primary/10 bg-base-300
            flex items-center justify-center gap-4 p-8">
-            {/* <div className='absolute'> {notif?.status} {notif?.readAt?.toString()}</div> */}
             <section className="flex items-center justify-between w-full gap-2 ">
                 <div className="relative">
                   <div className='avatar '>
@@ -186,7 +186,7 @@ useEffect(() => {
           
        <div className="flex max-sm:flex-wrap items-center justify-end gap-2 w-full">
           { notif?.sender?.role !== "tenant" && 
-            <button onClick={() =>
+          <button onClick={() =>
                helpers.handleFollowReq({
                userId:notif.recipient?._id?.toString(), // the authenticated user
                recipientId:notif.sender._id,

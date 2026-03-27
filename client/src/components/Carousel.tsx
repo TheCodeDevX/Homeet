@@ -14,10 +14,10 @@ import home from "../assets/house.svg"
           <div className="overflow-hidden rounded-2xl relative">
              
                    <div className="w-full bg-base-100 h-[500px] flex items-center justify-center">
-                    <img key={listing?.images[state.currentIndex]} 
+                    <img key={listing?.images?.[state?.currentIndex]} 
                     className='size-full object-cover object-center transition-opacity opacity-0 duration-500' 
                     onLoad={(e) => e.currentTarget.classList.add("!opacity-100")}
-                    src={listing?.images[state.currentIndex] || home} alt="Image" />
+                    src={listing?.images?.[state?.currentIndex] || home} alt="Image" />
                </div>
                  
         { listing?.images && listing?.images?.length > 1  &&  <motion.div>

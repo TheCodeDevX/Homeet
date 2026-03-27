@@ -1,4 +1,4 @@
-import { ArrowLeft,Bath, Bed, BedDouble, BedSingleIcon, Building2, Info, Maximize2, MessageCircle } from "lucide-react"
+import { Bath, Bed, BedDouble, BedSingleIcon, Building2, ChevronLeft, ChevronRight, Info, Maximize2, MessageSquare } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import avatar from "../assets/avatar.png"
 import verificationIcon from '../assets/verificationIcon.svg'
@@ -21,14 +21,15 @@ import ToolTip from "../components/ToolTip"
 import "flatpickr/dist/flatpickr.css";
 import Button from "../components/Button"
 import Price from "../components/Price"
-import useBooking from "../hooks/useBooking"
 import CardPageSkeleton from "../components/skeletons/CardPageSkeleton"
 import useGsapAnimation from "../hooks/useGsapAnimation"
-import DatePicker from "../components/DatePicker"
 import clsx from "clsx"
 import CommentSection from "../components/CommentSection"
 import * as helpers from "../utils/helpers"
 import type { UserData, UserRole } from "../types/types"
+import BookingForm from "../components/BookingForm"
+import {motion} from 'framer-motion'
+import { useThemeStore } from "../store/themeStore"
 
 
 
@@ -66,11 +67,10 @@ import type { UserData, UserRole } from "../types/types"
  
 //  const dateRef = useRef<HTMLInputElement | null>(null);
  
- const {selectedDateRef, selectedDate, setSelectedDate} = useBooking();
-
+//  const {selectedDateRef, selectedDate, setSelectedDate} = useBooking();
 //  const gsapAnimation = useGsapAnimation(container.current)
 
- 
+  
   
   const {sendFollowReq,  isReqLoading} = useFollowRequestStore()
   useEffect(() => {
@@ -129,68 +129,24 @@ import type { UserData, UserRole } from "../types/types"
 
 
 
-
-    
-
-
    // Variables 
    const isMobile = useMediaQuery({maxWidth:640})
-   const isLargeScreen = useMediaQuery({minWidth:1520})
-  
-   // flatpickr
-  // useEffect(() => {
-  //   if(!dateRef.current) return;
-  //   const instance = flatpickr(dateRef.current);
-  //    console.log("instance", instance )
-  // }, []);
 
-  useEffect(() => {
-    if(isLargeScreen || !isLargeScreen) {
-      setIsShow(false)
-    }
-  }, [isLargeScreen])
 
-  //  useEffect(() => {
-  //       const onClose = (e: MouseEvent) => {
-  //        if(!containerTwo.current?.contains(e.target as Node)) {
-  //         setIsShow(false)
-  //        }
-  //       }
-  
-  //       document.addEventListener("mousedown", onClose)
-  //       return () => document.removeEventListener("mousedown", onClose)
-  // }, [])
 
 
   const isAllowedUser = user?._id?.toString() !== listing?.user?._id?.toString();
   const handleClick = () => setIsShow(prev => !prev);
+  const {theme} = useThemeStore()
 
 
  
   if(isCardLoading) {
     return <CardPageSkeleton/>
-  } else document.body.style.overflow = 'auto'
+  }
    return (
     <>
-{ isAllowedUser && !isLargeScreen &&
-   
-  <div ref={containerTwo} 
-     className={clsx("fixed top-28 w-[400px] z-[2] bg-base-300 p-4 rounded opacity-0 invisible",
-       "left-1/2 -translate-x-1/2"
-     )}
-    >
-     <DatePicker 
-     listing={listing}
-     checkIn={selectedDateRef.current.checkIn}
-     checkOut={selectedDateRef.current.checkOut}
-     selectedDateRef={selectedDateRef}
-     handleClick={() => setIsShow(false)}
-     selectedDate={selectedDate}
-     setSelectedDate={setSelectedDate}
-     />
-     </div>
-   
- }
+    
 
  {id && <CommentSection
   ratings={ratings}
@@ -200,144 +156,163 @@ import type { UserData, UserRole } from "../types/types"
      
      <div className={`relative mt-24`}>
        {/* Date Picker */}
-   { isAllowedUser && isLargeScreen &&
-     <div ref={containerTwo} 
-     className={clsx("fixed top-28 w-[400px] z-[2] bg-base-300 p-4 rounded opacity-0 invisible",
-       "right-4"
+   { isAllowedUser &&
+      <>
+      {<motion.div animate={{opacity:isShow ? 1 : 0,
+      visibility: isShow ? "visible" : "hidden"
+
+      }} className="inset-0 bg-black/50 fixed z-[999]"/>}
+     <div ref={containerTwo}
+     className={clsx("fixed inset-0 z-[1000] flex items-center justify-center", 
+      "2xl:items-start 2xl:justify-end opacity-0 invisible"
+    
      )}
     >
-     <DatePicker 
+     
+     
+      <BookingForm 
       handleClick={() => setIsShow(false)}
       listing={listing}
-      checkIn={selectedDateRef.current.checkIn}
-      checkOut={selectedDateRef.current.checkOut} 
-      selectedDateRef={selectedDateRef}
-      selectedDate={selectedDate}
-      setSelectedDate={setSelectedDate}
      />
+   
+     
      </div>
+      </>
  }
 
- {/* <div className="absolute max-sm:right-8 top-4">
-  <button onClick={() => setIsSidebarOpen(true)}
-   className="btn btn-primary">
-    <ArrowRight/> <p className="flex items-center gap-2">Comment Section</p>
-  </button>
- </div> */}
-
+  <div className="max-w-2xl w-full mx-auto space-y-0 lg:p-4 p-2">
  
+     <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className={`flex items-center justify-center gap-2 text-sm font-medium text-base-content
+             border px-4 py-2 rounded-lg border-base-content/20
+             hover:bg-base-content/5 ${["forest", "dark"].includes(theme) ? "hover:text-white" 
+             : "hover:text-base-content"} transition-colors duration-200`}
+          >
+           { lang === "ar" ? <ChevronRight size={16}/> : <ChevronLeft size={16} />}
+            {t("buttons.goback", { ns: "common" })}
+          </button>
 
-      <div className="max-w-2xl w-full mx-auto space-y-0 lg:p-4 p-2">
-        <div className="bg-base-300 border border-base-content/20 rounded-xl p-6 shadow-2xl space-y-4">
-          <div className="flex items-center justify-between">
-            <button onClick={() => navigate(-1)}  className="flex items-center gap-2
-             font-bold hover:text-base-content/80 transition-colors duration-200">
-            <ArrowLeft/> {t("buttons.goback", {ns:"common"})}
+          {ratings.length > 0 && (
+            <button
+              onClick={() => setIsSidebarOpen((prev) => !prev)}
+              className={`flex items-center gap-2 text-sm font-medium text-base-content px-4 py-2 rounded-lg border transition-colors duration-200
+                ${isSidebarOpen
+                  ? "border-blue-400/40 text-blue-400 bg-blue-400/5"
+                  : "border-base-content/20 text-base-content hover:text-base-content hover:border-base-content/30 hover:bg-base-content/5"
+                }`}
+            >
+              {t("buttons.comments", { ns: "common" })}
+              <MessageSquare size={15} />
             </button>
-
-           { ratings.length > 0 &&  <button onClick={() => setIsSidebarOpen(prev => !prev)}
-             className={`flex items-center gap-2 font-semibold ${isSidebarOpen 
-              ? "text-blue-400 hover:text-blue-400/80" 
-              : "text-base-content hover:text-base-content/80"}
-              transition-colors duration-200`}>
-             {t("buttons.comments", {ns:"common"})} <MessageCircle size={18}/>
-  
-            </button>}
-          </div>
-            
+          )}
+        </div>
+        <div className="bg-base-300 border border-base-content/10 rounded-xl px-6 py-8 shadow-xl space-y-4">
             <div className="flex flex-col items-center w-full">
               <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-              
-               <div ref={parent} className="relative h-fit w-fit ">
-                 <div onClick={() => isMobile ? setIsOpen(prev => !prev) :
-                  isAllowedUser && navigate(`/profile/${listing?.user?._id}`)} 
-                className={`peer rounded-full flex items-center justify-center overflow-hidden
-                ${isAllowedUser ? 
-                "hover:scale-95 transition-all duration-300 cursor-pointer"
-                : "cursor-default"
-              }`}>
-                  <img className="size-20 object-cover" src={listing?.user?.profilePic || avatar}
-                   alt={"Profile Picture"} />
-                   
-                    
-                   
-                </div>
-                {isAllowedUser && <ToolTip/>}
-             { isAllowedUser && isMobile &&
-                <div id="card" ref={container} 
-                className={`absolute ${lang === "ar" ? "right-full" : "left-full"} top-1/2
-                 -translate-y-1/2 border border-primary/20 rounded-2xl opacity-0`}>
-                  {/* Triangle */}
-                  <div className={`absolute top-1/2  ${lang === "ar" ? "left-full rotate-180" : "right-full"} `}>
-                   <div className="absolute top-1/2 -translate-y-1/2 border border-transparent">
-                    <div className={`absolute top-1/2 -translate-y-1/2 
-                    ${lang === "ar" ? "-right-3" : "-left-4"} h-0 w-0 z-20
-
-                    border-l-[0px] border-l-transparent
-                    border-r-[24px] border-r-base-100
-                    border-b-[20px] border-b-transparent
-                    border-t-[20px] border-t-transparent
-                    `}>
-                    </div>
-
-
-                      <div className={`absolute top-1/2 -translate-y-1/2 
-                       ${lang === "ar" ? "-right-[10px]" : "-left-[18px]"}  h-0 w-0 z-11
-                    border-l-[0px] border-l-transparent
-                    border-r-[24px] border-r-primary/20
-                    border-b-[20px] border-b-transparent
-                    border-t-[20px] border-t-transparent
-                    `}>
-                    </div>
-                   </div>
-                  </div>
-
-                  <div className="card bg-base-100 shadow-xl overflow-hidden">
-                  <div className="flex w-[200px] flex-wrap items-center justify-between py-4 px-2">
-                <UserProfile isBtn user={listing?.user as UserData | null}/>
-                <div className="flex items-center justify-center max-md:flex-wrap gap-2 mx-2">
-
-                <FollowButton size="size-4" fontSize="text-xs"
-                  handleFollowReq={() => helpers.handleFollowReq({
-                  recipientId:listing?.user?._id?.toString() as string,
-                  userId: user?._id,
-                  sendFollowReq, setIsFollowing
-                  })}
-                  isFollowing={isFollowing}                
-                  isReqLoading={isReqLoading}
-                  handleNavigation={() => helpers.handleNavigation({
-                  listingUser:listing?.user,
-                  navigate,
-                  setSelectedUser
-                  })}
+               <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div ref={parent} className="relative h-fit w-fit">
+              <div
+                onClick={() =>
+                  isMobile
+                    ? setIsOpen((prev) => !prev)
+                    : isAllowedUser && navigate(`/profile/${listing?.user?._id}`)
+                }
+                className={`peer rounded-full flex items-center justify-center overflow-hidden ring-2 ring-base-content/10
+                  ${isAllowedUser
+                    ? "hover:scale-95 transition-all duration-300 cursor-pointer hover:ring-primary/40"
+                    : "cursor-default"
+                  }`}
+              >
+                <img
+                  className="size-14 object-cover"
+                  src={listing?.user?.profilePic || avatar}
+                  alt="Profile Picture"
                 />
-                
+              </div>
+
+              {isAllowedUser && <ToolTip />}
+
+              {isAllowedUser && isMobile && (
+                <div 
+                  id="card"
+                  ref={container}
+                  className={`absolute ${lang === "ar" ? "right-full" : "left-full"} top-1/2 -translate-y-1/2 border border-primary/20 rounded-2xl opacity-0`}
+                >
+                  {/* Triangle pointer */}
+                  <div className={`absolute top-1/2 ${lang === "ar" ? "left-full rotate-180" : "right-full"}`}>
+                    <div className="absolute top-1/2 -translate-y-1/2 border border-transparent">
+                      <div className={`absolute top-1/2 -translate-y-1/2 ${lang === "ar" ? "-right-3" : "-left-4"} h-0 w-0 z-20 border-l-[0px] border-l-transparent border-r-[24px] border-r-base-100 border-b-[20px] border-b-transparent border-t-[20px] border-t-transparent`} />
+                      <div className={`absolute top-1/2 -translate-y-1/2 ${lang === "ar" ? "-right-[10px]" : "-left-[18px]"} h-0 w-0 z-11 border-l-[0px] border-l-transparent border-r-[24px] border-r-primary/20 border-b-[20px] border-b-transparent border-t-[20px] border-t-transparent`} />
+                    </div>
+                  </div>
+                  <div className="card bg-base-100 shadow-xl overflow-hidden">
+                    <div className="flex w-[200px] flex-wrap items-center justify-between py-4 px-2">
+                      <UserProfile isBtn user={listing?.user as UserData | null} />
+                      <div className="flex items-center justify-center max-md:flex-wrap gap-2 mx-2">
+                        <FollowButton
+                          size="size-4"
+                          fontSize="text-xs"
+                          handleFollowReq={() => helpers.handleFollowReq({
+                            recipientId: listing?.user?._id?.toString() as string,
+                            userId: user?._id,
+                            sendFollowReq,
+                            setIsFollowing,
+                          })}
+                          isFollowing={isFollowing}
+                          isReqLoading={isReqLoading}
+                          handleNavigation={() => helpers.handleNavigation({
+                            listingUser: {
+                              firstName: listing?.user?.firstName ?? "Anonymous",
+                              lastName: listing?.user?.lastName ?? "Anonymous",
+                              _id: listing?.user?._id,
+                              profilePic: listing?.user?.profilePic,
+                            },
+                            navigate,
+                            setSelectedUser,
+                          })}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                </div>
-            
+              )}
+            </div>
 
-                </div>}
-
-               </div>
-                
-                <div>
-                <div className="flex gap-1 items-center">
-                   <h1 className="text-xl font-bold">{listing?.user?.firstName ?? "Anonymous"}</h1>
-                  {listing?.user && <img className='pointer-events-none select-none'
-                   src={verificationIcon} alt={listing?.user?.firstName || "userName"} />}
-                </div>
-                <p className="text-xs ">{roles[listing?.user?.role ?? "default"]}</p>
-                </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-base font-semibold text-base-content font-dmSerif">
+                  {listing?.user?.firstName ?? "Anonymous"}
+                </h2>
+                {listing?.user && (
+                  <img
+                    className="pointer-events-none select-none size-4"
+                    src={verificationIcon}
+                    alt={listing?.user?.firstName || "userName"}
+                  />
+                )}
               </div>
+              <p className="text-xs badge badge-outline text-base-content/50 tracking-wide mt-0.5">
+                {roles[listing?.user?.role ?? "default"]}
+              </p>
+            </div>
+          </div>
+        </div>
             { listing?.user?._id?.toString() !== user?._id?.toString() && <div className="flex gap-4 max-sm:hidden">
                 
             <FollowButton handleNavigation={
                   () => helpers.handleNavigation({
-                  listingUser:listing?.user,
+                  listingUser:{ 
+                  firstName: listing?.user?.firstName ?? "Anonymous",
+                  lastName:listing?.user?.lastName ?? "",
+                  _id:listing?.user?._id,
+                  profilePic:listing?.user?.profilePic
+                  },
                   navigate,
-                  setSelectedUser})
+                  setSelectedUser
+                })
                 }
               handleFollowReq={() => helpers.handleFollowReq({
                 recipientId:listing?.user?._id?.toString() as string,
@@ -350,8 +325,17 @@ import type { UserData, UserRole } from "../types/types"
              </div>}
               </div>
             </div>
-              <div className='flex gap-1 text-sm items-center'><ImLocation/>{listing?.location}</div>
-              <div className='flex gap-1 lg:text-2xl font-semibold text-xl items-center'>{listing?.title}</div>
+
+            <div className="flex flex-col gap-1.5 py-2">
+              <div className="flex items-center gap-1.5 text-xs text-base-content/45 uppercase tracking-widest">
+                  <ImLocation size={11} />
+                  {listing?.location}
+              </div>
+              <h1 className="text-2xl lg:text-3xl text-base-content leading-snug font-bold font-dmSerif">
+                {listing?.title}
+              </h1>
+            </div>
+
 
              <Carousel/>
 
@@ -446,9 +430,9 @@ import type { UserData, UserRole } from "../types/types"
                   <RiStarFill className='text-yellow-500 flex' size={30}/> 
                   <p className="flex items-baseline gap-1">
                   {avgRating?.toString().includes(".") ? avgRating.toFixed(1) : avgRating} {" "}
-                  <span className='text-xl text-base-content/50 relative -top-0.5'>(
-                  {lang === "ar" && " "} {t("labels.reviews", 
-                    {count: listing?.count, ns: "common"})} {lang !== "ar" && " "} )</span>
+                  <span className='text-sm text-base-content/50 relative -top-0.5'>(
+                    {t("labels.reviews", 
+                    {count: listing?.count, ns: "common"})})</span>
                   </p>
                 </div> 
                  </div>
@@ -461,9 +445,14 @@ import type { UserData, UserRole } from "../types/types"
         </div>
       </div>
      </div>
+
+
      </>
    )
  }
+
+
+
  
  export default CardPage
  

@@ -4,7 +4,7 @@ import {Eye, EyeClosed, Loader, Lock, Mail} from 'lucide-react'
 import {useState, type ChangeEvent, type FormEvent } from 'react'
 import Button from '../components/Button'
 import AuthButton from '../components/AuthButton'
-import {FaFacebookF, FaGoogle} from 'react-icons/fa'
+import { FaGoogle} from 'react-icons/fa'
 import { useAuthStore } from '../store/authStore'
 import { Link } from 'react-router-dom'
 import Light from '../components/Light'
@@ -13,6 +13,7 @@ import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
 import type { UserData } from '../types/types'
+import i18n from '../config/reacti18next'
 
 const LoginPage = () => {
   const {t} = useTranslation()
@@ -40,10 +41,8 @@ const LoginPage = () => {
     }
   }
 
-  const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
-  const facebook = () => window.open(`${"https://homeet.onrender.com"}/api/auth/facebook`, "_self")
-  // const google = () => window.open(`${"http://localhost:8000"}/api/auth/google`, "_self")
-  // const facebook = () => window.open(`${"http://localhost:8000"}/api/auth/facebook`, "_self")
+  // const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
+  const google = () => window.open(`${"http://localhost:8000"}/api/auth/google`, "_self")
 
   const {theme} = useThemeStore()
 
@@ -54,7 +53,7 @@ const LoginPage = () => {
     transition={{duration:0.5}}
     className='relative max-w-6xl mx-auto backdrop-filter backdrop-blur-xl rounded-[40px]
     bg-base-300 flex flex-col lg:flex-row justify-between overflow-hidden
-     p-6 border border-base-content/20 shadow-xl'>
+     border border-base-content/20 shadow-xl p-6'>
        <Light color='bg-base-content/40' top='top-[80%]' left='left-[80%]'/>
        <Light color='bg-base-content/40' top='top-[80%]' left='right-[80%]'/>
       
@@ -62,10 +61,10 @@ const LoginPage = () => {
           {/* Left Side */}
         <div className={`hidden  
          w-full lg:w-1/2 lg:flex items-center justify-center flex-col bg-gradient-to-b
-          ${lightThemes.includes(theme) ? "from-primary/60 to-primary/50 border-base-content/30 " 
-       : "from-primary/50 to-secondary/50 "} 
+          ${lightThemes.includes(theme) ? "from-primary/60 to-primary/50 border-base-content/30" 
+       : "from-primary/50 to-secondary/50"} 
            rounded-[40px]`}>
-            <div className="max-w-md p-8 flex flex-col text-center items-center justify-center ">
+              <div className="max-w-md p-8 flex flex-col text-center items-center justify-center ">
                 <div className="relative aspect-square  max-w-sm mx-auto">
                     <div className="flex w-full h-full items-center justify-center">
                          <TinyHouse/>
@@ -83,15 +82,16 @@ const LoginPage = () => {
         </div>
 
         {/* Right Side */}
-         <div className='w-full lg:w-1/2 flex flex-col lg:items-start lg:px-20 px-10 max-lg:py-10 justify-center'>
-         <div className='mb-2'>
-            <h1 className='text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text
+          <div className={`w-full lg:w-1/2 flex flex-col lg:items-start lg:px-20 px-10 max-lg:py-10 justify-center
+           ${i18n.language === "ar" ? "lg:mr-6 mr-0" : "lg:ml-6 ml-0"}`}>
+         <div className='mb-2 space-y-1'>
+            <h1 className='text-3xl max-xsss:text-2xl font-bold bg-gradient-to-r text-transparent bg-clip-text
             from-base-content from-0% to-base-content/90 to-100%'>
                 {t("login.title", {ns:"auth"})}
             </h1>
 
-            <div className='text-base-content/60 '>
-          <p>
+            <div className='text-base-content/60'>
+          <p className='text-[15px] lg:leading-[15px] max-xs:text-[14px] max-xsss:text-[12px]'>
           {t("login.q", {ns : 'auth'})}{" "}
           <Link to="/signup" className="text-primary font-semibold hover:underline">
             {t("login.link", {ns : "auth"})}
@@ -106,7 +106,7 @@ const LoginPage = () => {
              
               <div className="w-full">
                 <label>
-                  <span className='label-text text-base-content/80'>
+                  <span className='label-text max-xsss:!text-xs text-base-content/80'>
                     {t("labels.email", {ns:"common"})}
                   </span>
                   <Input autoComplete='email' type="email" name="email" placeholder={t("labels.email", {ns:"common"})}
@@ -117,7 +117,7 @@ const LoginPage = () => {
               
             <div className="w-full">
                 <label>
-                  <span className={`label-text text-base-content/80`}>
+                  <span className={`label-text max-xsss:!text-xs text-base-content/80`}>
                      {t("labels.password", {ns:"common"})}
                   </span>
                  <Input autoComplete='current-password' type={showPassword ? "text" : "password"} name="password"
@@ -128,7 +128,7 @@ const LoginPage = () => {
               </div>
 
               <div className="w-full">
-              <Link to="/forgot-password" className='hover:underline text-primary font-semibold'>
+              <Link to="/forgot-password" className='hover:underline max-lg:text-sm max-xsss:text-xs text-primary font-semibold'>
               {t("login.forgotPass", {ns:"auth"})}
               </Link>
               </div>
@@ -149,9 +149,8 @@ const LoginPage = () => {
            </div>
          </form>
 
-           <div className="flex max-xss:flex-wrap items-center gap-4 w-full mt-3">
+           <div className="flex items-center gap-4 w-full mt-3">
                <AuthButton googleAuth={google} provider={t("buttons.google", {ns:"common"})} icon={FaGoogle}/>
-               <AuthButton googleAuth={facebook}  provider={t("buttons.facebook", {ns:"common"})} icon={FaFacebookF}/>
           </div>
            
         </div>

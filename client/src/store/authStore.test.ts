@@ -405,7 +405,7 @@ describe("useAuthStore", () => {
     try {
     await result.current.checkAuth();      
     } catch (error) {
-      expect(error).toBe(new Error('error'))      
+      expect(error).toEqual(new Error('error'))      
     }
     });
 

@@ -46,13 +46,14 @@ const handlePausing = (id:string) => {
 
 
   useEffect(() => {  
-    getMessages(selectedUser?._id?.toString() as string)
+    if(!selectedUser?._id) return;
+    getMessages(selectedUser?._id.toString() as string)
     subToMessages()
     return () => unsubFromMessages()
-  }, [selectedUser, getMessages, subToMessages, unsubFromMessages])
+  }, [selectedUser, subToMessages, unsubFromMessages])
 
 
-  useEffect(() => {
+  useEffect(() => {   
   scrollRef.current?.scrollIntoView({behavior:"smooth"})
   }, [messages])
 
@@ -133,7 +134,7 @@ const handlePausing = (id:string) => {
    const {t} = useTranslation()
    const lang = i18n.language
    return (
-     <div className={`overflow-y-auto ${selectedUser ? "h-[43.8vh]" : "h-[60vh]"}
+     <div className={`overflow-y-auto
       relative`}>
        {isMessagesLoading ? 
        (<ChatSkeleton/>) :
@@ -155,7 +156,15 @@ const handlePausing = (id:string) => {
            : "bg-base-content text-base-300 "} `}>
           
            {message.image && ( 
-            <img className="rounded-xl h-32 w-fit object-contain" src={message.image.toString()} alt={"Image"} />
+            <div className="w-fit max-w-[280px] group relative">
+              <img className="rounded-xl w-full object-cover cursor-pointer
+              transition-transform duration-200 group-hover:brightness-95" src={message.image.toString()} alt={"Image"} />
+               { !message.text && message.image && <span className="text-xs opacity-70">
+                {formatDate(message?.createdAt as string) ?? t("clientMessages.INVALID_DATE", {ns: "messages"})}
+                </span>}
+            </div>
+            
+            
           )}
          { message.audio && message.audioDuration && (
           <div className="flex items-center justify-center gap-2 w-full ">
@@ -207,7 +216,6 @@ const handlePausing = (id:string) => {
           
 
           {message.text && (
-         
            <div className="max-w-sm overflow-hidden">
              <p className={`${message.image ? "mt-2" : "mt-0"}
               `}>

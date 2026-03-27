@@ -1,11 +1,13 @@
 {
-    "logoutModal" : {
+    "Modal" : {
         "logout" : "Déconnexion",
         "msg" : "Êtes-vous sûr de vouloir vous déconnecter ?",
         "actions" : {
             "confirm" : "Confirmer",
             "cancel" : "Annuler"
-        }
+        },
+    "deleteListingTitle": "Confirmer la suppression de l'annonce",
+    "deleteListingMsg": "Cette action ne peut pas être annulée. Une fois confirmée, votre annonce sera supprimée définitivement!"
     },
 
     "ratingModal" : {

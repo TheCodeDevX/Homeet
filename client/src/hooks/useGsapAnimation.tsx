@@ -28,13 +28,13 @@ import { useEffect, type RefObject } from "react";
     .to(containerRef.current, {visibility:"hidden"})
     } else {
      current?.fromTo(containerRef.current, Initialvars,
-         { opacity:1, y:0, visibility:"visible", ease:"back.out", duration:1})
+         { opacity:1, y:0, visibility:"visible", ease:"back.out", duration:0.8})
       .fromTo(elements,
         {opacity:0, yPercent:100},
       {
-      stagger:withoutStagger ? 0 : 0.15,
+      stagger:withoutStagger ? 0 : 0.12,
       opacity:1,
-      duration:0.3,
+      duration:0.24,
       yPercent:0,
       ease : "circ.inOut"
     }, "<")
@@ -53,10 +53,5 @@ import { useEffect, type RefObject } from "react";
     
 
  }
-
- 
-  
- 
- 
  export default useGsapAnimation
  

@@ -94,7 +94,6 @@ const OnboardingPage = () => {
 
    const navigate = useNavigate()
 
-
    return (
     <>
      <div className="h-full w-full">

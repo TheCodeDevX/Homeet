@@ -1,4 +1,4 @@
-import { BrushCleaning, Filter} from 'lucide-react'
+import { BrushCleaning, Filter, LogOut} from 'lucide-react'
 import {ImLocation, ImPriceTag} from 'react-icons/im'
 import { useRef, useState, type ChangeEvent } from 'react'
 import { TbCategory } from "react-icons/tb";
@@ -10,24 +10,35 @@ import { useTranslation } from 'react-i18next';
 import i18n from '../config/reacti18next';
 import clsx from 'clsx';
 import UserProfile from './UserProfile';
+import { useNavigate } from 'react-router-dom';
 
 const SidebarContent = () => {
   const rangeRef = useRef<HTMLInputElement | null>(null)
    const {filters, handleFiltersChange, clearAllFilters, setFilters} = useFiltration()
   
 
- const [active, setIsActive] = useState({
+ const [isActive, setIsActive] = useState({
    price: false,
    category: false,
    location:false,
    amenities: false,
-   sort : false
  })
 
  
 
- const handleToggle = (section: keyof typeof active) => {
+ const handleToggle = (section: keyof typeof isActive) => {
   setIsActive(prev => ({...prev, [section] : !prev[section]}))
+  if(!isActive[section]) {
+    setFilters((prev) => ( section === "price" ? {...prev, maxPrice : 0, minPrice : 0}
+      : {...prev, [section] : section === "amenities"
+         ? [] 
+         : section === "location" ? ""
+         : section === "category" ? 'placeholder'
+         : undefined
+
+      }
+    )
+  )}
  }
 
  const handleMaxChange = (e:ChangeEvent<HTMLInputElement>) => {
@@ -68,12 +79,14 @@ const SidebarContent = () => {
     {ns:"sidebar", returnObjects:true}) as Record<string, Facilities>
    const lang = i18n.language;
 
+   const {logout} = useAuthStore()
+   const navigate = useNavigate()
+
 
   
   return (
     <>
-       <div className="p-4 select-none">
-         
+  <div className="p-4 select-none">       
      <div className='flex items-center justify-between '>
         <h2 className='text-xl font-bold '> {t("content.title", {ns: "sidebar"})} </h2>
       
@@ -87,7 +100,7 @@ const SidebarContent = () => {
            </button>
       
           <div  className={`p-4 bg-base-300/50 rounded duration-150 ease-in-out
-             ${active.price ? "visible max-h-fit" : "max-h-0 overflow-hidden invisible py-0"}`}>
+             ${isActive.price ? "visible max-h-fit" : "max-h-0 overflow-hidden invisible py-0"}`}>
         <div className="flex flex-col gap-4">
              <label className='flex flex-col gap-2'>
                 <p className='text-center text-lg font-black p-2 border border-base-content/20 rounded-md m-2'>
@@ -116,21 +129,24 @@ const SidebarContent = () => {
            {t("content.filters.category.name", {ns : "sidebar"})}
            </button>
         <div  className={`p-4 bg-base-300/50 rounded duration-150 ease-in-out
-             ${active.category ? "visible max-h-fit" : "max-h-0 overflow-hidden invisible py-0"}`}>
+             ${isActive.category ? "visible max-h-fit" : "max-h-0 overflow-hidden invisible py-0"}`}>
         <div className="flex flex-col gap-4">
              <label className='flex flex-col gap-2'>
               <span className='label-text '> 
                {t("labels.pricingType", {ns : "common"})}
                </span>
               <select className='select select-bordered select-sm bg-base-300 text-base-content'
-              value={filters.category} name='category' onChange={handleFiltersChange}>
-               <option value="nightly" className='text-white'>
+              value={filters.category} defaultValue={"placeholder"} name='category' onChange={handleFiltersChange}>
+                 <option value="placeholder" className='text-base-content'>
+                   {t("content.filters.category.content.options.default", {ns : "sidebar"})}
+               </option>
+               <option value="nightly" className='text-base-content'>
                    {t("content.filters.category.content.options.nightly", {ns : "sidebar"})}
                </option>
-               <option value="monthly" className='text-white'>
+               <option value="monthly" className='text-base-content'>
                    {t("content.filters.category.content.options.monthly", {ns : "sidebar"})}
                </option>
-                 <option value="forSale" className='text-white'>
+                 <option value="one_time" className='text-base-content'>
                    {t("content.filters.category.content.options.forSale", {ns : "sidebar"})}
                  </option>
               </select>
@@ -144,7 +160,7 @@ const SidebarContent = () => {
            {t("content.filters.location.name", {ns : "sidebar"})}
            </button>
         <div  className={`p-4 bg-base-300/50 rounded duration-150 ease-in-out
-             ${active.location ? "visible max-h-fit" : "max-h-0 overflow-hidden invisible py-0"}`}>
+             ${isActive.location ? "visible max-h-fit" : "max-h-0 overflow-hidden invisible py-0"}`}>
             
         <div className="flex flex-col gap-4">
              <label className='flex flex-col gap-2'>
@@ -167,13 +183,13 @@ const SidebarContent = () => {
            </button>
 
         <div  className={`p-4 bg-base-300/50 rounded duration-150 linear
-             ${active.amenities ? "visible" : "max-h-0 overflow-hidden invisible py-0"}`}>
+             ${isActive.amenities ? "visible" : "max-h-0 overflow-hidden invisible py-0"}`}>
             
         <div className="flex flex-col gap-4">
              {amenities.map(({icon:Icon, label, key}, index) => (
                <label key={index} className='flex items-center justify-between gap-2
                 bg-base-300 text-base-content/50 border border-base-content/10 p-2 px-4 rounded-md
-                 hover:bg-base-content/5 '>
+                 hover:bg-base-content/5 cursor-pointer '>
              <input type="checkbox" className='hidden peer' 
                 checked={filters.amenities.includes(label)}
                onChange={(e) => handleAmenitiesChange(label, e.target.checked )}/>
@@ -187,12 +203,12 @@ const SidebarContent = () => {
         </div>
          </div>
 
-        {filters.shouldFilter ? ( <button onClick={clearAllFilters} className=
+        {filters.shouldFilter ? ( <button onClick={() => clearAllFilters()} className=
         {clsx("btn w-full", lang === "ar" && "flex-row-reverse")}>
             {t("buttons.clearAll", {ns : "common"})}
             <BrushCleaning size={13}/>
          </button>)
-         :( <button onClick={() => setFilters((prev) => ({...prev, shouldFilter:true}))} 
+         :( <button disabled={filters.query.trim().length === 0} onClick={() => setFilters((prev) => ({...prev, shouldFilter:true}))} 
            className={clsx("btn w-full", lang === "ar" && "flex-row-reverse", "btn-primary")}>
              {t("buttons.filter", {ns : "common"})}
             <Filter size={13}/>
@@ -201,8 +217,34 @@ const SidebarContent = () => {
         </div>
   </div>
 
- {/* User's Account & State */}
-  <UserProfile user={user}/>
+ {/* User Profile Section */}
+        <div className='space-y-3 border-t border-base-200 p-2 mt-auto bottom-8 select-none'>
+          <UserProfile user={user} />
+
+          {/* Logout Button */}
+          <button
+            onClick={() => {
+              logout()
+              navigate('/')
+              {}
+            }}
+            className='w-full flex items-center gap-3 px-4 py-3 rounded-lg 
+            text-sm font-medium text-error hover:bg-error/10 transition-all duration-200'
+          >
+            <LogOut size={18} />
+            <span>{t("sidebar.logout", { ns: "sidebar" })}</span>
+          </button>
+        </div>
+     
+
+      {/* Mobile Toggle Button
+      <button 
+        className='fixed bottom-6 right-6 btn btn-circle mt-24 btn-primary shadow-lg z-20'
+        onClick={() => {}}
+      >
+        
+        <Menu size={24} />
+      </button> */}
     </>
   )
 }

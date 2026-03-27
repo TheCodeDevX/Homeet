@@ -2,32 +2,35 @@ import mongoose from "mongoose";
 import validator from "validator"
 
 
+
+const priceSchema = new mongoose.Schema({
+  amount_usd : { type : Number, required : true },
+  amount_local : { type : Number, required : true },
+  currency : {
+    type : String,
+    required : true,
+    enum : ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY", "SAR",
+    "AED", "EGP", "MAD", "BRL", "INR", "TRY", "ZAR", "SGD", "HKD"]
+  }
+}, {_id : false})
+
  export const bookingSchema = new mongoose.Schema({
-   
+       
        firstName : {
        type : String,
-       required : [true , 'First Name is required'],
+       required : true, 
        trim : true
        },
    
        lastName : {
        type : String,
-       required : [true , 'Last Name is required'],
+       required : true,
        trim : true
        },
    
        email : {
        type : String,
-       required : [true , 'Email is required'],
-       trim : true,
-       lowercase : true,
-       sparse:true,
-       validate : {
-         validator :  function(v : string) {
-         return validator.isEmail(v);
-       },
-        message : "Invalid email address"
-       }
+       required : true,
        },
 
       phoneNumber :{ type : String, default : ""},
@@ -49,12 +52,27 @@ import validator from "validator"
 
       checkIn : {
       type : String,
-      required : true
+      required : function() {
+        return !this.offerPrice
+      }
       },
 
       checkOut : {
       type : String,
-      required: true,
+      required: function() {
+        return !this.offerPrice
+      },
+      },
+      offerPrice : {
+        type : priceSchema,
+        required : function() {
+        return !(this.checkIn && this.checkOut)
+      }
+      },
+
+      message : {
+      type : String,
+      required : false,
       },
 
       userId : {
@@ -62,11 +80,15 @@ import validator from "validator"
       required : true,
       },
 
-      costPrice : {
-        type : Number,
+      profilePicture : {
+        type: String,
         required : true,
-      }
-
+      },
+       role : {
+        type: String,
+        required : true,
+      },
+      costPrice : {type : priceSchema, required : true}
 
 
  }, {timestamps:true})

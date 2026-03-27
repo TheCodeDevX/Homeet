@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 import {bookingSchema} from '../models/booking.models'
 
 
+ const listingPriceSchema = new mongoose.Schema({
+   amount_usd : {type : Number, required : true},
+   amount_local : {type : Number, required : true},
+   currency : { type : String, enum : ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY", "SAR",
+    "AED", "EGP", "MAD", "BRL", "INR", "TRY", "ZAR", "SGD", "HKD"], required : true}
+ }, {_id:false})
+
  const listingShema = new mongoose.Schema({
     user : {
         type : mongoose.Schema.Types.ObjectId,
@@ -89,8 +96,8 @@ import {bookingSchema} from '../models/booking.models'
     default : 0
     },
     price : {
-        required : [true , "Price is required"],
-        type : Number,
+        type : listingPriceSchema,
+        required : true
     },
 
       avgRating : {
@@ -101,6 +108,17 @@ import {bookingSchema} from '../models/booking.models'
     count : {
         type : Number,
         default :0
+    },
+
+    status : {
+        type : String,
+        enum : ["active", "inactive"],
+        default : "active"
+    },
+
+    score : {
+        type : Number,
+        default : 0
     },
 
     bookings : [bookingSchema]

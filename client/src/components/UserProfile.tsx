@@ -32,7 +32,7 @@ import type { UserData } from '../types/types'
     
    return (
     
-    <div className="p-4 mt-auto bottom-8 select-none">
+    <div className="p-2 mt-auto bottom-8 select-none">
        <div className="flex items-center gap-2">
          <div className="avatar">
             <ProfilePicture/>

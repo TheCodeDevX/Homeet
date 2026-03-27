@@ -26,18 +26,18 @@ describe('themeStore', () => {
     it('saves a selected theme to localStorage', () => {
         const {result} = renderHook(() => useThemeStore());
         act(() => {
-            result.current.setTheme("acid");
+            result.current.setTheme("coffee");
         })
 
-        expect(result.current.theme).toBe("acid")
+        expect(result.current.theme).toBe("coffee")
         expect(localStorageMock.setItem).toHaveBeenCalled()
-        expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'acid');
+        expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'coffee');
     })
 
     it('defaults to "dark" when no theme value is stored under the selected key', () => {
         const {result} = renderHook(() => useThemeStore());
         act(() => {
-            result.current.setTheme("acid");
+            result.current.setTheme("coffee");
         })
         expect(localStorageMock.getItem("invalid-key")).toBe("dark")
     }),

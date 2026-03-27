@@ -5,7 +5,7 @@ import genToken from '../lib/generateToken'
 import cloudinary from '../lib/cloudinary';
 import passport from 'passport';
 import { createError } from '../utils/createError';
-import { sendResetPasswordRequest, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeMessage } from '../Mail/nodemailer';
+import { sendResetPasswordRequest, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeMessage } from '../Mail/emailSender';
 import { capitalizedName } from '../utils/capitalizedName';
 import crypto from 'crypto'
 import bcrypt from 'bcryptjs';
@@ -23,6 +23,11 @@ export const login = async(req:Request, res:Response, next:NextFunction) => {
    const user = await User.findOne({email});
    if(!user) {
       createError('INVALID_EMAIL', 401);
+      return;
+   }
+
+   if(user?.googleId) {
+      createError("CANNOT_SIGNIN_THROUGH_EMAIL_PASSWORD", 401)
       return;
    }
 
@@ -392,7 +397,7 @@ export const warmUp = async(req:Request, res:Response, next:NextFunction) => {
 
 
 // @desc   Handle unauthorized user
-// @route  GET /api/auth/google/failed - OR - /api/auth/facebook/failed
+// @route  GET /api/auth/google/failed
 // @access Public
 export const  handleUnauthorized = asyncHandler(async(req, res) => {
          res.status(401).json({
@@ -403,7 +408,7 @@ export const  handleUnauthorized = asyncHandler(async(req, res) => {
 
 
 // @desc   Handle authorized user
-// @route  GET /api/auth/google/success  - OR - /api/auth/facebook/success
+// @route  GET /api/auth/google/success
 // @access Public
 export const  handleAuthUser = asyncHandler(async(req, res) => {
    res.status(200).json({
@@ -419,31 +424,19 @@ export const  handleAuthUser = asyncHandler(async(req, res) => {
 // @route  GET /api/auth/google/callback
 // @access Public
 export const googleCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
-    passport.authenticate("google", {session:false}, (err:Error, user:UserDocument) => {
+    passport.authenticate("google", {session:false}, async (err:Error, user:UserDocument) => {
     if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
     genToken(res, user._id.toString());
-   if(!user?.isVerified && ( new Date(user?.refreshTokenExpiresAt) < new Date() )) {
-   genRefreshToken(res, user);
-   }
+    genRefreshToken(res, user);
+    if(!user?.isVerified) {
+    const capitalizedUserName = capitalizedName(user.firstName);
+    await sendVerificationEmail(user.email, capitalizedUserName , user.verificationToken)
+    }
     res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
 })(req, res , next)
 })
 
-// @desc   handle facebook callback 
-// @route  GET /api/auth/facebook/callback
-// @access Public
-export const facebookCallback = asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
-   passport.authenticate("facebook", {session:false}, (err:Error, user:UserDocument) => {
-   if(err || !user) return res.redirect(`${process.env.CLIENT_URL}/login`);
-   genToken(res, user._id.toString());
 
-   if(!user?.isVerified && ( new Date(user?.refreshTokenExpiresAt) < new Date() )) {
-   genRefreshToken(res, user);
-   }
-   
-   res.redirect(`${process.env.CLIENT_URL}?message=AUTH_USER`)
-})(req, res , next)
-})
 
 
 

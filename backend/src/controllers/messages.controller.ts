@@ -16,7 +16,7 @@ import {Request, Response, NextFunction} from "express"
  export const getUsers = async(req:Request, res:Response, next:NextFunction) => {
   try{
     const authUser = req.authUser
-    const users = await User.find({_id: {$ne : authUser._id}})
+    const users = await User.find({_id: {$ne : authUser._id}, onBoarded:true})
     res.status(200).json(users)
     console.log(`Users from getUsers controller $ne`, users)
   }

@@ -34,11 +34,13 @@
         "followBack" : "Follow Back",
         "mutualFollow" : "Mutual Follow",
         "checkAvailability" : "Check availability",
-        "reserve" : "Reserve"
+        "book" : "Book now",
+        "reserve" : "Reserve",
+        "submitOffer" : "Submit offer"
     },
 
       "placeholders" : {
-        "typeSomething" : "Type Something",
+        "typeSomething" : "type something",
         "search" : "Search",
         "title" : "Enter Your Listing Title",
         "description" : "Enter Your Detailed Description",
@@ -48,7 +50,9 @@
         "feedback" : "Your Feedback Matters to Us",
         "address" : "City, State, Country, ZIP",
         "bio" : "Your Biography",
-        "months" : "Months"
+        "months" : "Months",
+        "offerPrice": "Enter your offer price",
+        "message": "Enter your offer message"   
         
      },
       "labels" : {
@@ -82,7 +86,8 @@
         "years_one": "Commented a year ago",
         "years_other": "Commented {{count}} years ago",
         "newFollowers": "New Followers",
-        "totalPrice" : "( Total price )",
+        "totalPrice" : "(Total price)",
+        "selectConvo" : "Select a conversation",
         "gender" : {
             "label" : "Gender",
             "placeholder" : "Pick Your Gender",
@@ -159,7 +164,9 @@
         "guestContent" : "{{adults}} adults, {{children}} children, {{pets}} pets",
         "checkIn" : "Check In",
         "checkOut" : "Check Out",
-        "guests" : "Guests"
+        "guests" : "Guests",
+        "offerPrice" : "Offer Price",
+        "message" : "Message"
 
      }
  }

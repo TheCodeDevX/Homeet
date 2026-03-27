@@ -1,15 +1,89 @@
 {
- "dashboard" : {
-        "image" : "الصورة",
-        "title" : "العنوان",
-        "description" : "الوصف",
-        "location" : "الموقع",
-        "createdAt" : "تاريخ الإنشاء",
-        "actions" : {
-            "title" : "الإجراءات",
-            "delete" : "حذف",
-            "edit" : "تعديل"
-
-        } 
-    } 
+  "dashboard": {
+    "actions": {
+      "title": "الإجراءات",
+      "delete": "حذف",
+      "edit": "تعديل"
+    },
+    "title": "لوحة تحكم إعلاناتك",
+    "description": "أدر عقاراتك وتابع الحجوزات",
+    "bookings_one": "{{count}} حجز",
+    "bookings_other": "{{count}} حجوزات",
+    "noBookings": "لا توجد حجوزات بعد",
+    "metrics": {
+      "N/A": "غير متاح",
+      "TREND_PERCENTAGE": "{{percentage}}% هذا الشهر"
+    },
+    "stats": {
+      "fullLabel": {
+        "TOTAL_LISTINGS": "إجمالي الإعلانات",
+        "TOTAL_REVENUE": "إجمالي الإيرادات",
+        "TOTAL_GUESTS": "إجمالي الضيوف",
+        "BOOKED_LISTINGS": "الإعلانات المحجوزة",
+        "TOTAL_BOOKINGS": "إجمالي الحجوزات",
+        "OCCUPANCY_RATE": "معدل الإشغال",
+        "ADDED_THIS_WEEK": "مضاف هذا الأسبوع"
+      },
+      "shortLabel": {
+        "TOTAL_LISTINGS": "الإعلانات",
+        "BOOKED_LISTINGS": "محجوز",
+        "TOTAL_BOOKINGS": "الحجوزات",
+        "ADDED_THIS_WEEK": "هذا الأسبوع"
+      }
+    },
+    "contact": "تواصل",
+    "active": "نشط",
+    "analyticsTab": {
+      "title": "التحليلات والأداء",
+      "description": "تابع إيراداتك وحجوزاتك وبيانات ضيوفك",
+      "revenueTrend_one": "اتجاه الإيرادات (الشهر الماضي)",
+      "revenueTrend_other": "اتجاه الإيرادات",
+      "guestDistribution": "توزيع الضيوف",
+      "top": "أفضل الإعلانات أداءً",
+      "peak": "موسم الذروة",
+      "peakMonth_other": "{{month}} هو أقوى شهر لديك بـ {{count}} حجوزات",
+      "peakMonth_one": "{{month}} هو أقوى شهر لديك بحجز واحد",
+      "bestGuests": "{{guestType}} هم أكثر ضيوفك شيوعاً بنسبة {{percentage}} من جميع الحجوزات",
+      "revenue": "الإيرادات",
+      "Recommendations": "التوصيات",
+      "BestGuests": "أفضل الضيوف",
+      "noBookingsReceivedToAnalyze": "لا توجد حجوزات لتحليلها",
+      "bookings": "الحجوزات",
+      "recommendations": {
+        "booking_no_activity": "لا توجد حجوزات بعد. فكر في تحسين ظهور إعلانك أو تقديم عرض ترويجي.",
+        "booking_low_volume": "الحجوزات لا تزال منخفضة. جرب تخفيض الأسعار أو تحسين صور إعلانك.",
+        "booking_growing": "الحجوزات في تزايد. فكر في تشجيع الضيوف على ترك تقييمات لزيادة الثقة.",
+        "booking_excellent": "نشاط حجز ممتاز! تأكد من استمرار جودة العمليات وتجربة الضيوف.",
+        "revenue_no_income": "لم يتم تحقيق إيرادات بعد. تحقق من الأسعار وتوافر الحجز.",
+        "revenue_declining": "الإيرادات تتراجع مقارنة بالفترة السابقة. راجع الأسعار واتجاهات الطلب.",
+        "revenue_increasing": "الإيرادات في ازدياد. فكر في تحسين الأسعار لتعظيم الأرباح.",
+        "revenue_strong_growth": "نمو الإيرادات قوي هذا الشهر. فكر في رفع الأسعار قليلاً.",
+        "guests_low_volume": "حجم الضيوف منخفض. حسّن التسويق وجودة الإعلان.",
+        "guests_declining": "أعداد الضيوف تتراجع. تحقق من معدل الإلغاء أو تنافسية إعلانك.",
+        "guests_increasing": "أعداد الضيوف في ازدياد. تأكد من الحفاظ على جودة خدمتك.",
+        "rating_no_reviews": "ليس لديك تقييمات بعد. شجع الضيوف على ترك ملاحظاتهم.",
+        "rating_below_average": "تقييمك أقل من 4. ركز على تحسين تجربة الضيوف.",
+        "rating_good": "تقييم جيد. تحسينات صغيرة في الخدمة قد ترفعك إلى مستوى ممتاز.",
+        "rating_excellent": "تقييم ممتاز! أبرز التقييمات في إعلانك.",
+        "occupancy_very_low": "معدل الإشغال منخفض. فكر في العروض الترويجية أو تعديل الأسعار.",
+        "occupancy_moderate": "إشغال معتدل. حسّن الأسعار والتسويق لزيادة الحجوزات.",
+        "occupancy_healthy": "معدل إشغال جيد. حافظ على جودة الخدمة.",
+        "occupancy_very_high": "إشغال مرتفع جداً. قد تتمكن من رفع أسعارك.",
+        "trend_revenue_negative": "اتجاه الإيرادات في تراجع. تحقق من الأسعار والطلب الموسمي.",
+        "trend_revenue_positive": "اتجاه الإيرادات إيجابي. استمر في استراتيجيتك الحالية.",
+        "trend_booking_negative": "اتجاه الحجوزات في تراجع. حسّن الظهور أو عدّل الأسعار.",
+        "trend_booking_positive": "الحجوزات في اتجاه تصاعدي. استعد لتدفق أكبر من الضيوف.",
+        "trend_occupancy_negative": "الإشغال يتراجع. فكر في الخصومات أو العروض الترويجية.",
+        "trend_occupancy_positive": "الإشغال في ازدياد. قد يدعم الطلب رفع الأسعار.",
+        "trend_guest_negative": "اتجاه الضيوف في تراجع. تحقق من أداء الإعلان وتعليقات الضيوف.",
+        "trend_guest_positive": "أعداد الضيوف في اتجاه تصاعدي. حافظ على جودة خدمتك."
+      },
+      "guestClassification": {
+      "solo": "منفرد",
+      "couples": "أزواج",
+      "families": "عائلات",
+      "groups": "مجموعات"
+      }
+    }
+  }
 }

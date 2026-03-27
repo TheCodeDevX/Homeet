@@ -5,7 +5,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react'
 import Checkbox from '../components/Checkbox'
 import Button from '../components/Button'
 import AuthButton from '../components/AuthButton'
-import {FaFacebookF, FaGoogle} from 'react-icons/fa'
+import {FaGoogle} from 'react-icons/fa'
 import { useAuthStore } from '../store/authStore'
 import Light from '../components/Light'
 import { Link, useNavigate } from 'react-router-dom'
@@ -14,6 +14,7 @@ import TinyHouse from '../assets/svg/tinyHouse'
 import { lightThemes } from '../constants'
 import { useThemeStore } from '../store/themeStore'
 import type { UserData } from '../types/types'
+import i18n from '../config/reacti18next'
 
 const SignupPage = () => {
   const {t} = useTranslation();
@@ -46,7 +47,6 @@ const SignupPage = () => {
   }
 
   const google = () => window.open(`${"https://homeet.onrender.com"}/api/auth/google`, "_self")
-  const facebook = () => window.open(`${"https://homeet.onrender.com"}/api/auth/facebook`, "_self")
   const {theme} = useThemeStore()
   return (
     <motion.div
@@ -62,7 +62,7 @@ const SignupPage = () => {
           <div className={`hidden  
          w-full lg:w-1/2 lg:flex items-center justify-center flex-col bg-gradient-to-b
           ${lightThemes.includes(theme) ? "from-primary/60 to-primary/50 border-base-content/30 " 
-       : "from-primary/50 ring-1 ring-base-content/50 ring-offset-2 ring-offset-base-300 to-secondary/50 "} 
+       : "from-primary/50 to-secondary/50 "} 
            rounded-[40px]`}>
        
             <div className="max-w-md p-8 flex flex-col text-center items-center justify-center">
@@ -83,29 +83,32 @@ const SignupPage = () => {
         </div>
 
         {/* Right Side */}
-         <div className='w-full lg:w-1/2 flex flex-col lg:items-start lg:px-20 px-10 max-lg:py-10 justify-center'>
-         <div className='mb-2'>
-            <h1 className='text-3xl font-bold bg-gradient-to-r text-transparent bg-clip-text
-            from-base-content from-0% to-base-content/90 to-100%'>
+         <div className={`w-full lg:w-1/2 flex flex-col lg:items-start lg:px-20
+          px-10 max-lg:py-10 max-xs:py-1.5 justify-center
+           ${i18n.language === "ar" ? "lg:mr-6 mr-0" : "lg:ml-6 ml-0"}
+          `}>
+         <div className='sm:mb-2 mb-0 space-y-1'>
+            <h1 className='xs:text-3xl xsss:text-2xl text-xl font-bold bg-gradient-to-r
+            text-transparent bg-clip-text from-base-content from-0% to-base-content/90 to-100%'>
                 {t("signup.title", {ns:"auth"})}
             </h1>
 
-            <p className='text-base-content/60 '>
-              <p>
+            <div className='text-base-content/60'>
+              <p className='xs:text-[16px] xsss:text-sm text-xs'>
               {t("signup.q", {ns : 'auth'})}{" "}
               <Link to="/login" className="text-primary font-semibold hover:underline">
               {t("signup.link", {ns : "auth"})}
               </Link>
               </p>
-            </p>
+            </div>
          </div>
          <form onSubmit={handleSubmit}>
            <div className="space-y-3 mt-4">
-             <div className="w-full flex gap-x-2">
+             <div className="w-full flex max-xs:flex-wrap gap-x-2 gap-y-3">
 
               <div className="w-full">
                 <label>
-                  <span className='label-text text-base-content/80'>
+                  <span className='label-text text-base-content/80 max-xs:text-[12px]'>
                     {t("labels.firstName", {ns:"common"})}
                   </span>
                   <Input autoComplete='first-name' type="text" name="firstName" value={formState.firstName}
@@ -117,7 +120,7 @@ const SignupPage = () => {
 
               <div className="w-full">
                 <label>
-                  <span className='label-text text-base-content/80'>
+                  <span className='label-text text-base-content/80 max-xs:text-[12px]'>
                     {t("labels.lastName", {ns:"common"})}
                   </span>
                    <Input autoComplete='last-name' type="text" name="lastName" value={formState.lastName} onChange={handleChange}
@@ -129,7 +132,7 @@ const SignupPage = () => {
              
               <div className="w-full">
                 <label>
-                  <span className='label-text text-base-content/80'>
+                  <span className='label-text text-base-content/80 max-xs:text-[14px]'>
                     {t("labels.email", {ns:"common"})}
                   </span>
                   <Input autoComplete='email' type="email" name="email"
@@ -141,7 +144,7 @@ const SignupPage = () => {
               
             <div className="w-full">
                 <label>
-                  <span className={`label-text text-base-content/80`}>
+                  <span className={`label-text text-base-content/80 max-xs:text-[12px]`}>
                      {t("labels.password", {ns:"common"})}
                   </span>
                  <Input autoComplete='current-password' type={showPassword ? "text" : "password"} name="password"
@@ -150,7 +153,7 @@ const SignupPage = () => {
                   eyeIcon={showPassword ? Eye : EyeClosed} icon={Lock} required />
 
                </label>
-                <span className="text-xs text-primary/80 flex items-center gap-1 mt-2"><Shield size={12}/>
+                <span className="text-xs max-xss:text-[10px] max-xsss:text-[8.5px] text-primary/80 flex items-center gap-1 mt-2"><Shield size={12}/>
                  {t("signup.info", {ns:"auth"})}
                 </span>
               </div>
@@ -158,7 +161,7 @@ const SignupPage = () => {
               <div className="w-full">
               <label className='cursor-pointer flex items-center w-full group gap-1'>
                  <Checkbox/>
-                <p className='text-xs text-base-content/80 leading-tight'>{t("signup.pact", {ns:"auth"})}
+                <p className='text-xs max-xss:text-[11px] text-base-content/80 leading-tight'>{t("signup.pact", {ns:"auth"})}
                  
                 </p>
                 <p></p>
@@ -179,9 +182,8 @@ const SignupPage = () => {
            </div>
          </form>
 
-           <div className="flex max-xss:flex-wrap items-center gap-4 w-full mt-3">
+           <div className="flex items-center gap-4 w-full mt-3">
                <AuthButton googleAuth={google} provider={t("buttons.google", {ns:"common"})} icon={FaGoogle}/>
-               <AuthButton googleAuth={facebook}  provider={t("buttons.facebook", {ns:"common"})} icon={FaFacebookF}/>
           </div>
           
         </div>

@@ -1,4 +1,17 @@
 {
+    "sidebar" : {
+"logout": "Se déconnecter",
+"dashboard": "Tableau de bord",
+"overview": "Aperçu",
+"bookings": "Réservations",
+"analytics": "Analyses",
+"settings": "Paramètres",
+"manageListings": "Gérez facilement vos annonces de propriétés",
+"overviewDesc": "Consultez les indicateurs clés et les performances",
+"bookingsDesc": "Gérez toutes les réservations de vos voyageurs",
+"analyticsDesc": "Suivez les revenus et les données sur vos voyageurs",
+"settingsDesc": "Configurez votre compte et vos préférences"
+    },
     "content" : {
         "title" : "Filtrage",
         "filters" : {

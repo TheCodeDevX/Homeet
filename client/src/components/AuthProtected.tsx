@@ -11,9 +11,8 @@ import type { UserRole } from "../types/types";
 
   export const ProtectRoute = ({children} : PropsWithChildren) => {
 
-      const location = useLocation();
-      const {pathname} = location;
-
+    const location = useLocation();
+    const {pathname} = location;
   const {isAuthenticated, user, isCheckingAuth, isLoading} = useAuthStore();
   if(isCheckingAuth) return <LoadingSpinner/>
   if(!isAuthenticated && !isLoading) return <Navigate to="/login" replace/>

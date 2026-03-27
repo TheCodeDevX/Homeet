@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { useAuthStore } from "./authStore";
 import { AudioApi, MessageApi } from "../lib/axios.config";
 import { errorHandler } from "./helpers/errorHelper";
-import type { MessageData, UserData } from "../types/types";
+import type { MessageData, SelectedUser, UserData } from "../types/types";
  
 
  interface MessageStates {
     users : UserData[]
-    selectedUser : UserData | null
-    setSelectedUser : (selectedUser: UserData | null) => void
+    selectedUser : SelectedUser | null
+    setSelectedUser : (selectedUser: SelectedUser | null) => void
     isMessagesLoading : boolean,
     isMessagesSending : boolean,
     isUsersLoading : boolean,
@@ -16,7 +16,7 @@ import type { MessageData, UserData } from "../types/types";
     error : string | null,
     messages : MessageData[]
     getUsers : ({shouldLoad} : {shouldLoad : boolean}) => void
-    getMessages : (id:string ) => void
+    getMessages : (id:string) => void
     uploadAudio : (blob: Blob, receiverId:string | undefined, senderId : string) => void
     sendMessages : (id : string , data : MessageData) => void
     subToMessages : () => void

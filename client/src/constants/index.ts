@@ -4,6 +4,7 @@ import { AirVent, BedDouble, BellIcon, Building2, Car, Cat, Dumbbell,
 import {  type ComponentType, type SVGProps } from "react";
 import { RiHome2Line, RiLogoutCircleLine } from "react-icons/ri";
 import type { Lang } from "../store/languageStore";
+import type { CurrencyCode } from "../types/types";
 
  export type Links = "HOME" | "POST_LISTING" | "DASHBOARD" | "NOTIFICATIONS" | "CHAT"
  export type Tooltips = "NAV" | "NOTIFS" | "CHANGE_THEME" | "CHANGE_LANG" | "LOGOUT" | "PROFILE"
@@ -124,40 +125,13 @@ export const specs = [
   { key : "price", label :"Rent price ($)"},
 ]
 
-
  export type Theme = 
   | "light"
   | "dark"
   | "cupcake"
   | "forest"
-  | "bumblebee"
-  | "emerald"
-  | "corporate"
-  | "synthwave"
   | "retro"
-  | "cyberpunk"
-  | "valentine"
-  | "halloween"
-  | "garden"
-  | "aqua"
-  | "lofi"
-  | "pastel"
-  | "fantasy"
-  | "wireframe"
-  | "black"
-  | "luxury"
-  | "dracula"
-  | "cmyk"
-  | "autumn"
-  | "business"
-  | "acid"
-  | "lemonade"
-  | "night"
   | "coffee"
-  | "winter"
-  | "dim"
-  | "nord"
-  | "sunset";
 
 
 interface ThemeOptionsTypes {
@@ -167,167 +141,43 @@ interface ThemeOptionsTypes {
  }
 
 export const THEMES : ThemeOptionsTypes[] = [
+
   {
     name: "light",
     label: "Light",
     colors: ["#ffffff", "#5a67d8", "#8b5cf6", "#1a202c"],
   },
+
   {
     name: "dark",
     label: "Dark",
     colors: ["#1f2937", "#8b5cf6", "#ec4899", "#1a202c"],
   },
+
   {
     name: "cupcake",
     label: "Cupcake",
     colors: ["#f5f5f4", "#65c3c8", "#ef9fbc", "#291334"],
   },
+
   {
     name: "forest",
     label: "Forest",
     colors: ["#1f1d1d", "#3ebc96", "#70c217", "#e2e8f0"],
   },
-  {
-    name: "bumblebee",
-    label: "Bumblebee",
-    colors: ["#ffffff", "#f8e36f", "#f0d50c", "#1c1917"],
-  },
-  {
-    name: "emerald",
-    label: "Emerald",
-    colors: ["#ffffff", "#66cc8a", "#3b82f6", "#1e3a8a"],
-  },
-  {
-    name: "corporate",
-    label: "Corporate",
-    colors: ["#ffffff", "#4b6bfb", "#7b92b2", "#1d232a"],
-  },
-  {
-    name: "synthwave",
-    label: "Synthwave",
-    colors: ["#2d1b69", "#e779c1", "#58c7f3", "#f8f8f2"],
-  },
+  
   {
     name: "retro",
     label: "Retro",
     colors: ["#e4d8b4", "#ea6962", "#6aaa64", "#282425"],
   },
-  {
-    name: "cyberpunk",
-    label: "Cyberpunk",
-    colors: ["#ffee00", "#ff7598", "#75d1f0", "#1a103d"],
-  },
-  {
-    name: "valentine",
-    label: "Valentine",
-    colors: ["#f0d6e8", "#e96d7b", "#a991f7", "#37243c"],
-  },
-  {
-    name: "halloween",
-    label: "Halloween",
-    colors: ["#0d0d0d", "#ff7800", "#006400", "#ffffff"],
-  },
-  {
-    name: "garden",
-    label: "Garden",
-    colors: ["#e9e7e7", "#ec4899", "#16a34a", "#374151"],
-  },
 
-  {
-    name: "aqua",
-    label: "Aqua",
-    colors: ["#193549", "#4cd4e3", "#9059ff", "#f8d766"],
-  },
-  {
-    name: "lofi",
-    label: "Lofi",
-    colors: ["#0f0f0f", "#1a1919", "#232323", "#2c2c2c"],
-  },
-  {
-    name: "pastel",
-    label: "Pastel",
-    colors: ["#f7f3f5", "#d1c1d7", "#a1e3d8", "#4a98f1"],
-  },
-  {
-    name: "fantasy",
-    label: "Fantasy",
-    colors: ["#ffe7d6", "#a21caf", "#3b82f6", "#f59e0b"],
-  },
-  {
-    name: "wireframe",
-    label: "Wireframe",
-    colors: ["#e6e6e6", "#b3b3b3", "#b3b3b3", "#888888"],
-  },
-  {
-    name: "black",
-    label: "Black",
-    colors: ["#000000", "#191919", "#313131", "#4a4a4a"],
-  },
-  {
-    name: "luxury",
-    label: "Luxury",
-    colors: ["#171618", "#1e293b", "#94589c", "#d4a85a"],
-  },
-  {
-    name: "dracula",
-    label: "Dracula",
-    colors: ["#282a36", "#ff79c6", "#bd93f9", "#f8f8f2"],
-  },
-  {
-    name: "cmyk",
-    label: "CMYK",
-    colors: ["#f0f0f0", "#0891b2", "#ec4899", "#facc15"],
-  },
-  {
-    name: "autumn",
-    label: "Autumn",
-    colors: ["#f2f2f2", "#8c1f11", "#f28c18", "#6f4930"],
-  },
-  {
-    name: "business",
-    label: "Business",
-    colors: ["#f5f5f5", "#1e40af", "#3b82f6", "#f97316"],
-  },
-  {
-    name: "acid",
-    label: "Acid",
-    colors: ["#110e0e", "#ff00f2", "#ff7a00", "#99ff01"],
-  },
-  {
-    name: "lemonade",
-    label: "Lemonade",
-    colors: ["#ffffff", "#67e8f9", "#f5d742", "#2c3333"],
-  },
-  {
-    name: "night",
-    label: "Night",
-    colors: ["#0f172a", "#38bdf8", "#818cf8", "#e2e8f0"],
-  },
   {
     name: "coffee",
     label: "Coffee",
     colors: ["#20161f", "#dd9866", "#497174", "#eeeeee"],
-  },
-  {
-    name: "winter",
-    label: "Winter",
-    colors: ["#ffffff", "#0284c7", "#d946ef", "#0f172a"],
-  },
-  {
-    name: "dim",
-    label: "Dim",
-    colors: ["#1c1c27", "#10b981", "#ff5a5f", "#0f172a"],
-  },
-  {
-    name: "nord",
-    label: "Nord",
-    colors: ["#eceff4", "#5e81ac", "#81a1c1", "#3b4252"],
-  },
-  {
-    name: "sunset",
-    label: "Sunset",
-    colors: ["#1e293b", "#f5734c", "#ec4899", "#ffffff"],
-  },
+  }
+
 ];
 
 export const languages : {language : string , symbol : Lang}[] = [
@@ -339,48 +189,56 @@ export const languages : {language : string , symbol : Lang}[] = [
 
 
 export const lightThemes = [
-  "light",
-  "nord",
-  "wireframe",
-  "cupcake",
-  "emerald",
-  "corporate",
-  "valentine",
-  "garden",
-  "lofi",
-  "pastel",
-  "fantasy",
-  "cmyk",
-  "autumn",
-  "acid",
-  "lemonade",
-  "winter",
-  "bumblebee",
+"light",
+"cupcake",
+"emerald",
+"corporate",
+"valentine",
+"garden",
+"lofi",
+"pastel",
+"fantasy",
+"cmyk",
+"autumn",
+"acid",
+"lemonade",
+"winter",
+"bumblebee",
+"wireframe"
 ]
 
-export const currencies = [ 
-  { "code": "USD", "symbol": "$", "name": "US Dollar" },
-  { "code": "EUR", "symbol": "€", "name": "Euro" },
-  { "code": "GBP", "symbol": "£", "name": "British Pound Sterling" },
-  { "code": "JPY", "symbol": "¥", "name": "Japanese Yen" },
-  { "code": "CAD", "symbol": "C$", "name": "Canadian Dollar" },
-  { "code": "AUD", "symbol": "A$", "name": "Australian Dollar" },
-  { "code": "CHF", "symbol": "CHF", "name": "Swiss Franc" },
-  { "code": "CNY", "symbol": "¥", "name": "Chinese Yuan" },
-  { "code": "SAR", "symbol": "SAR", "name": "Saudi Riyal" },
-  { "code": "AED", "symbol": "AED", "name": "UAE Dirham" },
-  { "code": "EGP", "symbol": "EGP", "name": "Egyptian Pound" },
-  { "code": "MAD", "symbol": "MAD", "name": "Moroccan Dirham" },
-  { "code": "BRL", "symbol": "R$", "name": "Brazilian Real" },
-  { "code": "INR", "symbol": "₹", "name": "Indian Rupee" },
-  { "code": "TRY", "symbol": "₺", "name": "Turkish Lira" },
-  { "code": "ZAR", "symbol": "R", "name": "South African Rand" },
-  { "code": "SGD", "symbol": "S$", "name": "Singapore Dollar" },
-  { "code": "HKD", "symbol": "HK$", "name": "Hong Kong Dollar" }
+export const currencies : {
+    code: CurrencyCode;
+    symbol: string;
+    name: string;
+    rate : number
+}[] = [
+  { "code": "USD", "symbol": "$", "name": "US Dollar", "rate": 1 },
+  { "code": "EUR", "symbol": "€", "name": "Euro", "rate": 1.19 },
+  { "code": "GBP", "symbol": "£", "name": "British Pound Sterling", "rate": 1.36 },
+  { "code": "JPY", "symbol": "¥", "name": "Japanese Yen", "rate": 0.0065 },
+  { "code": "CAD", "symbol": "C$", "name": "Canadian Dollar", "rate": 0.74 },
+  { "code": "AUD", "symbol": "A$", "name": "Australian Dollar", "rate": 0.71 },
+  { "code": "CHF", "symbol": "CHF", "name": "Swiss Franc", "rate": 0.77 },
+  { "code": "CNY", "symbol": "¥", "name": "Chinese Yuan", "rate": 6.95 },
+  { "code": "SAR", "symbol": "SAR", "name": "Saudi Riyal", "rate": 3.67 },
+  { "code": "AED", "symbol": "AED", "name": "UAE Dirham", "rate": 3.67 },
+  { "code": "EGP", "symbol": "EGP", "name": "Egyptian Pound", "rate": 30.9 },
+  { "code": "MAD", "symbol": "MAD", "name": "Moroccan Dirham", "rate": 10.16 },
+  { "code": "BRL", "symbol": "R$", "name": "Brazilian Real", "rate": 5.26 },
+  { "code": "INR", "symbol": "₹", "name": "Indian Rupee", "rate": 91.7 },
+  { "code": "TRY", "symbol": "₺", "name": "Turkish Lira", "rate": 43.5 },
+  { "code": "ZAR", "symbol": "R", "name": "South African Rand", "rate": 16.2 },
+  { "code": "SGD", "symbol": "S$", "name": "Singapore Dollar", "rate": 1.27 },
+  { "code": "HKD", "symbol": "HK$", "name": "Hong Kong Dollar", "rate": 7.82 }
 ]
 
-export const prefixCurrencySymbols = ["USD", "EUR", "JPY", "CAD", "AUD", "JPY", "BRL",
-   "INR", "TRY", "ZAR", "SGD", "HKD"];
+
+
+export const prefixCurrencySymbols = [
+  "USD", "EUR", "JPY", "CAD", "AUD", "JPY", "BRL", 
+  "INR", "TRY", "ZAR", "SGD", "HKD"
+];
 
 
 
@@ -634,6 +492,6 @@ export const countries = [
 ];
 
 export const availableThemes : Array<Theme>
- = ["dark", "light", "cupcake", "forest", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade" , "night" , "coffee" , "winter" , "dim" , "nord" , "sunset"]
+ = ["dark", "light", "cupcake", "forest", "retro", "coffee"]
 
  export const availableLangs : Array<Lang> = ["ar" , "en" , "es" , "fr"]

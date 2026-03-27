@@ -1,4 +1,17 @@
 {
+    "sidebar" : {
+        "logout": "Cerrar sesión",
+        "dashboard": "Panel de control",
+        "overview": "Resumen",
+        "bookings": "Reservas",
+        "analytics": "Análisis",
+        "settings": "Configuración",
+        "manageListings": "Gestiona tus anuncios de propiedades fácilmente",
+        "overviewDesc": "Consulta las métricas clave y el rendimiento",
+        "bookingsDesc": "Gestiona todas las reservas de tus huéspedes",
+        "analyticsDesc": "Haz seguimiento de ingresos e información sobre huéspedes",
+        "settingsDesc": "Configura tu cuenta y preferencias"
+    },
     "content" : {
         "title" : "Filtros",
         "filters" : {

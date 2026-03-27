@@ -5,7 +5,7 @@ import { iconButtons, languages, lightThemes, links, THEMES, type Links, type To
 import {motion} from 'framer-motion'
 import React, { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { useAuthStore } from '../store/authStore'
-import LogoutModal from './LogoutModal'
+import Modal from './Modal'
 import clsx from 'clsx'
 import { useThemeStore } from '../store/themeStore'
 import { useTranslation } from 'react-i18next'
@@ -131,7 +131,6 @@ import { useDirectionContext } from '../hooks/useDirectionContext'
    const handleClick = (action:"navigate" | "logout" | "changeTheme" | "changeLang" | undefined, e:React.MouseEvent) => {
     e.stopPropagation();
     if(action === "logout") {
-    document.body.style.overflow = 'hidden';  
     setShowLogout(prev => !prev)
     }  else if (action === "navigate") {
        setShowHamburgerMenu(prev => !prev)
@@ -164,7 +163,9 @@ import { useDirectionContext } from '../hooks/useDirectionContext'
  
    return (
     <>
-    {showLogout && <LogoutModal onLogout={handleLogout} onShowModal={setShowLogout}/>}
+    {showLogout && <Modal onConfirm={handleLogout} onShowModal={setShowLogout} titleKey='Modal.logout'
+    subtitleKey="Modal.msg"
+    />}
    <div className='fixed z-50 top-0 left-0 w-full h-24 flex items-center border-b border-base-content/10 backdrop-filter 
      backdrop-blur-xl select-none'>
        <div className={`px-4 min-w-full`}>

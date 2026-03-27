@@ -4,19 +4,15 @@ import { useSidebarToggle } from "../hooks/useSidebarToggle"
 import { useEffect, useRef, useState } from "react";
 import {motion} from 'framer-motion'
 import { useFiltration } from "../hooks/useFiltration";
-import { useListingStore } from "../store/listingStore";
 import { useTranslation } from "react-i18next";
 import i18n from "../config/reacti18next";
 import clsx from "clsx";
 
   const Searchbar = () => {
 
-
     const {handleSidebarOpen} = useSidebarToggle();
-    const {handleFiltersChange, filters} = useFiltration()
+    const {handleFiltersChange, filters, setFilters, sort, onSortChange} = useFiltration()
     const [isOpen, setIsOpen] = useState(false);
-    const {getListings} = useListingStore()
-    const {setFilters, sort, setSort} = useFiltration()
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [isEmpty, setIsEmpty] = useState(false)
     useEffect(() => {
@@ -24,19 +20,13 @@ import clsx from "clsx";
       if(containerRef.current && !containerRef.current.contains(e.target as Node)){
         setIsOpen(false)
       }
-      };
+    };
       
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
      // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => {getListings()}, [!filters.shouldSort]) // getListings is stable since it's a zustand store, no need to include
-
-
-   
-
-   
-
+     // getListings is stable since it's a zustand store, no need to include
     // handle focus & blur 
     const [focused, setFocused] = useState(false)
     const focusRef = useRef<HTMLInputElement>(null)
@@ -62,7 +52,7 @@ import clsx from "clsx";
  const isNone = !sort.date && !sort.price && !sort.rating 
   
   
-  const handleSorting = () => {
+  const onSort = () => {
    setFilters(prev => ({...prev, shouldSort: prev.shouldSort || isNone ? false : true}))
    if(!filters.shouldSort) {
      setIsEmpty(isNone)
@@ -76,20 +66,25 @@ import clsx from "clsx";
     return (
       <div ref={containerRef} className="mb-5 max-xs:mb-8 flex justify-between gap-2 select-none">
      <label className="relative w-full">
-         <input onFocus={() =>{setFocused(true); setIsOpen(false)}} onBlur={() => setFocused(false)} 
-         ref={focusRef} type="text" placeholder={t("placeholders.search", {ns : "common"})} name="query"
-         value={filters.query} onChange={handleFiltersChange}
-           className={`input py-4 ${lang === "ar" ? "pr-16" : "pl-16"} max-sm:text-sm
-         focus:outline-base-content focus:border-base-content w-full 
-         placeholder-base-content outline-base-content/80 text-base-content
-          border-b-base-content/50 shadow-sm rounded`} />
-       <div className={`absolute z-20 ${lang === "ar" ? "right-8" : "left-8"}
-         top-1/2 -translate-y-1/2 justify-center rounded`}> 
-        <Search className="size-6"/></div>
-         
-
-     </label >
-     <div className="2xl:hidden flex filter_">
+  <input
+    onFocus={() => { setFocused(true); setIsOpen(false) }}
+    onBlur={() => setFocused(false)}
+    ref={focusRef}
+    type="text"
+    placeholder={t("placeholders.search", { ns: "common" })}
+    name="query"
+    value={filters.query}
+    onChange={handleFiltersChange}
+    className={`input input-bordered rounded-xl w-full text-sm
+      ${lang === "ar" ? "pr-11" : "pl-11"}
+      focus:outline-none focus:border-base-content/40
+      placeholder:text-base-content/30`}
+  />
+  <Search className={`absolute top-1/2 -translate-y-1/2 size-4 text-base-content/40 pointer-events-none
+    ${lang === "ar" ? "right-3.5" : "left-3.5"}`}
+  />
+</label>
+     {filters.query.trim().length > 0 && <div className="2xl:hidden flex filter_">
        <motion.button transition={{duration:0}} animate={{display:focused? "none" : "flex"}}
          onClick={handleSidebarOpen}
           className={clsx("border border-base-content/20 base-outline-base-contentspace-nowrap",
@@ -99,9 +94,9 @@ import clsx from "clsx";
         <span className="max-xss:hidden"> {t("buttons.filter", {ns : "common"})} </span>
         <FaFilter/>
      </motion.button>
-     </div>
+     </div>}
 
-      <div className="relative">
+     { filters.query.trim().length === 0 && <div className="relative">
        <motion.button transition={{duration:0}} animate={{display:focused? "none" : "flex"}} 
        onClick={() => setIsOpen(prev => !prev)}
         className={clsx("border border-base-content/20 base-outline-base-contentspace-nowrap",
@@ -121,12 +116,13 @@ import clsx from "clsx";
             
         <div className="flex flex-col gap-2">
              <span>{t("price.label", {ns:"sort"})}</span>
-             <select value={sort.price} 
+             <select value={sort.price}  defaultValue={"none"}
              onMouseDown={() => setIsEmpty(false)}
-              onChange={(e) => setSort(prev => ({...prev, price:e.target.value}))}
+             name="price"
+              onChange={onSortChange}
               className={`select ${isEmpty ? "select-error text-error" : "select-primary text-base-content"}
                select-sm bg-base-100  border duration-300 transition-colors ease-in-out`}>
-              <option value="">{t("default", {ns:"sort"})}</option>  
+              <option value="none">{t("default", {ns:"sort"})}</option>  
               <option value="cheap">{t("price.options.cheap", {ns:"sort"})}</option>
               <option value="expensive">{t("price.options.exp", {ns:"sort"})}</option>
              </select>
@@ -136,10 +132,11 @@ import clsx from "clsx";
              <span>{t("rating.label", {ns:"sort"})}</span>
              <select value={sort.rating} 
              onMouseDown={() => setIsEmpty(false)}
-             onChange={(e) => setSort(prev => ({...prev, rating:e.target.value}))}
+             name="rating"
+             onChange={onSortChange}
               className={`select ${isEmpty ? "select-error text-error" : "select-primary text-base-content"}
                select-sm bg-base-100 border duration-300 transition-colors ease-in-out`}>
-              <option value="">{t("default", {ns:"sort"})}</option>  
+              <option value="none">{t("default", {ns:"sort"})}</option>  
               <option value="high">{t("rating.options.high", {ns:"sort"})}</option>
               <option value="low">{t("rating.options.low", {ns:"sort"})}</option>
              </select>
@@ -147,7 +144,7 @@ import clsx from "clsx";
 
          <div className="flex flex-col gap-2">
              <span>{t("date.label", {ns:"sort"})}</span>
-             <select value={sort.date} onChange={(e) => setSort((prev) => ({...prev, date : e.target.value}))}
+             <select name="date" value={sort.date} onChange={onSortChange}
               onMouseDown={() => setIsEmpty(false)}
               className={`select ${isEmpty ? "select-error text-error" : "select-primary text-base-content"}
                select-sm bg-base-100 border duration-300 transition-colors ease-in-out`}>
@@ -157,12 +154,12 @@ import clsx from "clsx";
              </select>
         </div>
          <button className={`btn w-full ${filters.shouldSort ? "btn-error text-error-content" : "btn-primary text-primary-content"}`}
-          onClick={handleSorting}>
+          onClick={onSort}>
             {filters.shouldSort ? t("cancel", {ns:"sort"}) : t("apply", {ns:"sort"})}
           </button>
          </div>
      </div>
-     </div>
+     </div>}
     
       </div>
     )

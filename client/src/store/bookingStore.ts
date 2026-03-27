@@ -1,26 +1,35 @@
 import { create } from "zustand";
 import { BookingApi } from "../lib/axios.config";
 import { errorHandler } from "./helpers/errorHelper";
+import type { CurrencyCode } from "../types/types";
+import type { PricingType } from "./listingStore";
 
- interface BookingType {
-    checkIn?: string,
-    checkOut?: string,
+ export type BookingType<T extends PricingType> = (T extends "one_time" 
+   ? {
+      offerPrice : {amount_local: number, amount_usd:number, currency : CurrencyCode}, 
+      message?:string,
+      _id: string,
+      createdAt?: string,
+   } 
+   : {
+    pricingType : PricingType
+    checkIn: string,
+    checkOut: string,
     adults : number,
     children : number,
     pets : number,
     createdAt?: string,
-    totalPrice : number,
-    duration : { months?: number, nights?: number }, 
+    costPrice: {amount_local: number, amount_usd:number, currency : CurrencyCode}, 
     _id : string,
- }
+ } & T extends "nightly" ? {nights:number} : {months:number})
 
  interface Booking {
   isBookingLoading : boolean
-  booking : BookingType | null
-  bookings : BookingType[]
+  booking : BookingType<PricingType> | null
+  bookings : BookingType<PricingType>[]
   error : string | null
   message : string
-  createBooking : (listingId?:string, booking?: Omit<BookingType, "createdAt" | "_id">) => void
+  createBooking : (listingId?:string, booking?: Omit<BookingType<PricingType>, "createdAt" | "_id">) => void
  }
 
 
@@ -34,7 +43,7 @@ import { errorHandler } from "./helpers/errorHelper";
     set({isBookingLoading : true, error : null})
     try {
      const response = await BookingApi.post(`/book-property/${listingId}`, booking)
-     set({booking: response?.data?.booking, isBookingLoading:false, message: response?.data?.message})
+     set({isBookingLoading:false, message: response?.data?.message})
     } catch (error) {
     const err  = errorHandler({error, defaultErr :"BOOKING_FAILED"})
     set({isBookingLoading:false, error:err})

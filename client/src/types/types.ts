@@ -136,13 +136,33 @@ export type UserData = {
   verificationToken?: number
 }
 
+export type SelectedUser = Pick<UserData, "firstName" | "lastName" | "_id" | "profilePic">
+
  export interface NavigationProps {
-  listingUser:UserData | undefined,
-  setSelectedUser: (selectedUser: UserData | null) => void,
+  listingUser: SelectedUser | undefined
+  setSelectedUser: (selectedUser: SelectedUser | null) => void
   navigate:NavigateFunction
+}
+
+export type TrendStatus = "positive" | "negative" | "neutral" | 'n/a'
+export interface MetricCardProps {
+  label: string
+  value: string | number
+  unit?: string
+  icon: React.ComponentType<{ size: number }>
+  trend?: {
+    value: number | 'N/A'
+    trendStatus: TrendStatus
+  }
+  color?: string
 }
 
 export type LoginData = Pick<UserData, "email" | "password">
 export type SignupData = Pick<UserData, "firstName" | "lastName" | "email" | "password">
 
 export interface ErrorHandlerParameters {error : unknown, defaultErr : string}
+
+export type StatusEnum = "active" | "inactive"
+
+export type CurrencyCode = "USD" | "EUR" | "GBP" | "JPY" | "CAD" | "AUD" | "CHF" |
+ "CNY" | "SAR" | "AED" | "EGP" | "MAD" | "BRL" | "INR" | "TRY" | "ZAR" | "SGD" | "HKD"

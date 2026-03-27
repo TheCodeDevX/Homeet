@@ -1,50 +1,142 @@
+import CountUp from 'react-countup'
 import { currencies, prefixCurrencySymbols } from '../constants'
 import type { ApiData, PricingType } from '../store/listingStore'
 import { t } from 'i18next'
+import { useEffect, useRef, useState } from 'react'
+import { convertPrice } from '../utils/convertPrice'
+import { useAuthStore } from '../store/authStore'
+import type { CurrencyCode, UserData } from '../types/types'
+import { fetchCurrenciesWithRates } from '../utils/fetchCurrenciesWithRates'
+import clsx from 'clsx'
+import i18n from '../config/reacti18next'
 
 interface PriceProps {
     listing : ApiData | null,
     price?: number | undefined,
     isDynamic : boolean,
+    textSize?: "sm" | "large"
+    classes?: string,
+} 
+
+ const Price = ({ listing, price, isDynamic, textSize = "large" }: PriceProps) => {
+  
+   const getCurrency = (user:UserData | null) => currencies.find(
+    c => c.code.toLowerCase() === user?.currency
+  )
+  const authUser = useAuthStore().user
+  const userCurrency = getCurrency(authUser)?.code
+  const bookingCurrency = getCurrency(listing?.user ?? null)?.code
+  const targetPrice = isDynamic ? price ?? 0 : listing?.price?.amount_local || 0
+
+   const prevCurrencyRef = useRef<CurrencyCode>(bookingCurrency)
+  const [convertedPrice, setConvertedPrice] = useState(0);
+  const [currenciesWithRates, setCurrenciesWithRates] = useState<{
+    rate: number;
+    code: CurrencyCode;
+    symbol: string;
+    name: string;
+}[] | undefined>();
+
+  useEffect(() => {
+  const fetchCurrencies = async () => {
+    const result = await fetchCurrenciesWithRates(bookingCurrency)
+    setCurrenciesWithRates(result)
+  }
+  fetchCurrencies()
+  }, [bookingCurrency])
+
+
+  useEffect(() => {
+    const getConvertedPrice = () => {
+      const price = convertPrice(+targetPrice, bookingCurrency, userCurrency, currenciesWithRates ?? [])
+      setConvertedPrice(price ?? 0)
+    }
+     getConvertedPrice()
+
+  }, [targetPrice, bookingCurrency, userCurrency, currenciesWithRates ])
+  const prevPriceRef = useRef<number>(convertedPrice)
+ 
+  const isPrefixCurrencySymbol = prefixCurrencySymbols.includes(authUser?.currency?.toUpperCase() as string)
+
+  const getPropertyCategory = (pricingType: PricingType | undefined) => {
+    if (!pricingType) return
+    switch (pricingType) {
+      case "monthly":  return t(`card.categories.monthly`,  { ns: "card" })
+      case "nightly":  return t(`card.categories.nightly`,  { ns: "card" })
+      case "one_time": return t(`card.categories.one_time`, { ns: "card" })
+      default:         return t(`card.categories.placeholder`, { ns: "card" })
+    }
+  }
+
+ 
+
+  useEffect(() => { 
+    prevPriceRef.current = convertedPrice
+   }, [convertedPrice])
+
+   useEffect(() => {
+    prevCurrencyRef.current = userCurrency
+   }, [userCurrency])
+
+   const isArabic = i18n.language === "ar"
+
+  return (
+    <div className={clsx("flex", textSize === "sm" 
+    ? "flex-row items-baseline justify-start gap-2" 
+    : "flex-col justify-center items-center gap-1")}>
+      <div className="flex items-center justify-center">
+        {isPrefixCurrencySymbol && !isArabic && (
+          <span className={clsx(
+            textSize === "sm" ? "text-sm" : "sm:text-3xl text-xl text-base-content/80",
+            "font-bold -mb-0.5"
+            )}>
+            {getCurrency(authUser)?.symbol}
+          </span>
+        )}
+
+        <span className={
+          clsx("font-black tabular-nums tracking-tight", textSize === "sm" 
+            ? "sm:text-lg text-sm" : "sm:text-4xl text-2xl text-base-content" )
+        }>
+         { <CountUp
+            start={prevPriceRef.current}
+            end={Number(convertedPrice)}
+            duration={1.5}
+            separator=","
+          />
+          }
+        </span>
+
+        { isArabic &&
+        <span className={clsx(
+            textSize === "sm" ? "text-sm" : "sm:text-xl text-lg text-base-content/80",
+            "font-bold -mb-0.5"
+            )}>
+            {t(`currencies.${getCurrency(authUser)?.code}`, {ns : "common"})}
+        </span>
+        }
+
+        {!isPrefixCurrencySymbol && !isArabic && (
+          <span className={clsx(
+            textSize === "sm" ? "text-sm" : "sm:text-3xl text-xl text-base-content/80",
+            "font-bold -mb-0.5"
+            )}>
+            {getCurrency(authUser)?.symbol}
+          </span>
+        )}
+      </div>
+
+      <span className={
+        clsx("font-medium tracking-widest uppercase leading-none",
+          textSize === "sm" ? "text-[11px] opacity-80" : "text-sm text-base-content/80"
+        )
+      }>
+        {isDynamic
+          ? t("labels.totalPrice", { ns: "common" })
+          : getPropertyCategory(listing?.pricingType)}
+      </span>
+    </div>
+  )
 }
 
- const Price = ({listing, price, isDynamic} : PriceProps) => {
-     const isPrefixCurrencySymbol = prefixCurrencySymbols.includes(listing?.user?.currency?.toUpperCase() as string)
-     const getPropertyCateory = (pricingType : PricingType | undefined) => {
-        if(!pricingType) return;
-        switch(pricingType) {
-         case "monthly" : return t(`card.categories.monthly`, {ns:"card"})
-         case "nightly" : return t(`card.categories.nightly`, {ns:"card"})
-         case "one_time" : return  t(`card.categories.one_time`, {ns:"card"})
-         default : return t(`card.categories.placeholder`, {ns:"card"});
-        }
-     }
-
-   return (
-        <div className='flex items-center justify-center'>
-            <p className="sm:text-3xl text-xl font-black line-clamp-1">
-                <span className={`font-black`}>
-                {isPrefixCurrencySymbol && currencies.find(c => c.code.toLowerCase()
-                === listing?.user?.currency)?.symbol}
-                </span>
-                <span className={`font-black`}>{ isDynamic ? price : listing?.price }</span> 
-                <span className={`font-black mx-1`}>
-                {!isPrefixCurrencySymbol && currencies.find(c => c.code.toLowerCase()
-                === listing?.user?.currency)?.symbol}
-                </span>
-     
-            </p>
-           { !isDynamic ?  <p className='sm:text-xl text-lg font-semibold opacity-80 '>
-              { getPropertyCateory(listing?.pricingType) }
-            </p> :
-            <p className='md:text-md sm:text-sm text-xs font-semibold opacity-80 '>
-            {t("labels.totalPrice", {ns : "common"})}
-            </p>
-        }
-
-        </div>
-   )
- }
- 
- export default Price
- 
+export default Price

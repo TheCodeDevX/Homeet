@@ -1,0 +1,56 @@
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useEffect, type RefObject } from "react";
+
+ interface CloseOutsideProps {
+    ctx : RefObject<gsap.Context | null>
+    tl: RefObject<gsap.core.Timeline | null>
+    containerRef:RefObject<HTMLDivElement | null>
+    parentRef : RefObject<HTMLDivElement | null>
+    state:boolean
+    isOpenRef: RefObject<boolean>
+    withoutStagger?: boolean
+
+
+ }
+
+ const useCloseOutside = ({containerRef, state, isOpenRef, ctx, tl, parentRef, withoutStagger}: CloseOutsideProps) => {
+    const Initialvars = {opacity:0, y:100, ease:"back.in", visibility:"visible"};
+
+   useGSAP(() => {
+    const elements = gsap.utils.toArray(containerRef.current?.getElementsByTagName("button") as HTMLCollection)
+    tl.current = gsap.timeline()
+    ctx.current = gsap.context(() => {
+    const {current} = tl; 
+    if(!state){
+    current?.to(containerRef.current, Initialvars)
+    .to(containerRef.current, {visibility:"hidden"})
+    } else {
+     current?.fromTo(containerRef.current, Initialvars,
+         { opacity:1, y:0, visibility:"visible", ease:"back.out", duration:0.8})
+      .fromTo(elements,
+        {opacity:0, yPercent:100},
+      {
+      stagger:withoutStagger ? 0 : 0.12,
+      opacity:1,
+      duration:0.24,
+      yPercent:0,
+      ease : "circ.inOut"
+    }, "<")
+    } 
+     
+    }, parent);
+    return () => {
+      ctx.current?.revert()
+    };
+   }, {dependencies:[state], scope:parentRef});
+
+    useEffect(() => {
+    isOpenRef.current = state;
+    }, [state, isOpenRef]);
+
+    
+
+ }
+ export default useCloseOutside
+ 

@@ -15,12 +15,6 @@ import { UserDocument } from "../shared/types/types";
     sparse : true
     },
 
-    facebookId : {
-    type : String,
-    unique: true,
-    sparse : true
-    },
-
     firstName : {
     type : String,
     required : [true , 'First Name is required'],
@@ -52,7 +46,7 @@ import { UserDocument } from "../shared/types/types";
     password : {
     type : String,
     required: function() {
-    return !this.googleId && !this.facebookId;
+    return !this.googleId
   },
     trim : true,
     minlength : [8, "the Password must be at least 8 characters long"],

@@ -1,15 +1,89 @@
 {
-    "dashboard" : {
-        "image" : "Imagen",
-        "title" : "Título",
-        "description" : "Descripción",
-        "location" : "Ubicación",
-        "createdAt" : "Creado el",
-        "actions" : {
-            "title" : "Acciones",
-            "delete" : "Eliminar",
-            "edit" : "Editar"
-
-        } 
-    } 
+  "dashboard": {
+    "actions": {
+      "title": "Acciones",
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "title": "Panel de tus anuncios",
+    "description": "Gestiona tus propiedades y haz seguimiento de las reservas",
+    "bookings_one": "{{count}} reserva",
+    "bookings_other": "{{count}} reservas",
+    "noBookings": "Aún no hay reservas",
+    "metrics": {
+      "N/A": "N/D",
+      "TREND_PERCENTAGE": "{{percentage}}% este mes"
+    },
+    "stats": {
+      "fullLabel": {
+        "TOTAL_LISTINGS": "Total de anuncios",
+        "TOTAL_REVENUE": "Ingresos totales",
+        "TOTAL_GUESTS": "Total de huéspedes",
+        "BOOKED_LISTINGS": "Anuncios reservados",
+        "TOTAL_BOOKINGS": "Total de reservas",
+        "OCCUPANCY_RATE": "Tasa de ocupación",
+        "ADDED_THIS_WEEK": "Añadido esta semana"
+      },
+      "shortLabel": {
+        "TOTAL_LISTINGS": "Anuncios",
+        "BOOKED_LISTINGS": "Reservados",
+        "TOTAL_BOOKINGS": "Reservas",
+        "ADDED_THIS_WEEK": "Esta semana"
+      }
+    },
+    "contact": "Contacto",
+    "active": "Activo",
+    "analyticsTab": {
+      "title": "Análisis y rendimiento",
+      "description": "Haz seguimiento de tus ingresos, reservas e información sobre huéspedes",
+      "revenueTrend_one": "Tendencia de ingresos (último mes)",
+      "revenueTrend_other": "Tendencia de ingresos",
+      "guestDistribution": "Distribución de huéspedes",
+      "top": "Anuncios con mejor rendimiento",
+      "peak": "Temporada alta",
+      "peakMonth_other": "{{month}} es tu mes más fuerte con {{count}} reservas",
+      "peakMonth_one": "{{month}} es tu mes más fuerte con una reserva",
+      "bestGuests": "{{guestType}} son tus huéspedes más frecuentes con un {{percentage}} de todas las reservas",
+      "revenue": "Ingresos",
+      "Recommendations": "Recomendaciones",
+      "BestGuests": "Mejores huéspedes",
+      "noBookingsReceivedToAnalyze": "No hay reservas para analizar",
+      "bookings": "Reservas",
+      "recommendations": {
+        "booking_no_activity": "Aún no tienes reservas. Considera mejorar la visibilidad del anuncio u ofrecer una promoción.",
+        "booking_low_volume": "Las reservas siguen siendo bajas. Intenta reducir los precios o mejorar las fotos de tu anuncio.",
+        "booking_growing": "Las reservas están creciendo. Considera animar a los huéspedes a dejar reseñas para aumentar la confianza.",
+        "booking_excellent": "¡Excelente actividad de reservas! Asegúrate de que las operaciones y la experiencia del huésped sigan siendo consistentes.",
+        "revenue_no_income": "Aún no se han generado ingresos. Revisa los precios y la disponibilidad de reservas.",
+        "revenue_declining": "Los ingresos están bajando en comparación con el período anterior. Revisa los precios y las tendencias de demanda.",
+        "revenue_increasing": "Los ingresos están aumentando. Considera optimizar los precios para maximizar las ganancias.",
+        "revenue_strong_growth": "El crecimiento de ingresos es sólido este mes. Considera aumentar ligeramente los precios.",
+        "guests_low_volume": "El volumen de huéspedes es bajo. Mejora el marketing y la calidad del anuncio.",
+        "guests_declining": "El número de huéspedes está bajando. Revisa tu tasa de cancelación o la competitividad del anuncio.",
+        "guests_increasing": "El número de huéspedes está aumentando. Asegúrate de mantener la calidad del servicio.",
+        "rating_no_reviews": "Aún no tienes reseñas. Anima a los huéspedes a dejar sus comentarios.",
+        "rating_below_average": "Tu valoración está por debajo de 4. Enfócate en mejorar la experiencia del huésped.",
+        "rating_good": "Buena valoración. Pequeñas mejoras en el servicio podrían llevarte a un nivel excelente.",
+        "rating_excellent": "¡Valoración excelente! Destaca las reseñas en tu anuncio.",
+        "occupancy_very_low": "La tasa de ocupación es baja. Considera promociones o ajustar los precios.",
+        "occupancy_moderate": "Ocupación moderada. Optimiza los precios y el marketing para aumentar las reservas.",
+        "occupancy_healthy": "Tasa de ocupación saludable. Mantén la calidad del servicio.",
+        "occupancy_very_high": "Ocupación muy alta. Es posible que puedas aumentar tus precios.",
+        "trend_revenue_negative": "La tendencia de ingresos está bajando. Investiga los precios y la demanda estacional.",
+        "trend_revenue_positive": "La tendencia de ingresos es positiva. Mantén tu estrategia actual.",
+        "trend_booking_negative": "La tendencia de reservas está bajando. Mejora la visibilidad o ajusta los precios.",
+        "trend_booking_positive": "Las reservas tienen tendencia al alza. Prepárate para un mayor flujo de huéspedes.",
+        "trend_occupancy_negative": "La ocupación está bajando. Considera descuentos o promociones.",
+        "trend_occupancy_positive": "La ocupación está aumentando. La demanda puede soportar precios más altos.",
+        "trend_guest_negative": "La tendencia de huéspedes está bajando. Revisa el rendimiento del anuncio y los comentarios.",
+        "trend_guest_positive": "El número de huéspedes tiene tendencia al alza. Mantén la calidad del servicio."
+      },
+      "guestClassification": {
+      "solo": "Solo",
+      "couples": "Parejas",
+      "families": "Familias",
+      "groups": "Grupos"
+      }
+    }
+  }
 }

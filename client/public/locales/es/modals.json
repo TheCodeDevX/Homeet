@@ -1,11 +1,13 @@
 {
-    "logoutModal" : {
+    "Modal" : {
         "logout" : "Cerrar Sesión",
         "msg" : "¿Estás seguro de que quieres cerrar sesión?",
         "actions" : {
             "confirm" : "Confirmar",
             "cancel" : "Cancelar"
-        }
+        },
+        "deleteListingTitle": "Confirmar eliminación del anuncio",
+        "deleteListingMsg": "Esta acción no se puede deshacer. ¡Una vez que confirmes, tu anuncio se eliminará permanentemente!"
     },
 
     "ratingModal" : {

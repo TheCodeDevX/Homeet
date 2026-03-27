@@ -76,7 +76,7 @@
     "SUCCESSFUL_CREATED_LISTING": "Your listing is now live!",
     "SUCCESSFUL_UPDATED_LISTING": "Listing updated successfully.",
     "INVALID_ID_FORMAT": "Something went wrong. Please try again.",
-    "LIS_UNFOUND": "This listing no longer exists.",
+    "LISTING_NOT_FOUND": "This listing no longer exists.",
     "LISTING_DELETED_SUCCESSFULLY": "Listing deleted.",
 
     "INVALID_RATING": "Please select a valid rating.",
@@ -132,7 +132,18 @@
     "FAILED_TO_FETCH_INCOMING_NOTIFICATIONS": "Failed to fetch incoming notifications. Please try again later.",
     "FAILED_TO_READ_NOTIFICATION": "Failed to mark the notification as read. Please try again later.",
     "FAILED_TO_ARCHIVE_NOTIFICATION": "Failed to archive the notification. Please try again later.",
-    "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "Failed to delete archived notifications. Please try again later."
+    "FAILED_TO_DELETE_ARCHIVED_NOTIFICATIONS": "Failed to delete archived notifications. Please try again later.",
+    "FAILED_TO_UPDATE_LISTING_STATUS" : "Failed to update the listing's status", 
+    "FAILED_TO_SEARCH_LISTINGS" : "Failed to search listings",
+
+    "CANNOT_SIGNIN_THROUGH_EMAIL_PASSWORD" : "Your account was registered using Google. Please sign in with google instead of your email & password",
+    "INVALID_CURRENCY_CODE": "Invalid currency code.",
+    "CURRENCY_CODE_IS_REQUIRED": "Currency code is required.",
+    "COST_PRICE_IS_REQUIRED": "Cost price is required.",
+    "NO_CURRENCY_RECEIVED": "No currency received.",
+    "INVALID_CURRENCY": "Invalid currency.",
+    "CONFIRMED_OFFER": "Your offer has been confirmed.",
+    "DUPLICATED_OFFER" : "You've already submitted an offer for this listing"
     
   },
 
@@ -145,7 +156,13 @@
     "INVALID_DATE" : "Invalid date",
     "ERR_REFRESHING_TOKEN" : "Failed to refresh the access token!",
     "NO_PASSWORD_PROVIDED": "No password provided",
-    "CONFIRM_YOUR_PASS" : "Please confirm your password before submitting"
+    "CONFIRM_YOUR_PASS" : "Please confirm your password before submitting",
 
+    "REQUIRED_OFFER_PRICE" : "Offer price is required",
+    "REQUIRED_CURRENCY" : "Currency is required",
+    "REQUIRED_CHECKIN" : "Check-in is required!",
+    "REQUIRED_CHECKOUT" : "Check-out is required!"
+    
+    
   }
 }

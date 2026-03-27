@@ -642,4 +642,63 @@ describe("likeRating", () => {
         expect(result.current.isLoading).toBe(false)
     })
 })
+
+
+// describe("searchListings", () => {
+
+//     it("searches listings", async () => {
+//         mockAxios.put.mockResolvedValueOnce({
+//            data : {}
+//         })
+//         const { result } = renderHook(() => useListingStore())
+
+//         await act(async () => {
+//             await result.current.searchListings({})
+//         })
+
+//         expect(mockAxios.put).toHaveBeenCalledWith('/dashboard/123', { title: "updated-property" })
+//         expect(result.current.listing).toEqual({ _id: "123", title: "updated-property" })
+//         expect(result.current.message).toBe("listing updated successfully")
+//         expect(result.current.isLoading).toBe(false)
+//     })
+
+//     it("sets error and rethrows when update fails", async () => {
+//         const Err = new Error("something went wrong")
+//         mockAxios.put.mockRejectedValueOnce(Err)
+//         const { result } = renderHook(() => useListingStore())
+
+//         await act(async () => {
+//             try {
+//                 await result.current.updateListing("123", { title: "updated-property" } as any)
+//             } catch (error) {
+//                 expect(error).toBe(Err)
+//             }
+//         })
+
+//         expect(spy).toHaveBeenCalledWith({ error: Err, defaultErr: "FAILED_TO_UPDATE_LISTING" })
+//         expect(result.current.error).toBe("something went wrong")
+//         expect(result.current.isLoading).toBe(false)
+//     })
+
+//     it("sets default error when original error message is not found", async () => {
+//         const Err = new Error(undefined)
+//         mockAxios.put.mockRejectedValueOnce(Err)
+//         const { result } = renderHook(() => useListingStore())
+
+//         await act(async () => {
+//             try {
+//                 await result.current.updateListing("123", { title: "updated-property" } as any)
+//             } catch (error) {
+//                 expect(error).toBe(Err)
+//             }
+//         })
+
+//         expect(spy).toHaveBeenCalledWith({ error: Err, defaultErr: "FAILED_TO_UPDATE_LISTING" })
+//         expect(result.current.error).toBe("FAILED_TO_UPDATE_LISTING")
+//         expect(result.current.isLoading).toBe(false)
+//     })
+// })
+
+
+
 })

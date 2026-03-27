@@ -1,5 +1,23 @@
 
  {
+
+  "sidebar": {
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "bookings": "Bookings",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "manageListings": "Manage your property listings with ease",
+    "overviewDesc": "View key metrics and performance",
+    "bookingsDesc": "Manage all your guest bookings",
+    "analyticsDesc": "Track revenue and guest insights",
+    "settingsDesc": "Configure your account and preferences"
+
+   
+  },
+
+
     "content" : {
         "title" : "Filtration",
         "filters" : {

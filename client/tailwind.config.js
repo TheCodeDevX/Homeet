@@ -12,12 +12,14 @@ export default {
         Secondary : "#5904B4"
       },
       fontFamily : {
-      
+      poppins : ["Poppins", "sans-serif"],
+      dmSerif : ["DM Serif", 'serif']
       },
       screens : {
-        "card-fix" : "690px",
+        "card-fix" : "640px",
         "xs" : "480px",
-        "xss" : "425px"
+        "xss" : "425px",
+        "xsss" : "370px"
       },
     },
   },
@@ -27,37 +29,10 @@ export default {
       "light",
       "dark",
       "cupcake",
-      "bumblebee",
-      "emerald",
-      "corporate",
-      "synthwave",
       "retro",
-      "cyberpunk",
-      "valentine",
-      "halloween",
-      "garden",
-      "forest",
-      "aqua",
-      "lofi",
-      "pastel",
-      "fantasy",
-      "wireframe",
-      "black",
-      "luxury",
-      "dracula",
-      "cmyk",
-      "autumn",
-      "business",
-      "acid",
-      "lemonade",
-      "night",
       "coffee",
-      "winter",
-      "dim",
-      "nord",
-      "sunset",
-      
-    ],
+      "forest"
+    ]
   }
 }
 
