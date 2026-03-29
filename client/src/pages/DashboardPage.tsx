@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion'
-import {  Calendar, CatIcon, ChevronDown, Clock, LayoutGridIcon, PenBoxIcon, PinIcon, Search, TicketCheck, Tickets, Trash, Users} from 'lucide-react'
+import {  Calendar, CatIcon, ChevronDown, Clock, LayoutGridIcon, MenuIcon, PenBoxIcon, PinIcon, Search, TicketCheck, Tickets, Trash, Users} from 'lucide-react'
 import { useListingStore } from '../store/listingStore'
 import { useEffect, useState } from 'react'
 import {useNavigate } from 'react-router-dom'
@@ -15,6 +15,8 @@ import type { StatusEnum } from '../types/types'
 import StatCard from '../components/StartCard'
 import * as helpers from '../utils/helpers'
 import { useMessageStore } from '../store/messageStore'
+import clsx from 'clsx'
+import { useSidebarToggle } from '../hooks/useSidebarToggle'
 
 interface ListingType {
   title : string,
@@ -67,6 +69,8 @@ interface ListingType {
   await updateStatus(listingId, status)
  }
 
+ const {handleSidebarOpen} = useSidebarToggle()
+
    return (
     <>
      {isOpen && <Modal  onConfirm={onDelete} onShowModal={setIsOpen} titleKey='Modal.deleteListingTitle'
@@ -79,7 +83,8 @@ interface ListingType {
   className="relative min-h-screen mt-24 max-sm:pt-2 ml-72 xl:p-4 lg:p-4 p-2 max-2xl:ml-0 overflow-x-hidden"
 >
   {/* Search Bar */}
-  <div className="relative mb-8">
+  <div className="flex justify-between gap-2 select-none">
+     <div className="relative mb-8 w-full">
     <input
       value={query}
       onChange={(e) => setQuery(e.target.value)}
@@ -96,6 +101,17 @@ interface ListingType {
         ${lang === 'ar' ? "right-2" : "left-2"} mx-2 size-[16px] text-base-content/40`}
     />
   </div>
+
+  <button
+  onClick={handleSidebarOpen}
+  className={clsx("border border-base-content/10 btn 2xl:hidden",
+  "items-center gap-2 bg-base-300/50 rounded right-0 px-4 shadow-sm",
+  lang === "ar" && "flex-row-reverse",
+  "hover:scale-105 transition-all duration-200 active:scale-95 text-base-content")}>
+ <MenuIcon/> {t("buttons.menu", {ns : "common"})}
+  </button>
+  </div>
+ 
 
   {/* Overview Header */}
   <div className='mb-6 sm:mb-8'>

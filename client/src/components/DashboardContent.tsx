@@ -6,6 +6,7 @@ import { BarChart3, Calendar, Settings, LogOut, X} from "lucide-react"
 import clsx from "clsx"
 import i18n from "../config/reacti18next"
 import { useLocation, useNavigate } from "react-router-dom"
+import { useSidebarToggle } from "../hooks/useSidebarToggle"
 
 const DashboardSidebar = () => {
   const { t } = useTranslation()
@@ -13,6 +14,7 @@ const DashboardSidebar = () => {
   const lang = i18n.language
   const location = useLocation()
   const navigate = useNavigate()
+  const {setIsOpen} = useSidebarToggle()
 
   const navItems = [
     {
@@ -67,7 +69,7 @@ const DashboardSidebar = () => {
             </h1>
             <button
               className='lg:hidden btn btn-ghost btn-sm'
-              onClick={() => {}}
+              onClick={() => {setIsOpen(false)}}
             >
               <X size={20} />
             </button>

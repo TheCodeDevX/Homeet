@@ -37,7 +37,8 @@
         "checkAvailability": "تحقق من التوفر",
         "book": "احجز الآن",
         "reserve" : "حجز",
-        "submitOffer" : "إرسال العرض"
+        "submitOffer" : "إرسال العرض",
+        "menu" : "قائمة"
     },
 
       "placeholders" : {
@@ -54,6 +55,7 @@
         "months" : "أشهر",
         "offerPrice": "أدخل سعر عرضك",
         "message": "أدخل رسالة عرضك"
+      
         
      },
       "labels" : {

@@ -36,7 +36,8 @@
         "checkAvailability" : "Check availability",
         "book" : "Book now",
         "reserve" : "Reserve",
-        "submitOffer" : "Submit offer"
+        "submitOffer" : "Submit offer",
+        "menu" : "Menu"
     },
 
       "placeholders" : {

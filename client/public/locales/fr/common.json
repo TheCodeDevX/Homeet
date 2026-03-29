@@ -36,7 +36,8 @@
         "checkAvailability": "Vérifier la disponibilité",
         "book": "Réserver maintenant",
         "reserve" : "Réservation",
-        "submitOffer": "Soumettre l'offre"
+        "submitOffer": "Soumettre l'offre",
+        "menu" : "Menu"
     },
 
       "placeholders" : {
