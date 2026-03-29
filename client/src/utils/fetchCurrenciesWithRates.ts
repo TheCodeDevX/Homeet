@@ -14,3 +14,4 @@ export const fetchCurrenciesWithRates = async(base_currency : CurrencyCode | und
 }[] = currencies.map((c) => ({...c, rate : data.rates[c.code] ?? 1 }))
   return updated;
 }
+

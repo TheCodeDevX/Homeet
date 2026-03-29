@@ -176,7 +176,7 @@ import type { AuthData } from '../types/types'
    connectSocket : () => {
       const authUser = get().user;
       if(!authUser || get()?.socket?.connected) return;
-      const socket = io("https://homeet.onrender.com", {
+      const socket = io("http://localhost:8000", {
          withCredentials:true,
          transports : ["websocket"],
          reconnection:true,

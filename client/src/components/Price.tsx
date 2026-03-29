@@ -5,7 +5,7 @@ import { t } from 'i18next'
 import { useEffect, useRef, useState } from 'react'
 import { convertPrice } from '../utils/convertPrice'
 import { useAuthStore } from '../store/authStore'
-import type { CurrencyCode, UserData } from '../types/types'
+import type { CurrencyCode } from '../types/types'
 import { fetchCurrenciesWithRates } from '../utils/fetchCurrenciesWithRates'
 import clsx from 'clsx'
 import i18n from '../config/reacti18next'
@@ -19,13 +19,10 @@ interface PriceProps {
 } 
 
  const Price = ({ listing, price, isDynamic, textSize = "large" }: PriceProps) => {
-  
-   const getCurrency = (user:UserData | null) => currencies.find(
-    c => c.code.toLowerCase() === user?.currency
-  )
+ 
   const authUser = useAuthStore().user
-  const userCurrency = getCurrency(authUser)?.code
-  const bookingCurrency = getCurrency(listing?.user ?? null)?.code
+  const userCurrency = authUser?.currency?.toUpperCase() as CurrencyCode
+  const bookingCurrency = listing?.price.currency
   const targetPrice = isDynamic ? price ?? 0 : listing?.price?.amount_local || 0
 
    const prevCurrencyRef = useRef<CurrencyCode>(bookingCurrency)
@@ -47,13 +44,9 @@ interface PriceProps {
 
 
   useEffect(() => {
-    const getConvertedPrice = () => {
       const price = convertPrice(+targetPrice, bookingCurrency, userCurrency, currenciesWithRates ?? [])
       setConvertedPrice(price ?? 0)
-    }
-     getConvertedPrice()
-
-  }, [targetPrice, bookingCurrency, userCurrency, currenciesWithRates ])
+  }, [targetPrice, bookingCurrency, userCurrency, currenciesWithRates])
   const prevPriceRef = useRef<number>(convertedPrice)
  
   const isPrefixCurrencySymbol = prefixCurrencySymbols.includes(authUser?.currency?.toUpperCase() as string)
@@ -90,7 +83,7 @@ interface PriceProps {
             textSize === "sm" ? "text-sm" : "sm:text-3xl text-xl text-base-content/80",
             "font-bold -mb-0.5"
             )}>
-            {getCurrency(authUser)?.symbol}
+            {currencies.find(c => c.code === userCurrency)?.symbol}
           </span>
         )}
 
@@ -98,13 +91,14 @@ interface PriceProps {
           clsx("font-black tabular-nums tracking-tight", textSize === "sm" 
             ? "sm:text-lg text-sm" : "sm:text-4xl text-2xl text-base-content" )
         }>
-         { <CountUp
+         <CountUp
             start={prevPriceRef.current}
             end={Number(convertedPrice)}
             duration={1.5}
+            decimals={2}
             separator=","
           />
-          }
+          
         </span>
 
         { isArabic &&
@@ -112,7 +106,7 @@ interface PriceProps {
             textSize === "sm" ? "text-sm" : "sm:text-xl text-lg text-base-content/80",
             "font-bold -mb-0.5"
             )}>
-            {t(`currencies.${getCurrency(authUser)?.code}`, {ns : "common"})}
+            {t(`currencies.${userCurrency}`, {ns : "common"})}
         </span>
         }
 
@@ -121,7 +115,7 @@ interface PriceProps {
             textSize === "sm" ? "text-sm" : "sm:text-3xl text-xl text-base-content/80",
             "font-bold -mb-0.5"
             )}>
-            {getCurrency(authUser)?.symbol}
+             {currencies.find(c => c.code === userCurrency)?.code}
           </span>
         )}
       </div>
