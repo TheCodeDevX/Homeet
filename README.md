@@ -140,8 +140,6 @@ Add images like:
 #### Chat interface
 ![Chat](./screenshots/chat.jpeg)
 
-#### Chat interface
-![Chat](./screenshots/chat.jpeg)
 
 #### Dahboard 
 ![Dashboard](./screenshots/dashboard.jpeg)
