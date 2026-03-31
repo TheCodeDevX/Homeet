@@ -61,7 +61,7 @@ interface ListingType {
   return;
   }
  setIsOpen(false)
- deleteListing(listingId)
+ deleteListing(listingId.toString())
 }
 
  const handleChangeStatus = async(listingId:string|undefined, status : StatusEnum) => {

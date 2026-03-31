@@ -15,7 +15,7 @@ import { protect } from '../middlewares/auth.middlewares';
   createListing);
 
   router.get("/listings", protect, getListings)
-  router.get("/search", protect, searchListings) //todo
+  router.get("/search", protect, searchListings)
   router.get("/listings/:id", protect, getListing)
   router.get("/dashboard", protect, getUserListings)
   router.post('/dashboard/status/:listingId', protect, updateListingStatus)
