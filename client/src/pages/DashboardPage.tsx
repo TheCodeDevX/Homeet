@@ -36,6 +36,7 @@ interface ListingType {
    const [isSliced, setIsSliced] = useState<{[id:string] : boolean}>({})
    const [isOpen, setIsOpen] = useState(false);
    const [isExpanded, setIsExpanded] = useState<{[key:string] : boolean}>({})
+   const [listingIdToDelete, setListingIdToDelete] = useState('')
   useEffect(() => {
     getUserListings()
   }, [isDeleting, getUserListings])
@@ -53,7 +54,7 @@ interface ListingType {
   }
     navigate(`/dashboard/edit/${listingId}`)
   };
-  const onDelete = (listingId : string | undefined) => {
+  const onDelete = (listingId:string | undefined) => {
   if(!listingId) {
   toast.custom((toast) => (
   <ToasterCompo color="red" msg={t("clientMessages.", {ns:"messages"})} t={toast}/>
@@ -73,7 +74,7 @@ interface ListingType {
 
    return (
     <>
-     {isOpen && <Modal  onConfirm={onDelete} onShowModal={setIsOpen} titleKey='Modal.deleteListingTitle'
+     {isOpen && <Modal  onConfirm={() => onDelete(listingIdToDelete)} onShowModal={setIsOpen} titleKey='Modal.deleteListingTitle'
     subtitleKey="Modal.deleteListingMsg"
     />}
   <motion.div
@@ -302,7 +303,7 @@ interface ListingType {
                 </button>
 
                 <button
-                  onClick={() => setIsOpen(prev => !prev)}
+                  onClick={() => {setIsOpen(prev => !prev); setListingIdToDelete(listing._id?.toString() as string)}}
                   className='p-2 sm:p-2.5 bg-base-content/5 hover:bg-error/10 
                   border border-transparent hover:border-error/30 text-base-content/70 hover:text-error 
                   transition-all duration-200 tooltip rounded-full'
